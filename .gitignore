@@ -1,0 +1,4 @@
+node_modules/
+1102.mp4
+assets/video/*.mp4
+*-original.*

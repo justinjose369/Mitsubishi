@@ -1,0 +1,15 @@
+﻿{
+  "name": "mitsubishi-motors-kuwait-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Mitsubishi Motors Kuwait - premium website redesign (static, no build step)",
+  "scripts": {
+    "start": "node server.js",
+    "vendor": "node scripts/vendor.js"
+  },
+  "dependencies": {
+    "@fontsource/barlow": "^5.0.0",
+    "@fontsource/barlow-condensed": "^5.0.0",
+    "gsap": "^3.12.5"
+  }
+}
