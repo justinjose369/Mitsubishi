@@ -124,7 +124,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 /* ---------- Hero ---------- */
 .hero { position: relative; height: 100vh; height: 100svh; min-height: 620px; display: flex; align-items: flex-end; overflow: hidden; background: var(--ink); }
 /* The source film (1920x1080) has subtitles burned into its bottom ~10%. Scaling from the top edge crops that band out. */
-.hero__media { position: absolute; inset: 0; transform: scale(1.14); transform-origin: 50% 0; background: #0b0b0c url(../assets/img/l200-ext.webp) center / cover no-repeat; } /* still image only shows if the video cannot load */
+.hero__media { position: absolute; inset: 0; transform: scale(1.14); transform-origin: 50% 0; background: #0b0b0c; }
 .hero__video { position: absolute; inset: -4% 0; width: 100%; height: 108%; object-fit: cover; will-change: transform; }
 .hero__shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,11,12,.55) 0%, rgba(11,11,12,.22) 38%, rgba(11,11,12,.7) 100%); }
 .hero__content { position: relative; padding-bottom: clamp(72px, 10vh, 120px); }
