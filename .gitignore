@@ -1,4 +1,4 @@
 node_modules/
-1102.mp4
-assets/video/*.mp4
+/1102.mp4
+assets/video/1102.mp4
 *-original.*
