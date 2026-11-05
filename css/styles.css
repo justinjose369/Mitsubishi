@@ -858,3 +858,6 @@ html.snap .fleet__intro { height: 48svh; }
 .header__sep { width: 1px; height: 30px; background: rgba(255, 255, 255, .3); }
 .header__enquire { min-height: 42px; padding: 0 22px; font-size: 12px; letter-spacing: .14em; }
 @media (max-width: 1023px) { .header__sep, .header__enquire { display: none; } .header__right { display: contents; } }
+
+/* disabled header links */
+.nav a[aria-disabled="true"] { pointer-events: none; cursor: default; }
