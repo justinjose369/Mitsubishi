@@ -7,7 +7,7 @@ http.createServer((req, res) => {
   const file = path.join(root, p);
   if (!file.startsWith(root) || /node_modules|server\.js/.test(p)) { res.writeHead(403); return res.end('Forbidden'); }
   fs.stat(file, (e, st) => {
-    if (e || !st.isFile()) { res.writeHead(404); return res.end('Not found'); }
+    if (e || !st.isFile()) { return fs.readFile(path.join(root, '404.html'), (e2, b) => { res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' }); res.end(e2 ? 'Not found' : b); }); }
     const type = types[path.extname(file).toLowerCase()] || 'application/octet-stream';
     const range = req.headers.range;
     if (range) { // needed for video seeking

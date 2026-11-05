@@ -44,5 +44,6 @@ window.MMK_CONFIG = {
       phones: [{ display: '+971 4 228 2211', tel: '+97142282211' }],
       mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Al+Masraf+Tower+Baniyas+Street+Dubai' }
   ],
+  brochures: { destinator: '', l200: '', outlander: '', xpander: '' }, // paste each brochure PDF URL here to enable the Download buttons
   officialSite: 'https://www.mitsubishi-motors.com.kw'
 };

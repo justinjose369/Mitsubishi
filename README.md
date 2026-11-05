@@ -111,3 +111,10 @@ Phone numbers, WhatsApp number, service-centre lines, hours, address, and social
 * All GSAP/ScrollTrigger instances live in one `gsap.context`; DOM listeners share one `AbortController`;
   `MMK_destroy()` (also run on `pagehide`) leaves 0 tweens and 0 triggers.
 * Not tested: real devices, Safari/Firefox, screen readers (NVDA/VoiceOver).
+
+## Inner pages
+
+`node scripts/build-pages.js` regenerates the inner pages (vehicles, destinator/l200/outlander/xpander, compare, parts, fleet, about,
+media, blog, article, contact, brochures, 404) from `scripts/content.js`. Styles: `css/inner.css`; behaviour: `js/inner.js`.
+Edit copy and specs in `scripts/content.js`, then rebuild. Brochure PDF links go in `js/config.js` (`brochures`); until set, the
+buttons open an enquiry. Anything unconfirmed is shown as "On request".
