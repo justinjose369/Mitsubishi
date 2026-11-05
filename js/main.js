@@ -25,7 +25,7 @@
   $$('[data-parts-tel]').forEach(a => { a.href = 'tel:' + C.partsPhone.tel; a.textContent = C.partsPhone.display; });
   $$('[data-maps]').forEach(a => { a.href = C.mapsUrl; });
   $$('[data-address]').forEach(el => { el.innerHTML = C.address.map(l => '<span>' + l + '</span>').join('<br>'); });
-  $$('[data-social]').forEach(a => { a.href = C.social[a.dataset.social] || '#'; });
+  // footer social icons are intentionally inert (no outbound redirects)
   const offEl = $('[data-footer-offices]');
   if (offEl) offEl.innerHTML = C.footerOffices.map(o =>
     '<div class="office"><h4>' + o.name + '</h4><a class="office__addr" href="' + o.mapsUrl + '" target="_blank" rel="noopener"><address>' + o.address.join('<br>') + '</address></a>' +

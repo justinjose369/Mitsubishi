@@ -95,4 +95,4 @@ window.MMK_MODELS = [
 ]
   /* Showcase shows one variant per model. */
   .filter(m => ['destinator-m-line', 'outlander-sport-h-line', 'l200-glx-diesel', 'xpander'].includes(m.id))
-  .map(m => Object.assign({ url: 'https://www.mitsubishi-motors.com.kw/en/cars/' + m.slug }, MMK_EXTRA[m.id], m));
+  .map(m => Object.assign({}, MMK_EXTRA[m.id], m));

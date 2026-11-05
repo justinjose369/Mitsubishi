@@ -862,3 +862,4 @@ html.snap .fleet__intro { height: 48svh; }
 /* disabled header links */
 .nav a[aria-disabled="true"] { pointer-events: none; cursor: default; }
 .media__list a { cursor: default; }
+.footer a[aria-disabled="true"], .footer__social a[aria-disabled="true"] { cursor: default; }
