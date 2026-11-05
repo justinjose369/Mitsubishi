@@ -7,7 +7,7 @@
   <meta name="description" content="Explore the full Mitsubishi range in Libya: Outlander, Destinator, XForce, Montero Sport, L200 and more. Genuine parts, service centres and fleet solutions.">
   <meta name="theme-color" content="#0b0b0c">
   <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
-  <script>document.documentElement.classList.add('js');</script>
+  <script>document.documentElement.classList.add('js');if(matchMedia('(min-width: 1024px) and (min-height: 600px)').matches)document.documentElement.classList.add('snap');</script>
   <link rel="preload" href="assets/fonts/barlow-condensed-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/cars/destinator-m-line.webp" as="image" type="image/webp">
   <link rel="stylesheet" href="css/styles.css">
@@ -25,6 +25,7 @@
       <symbol id="i-whatsapp" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/><path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1"/></symbol>
       <symbol id="i-mail" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></symbol>
       <symbol id="i-map-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
+      <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
       <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></symbol>
       <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
       <symbol id="i-play" viewBox="0 0 24 24"><polygon points="6 3 20 12 6 21 6 3"/></symbol>
@@ -52,7 +53,7 @@
         <ul>
           <li><a href="#top" data-nav="top" class="is-active" aria-current="page">Home</a></li>
           <li><a href="#about" data-nav="about">About Us</a></li>
-          <li><a href="#cars" data-nav="cars">Cars</a></li>
+          <li class="nav__mega" id="navCars"><a href="#cars" data-nav="cars" aria-haspopup="true" aria-expanded="false" aria-controls="mega">Cars<svg class="ic nav__chev" aria-hidden="true"><use href="#i-chevron-down"/></svg></a></li>
           <li><a href="#parts" data-nav="parts">Parts</a></li>
           <li><a href="#fleet" data-nav="fleet">Fleet</a></li>
           <li><a href="#media" data-nav="media">Media</a></li>
@@ -64,6 +65,12 @@
         <svg class="ic ic--open"><use href="#i-menu"/></svg><svg class="ic ic--close"><use href="#i-x"/></svg>
       </button>
     </div>
+    <div class="mega" id="mega" aria-label="Mitsubishi vehicles">
+      <div class="mega__inner">
+        <div class="mega__grid" id="megaGrid"></div>
+        <p class="mega__foot"><a href="#cars" data-mega-close>View the full range <svg class="ic"><use href="#i-arrow-right"/></svg></a></p>
+      </div>
+    </div>
   </header>
 
   <!-- Mobile menu -->
@@ -72,7 +79,7 @@
       <ul>
         <li><a href="#top">Home</a></li>
         <li><a href="#about">About Us</a></li>
-        <li><a href="#cars">Cars</a></li>
+        <li><a href="#cars">Cars</a><ul class="menu__sub" id="menuCars"></ul></li>
         <li><a href="#parts">Parts</a></li>
         <li><a href="#fleet">Fleet</a></li>
         <li><a href="#media">Media</a></li>
@@ -104,49 +111,40 @@
           </div>
         </div>
       </div>
-      <a class="scrollcue" href="#trust" aria-label="Scroll to content"><span>Scroll</span><i></i></a>
-    </section>
-
-    <!-- 3. TRUST STRIP -->
-    <section class="trust" id="trust" aria-label="Key facts">
-      <ul class="wrap trust__list">
-        <li data-rv><strong>100+</strong><span>Years creating innovative vehicles</span></li>
-        <li data-rv><strong>9</strong><span>Vehicles in the showcase</span></li>
-        <li data-rv><strong>4</strong><span>Service centres: Al Rai, Fahaheel, Ahmadi, Jahra</span></li>
-        <li data-rv><strong>7</strong><span>Days a week, open at the Al Rai showroom</span></li>
-      </ul>
+      <a class="scrollcue" href="#cars" aria-label="Scroll to content"><span>Scroll</span><i></i></a>
     </section>
 
     <!-- 4. CAR SHOWCASE -->
-    <section class="showcase" id="cars" aria-labelledby="cars-title">
+    <section class="showcase" id="cars" aria-label="Mitsubishi models">
       <div class="wrap">
-        <div class="sec-head">
-          <div>
-            <p class="eyebrow" data-rv>The range</p>
-            <h2 class="h2" id="cars-title" data-rv>Choose your Mitsubishi</h2>
-          </div>
-          <div class="ctrl" role="group" aria-label="Showcase controls">
-            <span class="ctrl__count" aria-hidden="true"><b id="scIndex">01</b> / <span id="scTotal">9</span></span>
-            <button class="ctrl__btn" id="scPrev" type="button" aria-label="Previous model"><svg class="ic"><use href="#i-arrow-left"/></svg></button>
-            <button class="ctrl__btn" id="scNext" type="button" aria-label="Next model"><svg class="ic"><use href="#i-arrow-right"/></svg></button>
-            <button class="ctrl__btn" id="scPlay" type="button" aria-label="Pause automatic rotation" aria-pressed="true"><svg class="ic ic--pause"><use href="#i-pause"/></svg><svg class="ic ic--play"><use href="#i-play"/></svg></button>
-          </div>
-        </div>
-
         <div class="stage" id="stage" role="region" aria-roledescription="carousel" aria-label="Mitsubishi models" tabindex="0">
           <div class="stage__info">
             <p class="stage__no" id="scNo" aria-hidden="true">01</p>
-            <h3 class="stage__name" id="scName">Destinator M Line</h3>
+            <h3 class="stage__name" id="scName">Destinator</h3>
             <p class="stage__intro" id="scIntro"></p>
             <p class="stage__price" id="scPrice"></p>
             <div class="stage__cta">
-              <a class="btn btn--solid" id="scExplore" href="#featured">Explore details <svg class="ic"><use href="#i-arrow-right"/></svg></a>
               <a class="btn btn--ghost" id="scEnquire" href="#contact">Enquire now</a>
             </div>
           </div>
-          <dl class="stage__specs" id="scSpecs" aria-label="Key specifications"></dl>
+          <div class="stage__specs details" id="details">
+            <div class="details__tabs" role="tablist" aria-label="Vehicle information">
+              <button type="button" role="tab" id="dtTab-design" aria-controls="dtPanel" aria-selected="true" data-dt="design">Design</button>
+              <button type="button" role="tab" id="dtTab-performance" aria-controls="dtPanel" aria-selected="false" tabindex="-1" data-dt="performance">Performance</button>
+              <button type="button" role="tab" id="dtTab-safety" aria-controls="dtPanel" aria-selected="false" tabindex="-1" data-dt="safety">Safety</button>
+              <button type="button" role="tab" id="dtTab-comfort" aria-controls="dtPanel" aria-selected="false" tabindex="-1" data-dt="comfort">Comfort</button>
+            </div>
+            <div class="details__panel" id="dtPanel" role="tabpanel" aria-labelledby="dtTab-design" tabindex="0">
+              <dl class="details__grid" id="dtGrid"></dl>
+            </div>
+          </div>
           <div class="stage__car" id="scCar" aria-live="polite"></div>
-          <div class="stage__floor" aria-hidden="true"></div>
+          <div class="ctrl" role="group" aria-label="Showcase controls">
+          <span class="ctrl__count" aria-hidden="true"><b id="scIndex">01</b> / <span id="scTotal">4</span></span>
+          <button class="ctrl__btn" id="scPrev" type="button" aria-label="Previous model"><svg class="ic"><use href="#i-arrow-left"/></svg></button>
+          <button class="ctrl__btn" id="scNext" type="button" aria-label="Next model"><svg class="ic"><use href="#i-arrow-right"/></svg></button>
+          <button class="ctrl__btn" id="scPlay" type="button" aria-label="Pause automatic rotation" aria-pressed="true"><svg class="ic ic--pause"><use href="#i-pause"/></svg><svg class="ic ic--play"><use href="#i-play"/></svg></button>
+        </div>
           <div class="stage__progress" aria-hidden="true"><i id="scBar"></i></div>
         </div>
 
@@ -155,48 +153,25 @@
           <div class="thumbs" id="thumbs" role="tablist" aria-label="Select a model"></div>
           <button class="thumbs__arrow thumbs__arrow--next" id="thNext" type="button" aria-label="Scroll models right" hidden><svg class="ic"><use href="#i-arrow-right"/></svg></button>
         </div>
+
       </div>
     </section>
 
-    <!-- 5. FEATURED VEHICLE -->
-    <section class="featured" id="featured" aria-labelledby="ft-name">
-      <div class="wrap">
-        <div class="ft__head">
-          <p class="eyebrow ft__eyebrow" data-rv>Featured vehicle</p>
-          <div class="ft__ctrl">
-            <button class="ft__arrow" id="ftPrev" type="button" aria-label="Previous variant"><svg class="ic"><use href="#i-arrow-left"/></svg></button>
-            <button class="ft__arrow" id="ftNext" type="button" aria-label="Next variant"><svg class="ic"><use href="#i-arrow-right"/></svg></button>
-          </div>
-        </div>
-        <div class="ft__card" data-rv>
-          <div class="ft__nav">
-            <div class="ft__title">
-              <span>Mitsubishi</span>
-              <h2 id="ft-name" aria-live="polite">L200 GLX Diesel</h2>
+    <!-- 5. VEHICLE SCROLL SHOWCASE (replaces the former featured vehicle) -->
+    <section class="story" id="story" aria-labelledby="story-title">
+      <div class="story__track" id="storyTrack">
+        <div class="story__sticky">
+          <div class="story__bg" id="stBg" aria-hidden="true"></div>
+          <div class="story__shade" aria-hidden="true"></div>
+          <div class="wrap story__grid">
+            <div class="story__head">
+              <h2 class="story__h" id="story-title">Mitsubishi in <span class="accent">Libya</span></h2>
+              <div class="story__prog">
+                <span class="story__count" aria-hidden="true"><b id="stNow">01</b>/04</span>
+                <span class="story__ticks" id="stTicks"></span>
+              </div>
             </div>
-            <div class="ft__tabs" role="tablist" aria-label="L200 GLX Diesel highlights">
-              <button type="button" role="tab" aria-selected="true" data-ft="highlights">Highlights</button>
-              <button type="button" role="tab" aria-selected="false" data-ft="design">Design</button>
-              <button type="button" role="tab" aria-selected="false" data-ft="performance">Performance</button>
-              <button type="button" role="tab" aria-selected="false" data-ft="safety">Safety</button>
-              <button type="button" role="tab" aria-selected="false" data-ft="comfort">Comfort</button>
-            </div>
-            <a class="ft__btn" href="#contact" data-vehicle="l200-glx-diesel">Enquire now</a>
-          </div>
-          <div class="ft__stage">
-            <span class="ft__outline" aria-hidden="true">L200</span>
-            <div class="ft__rig" id="ftRig"><div class="ft__body" id="ftBody"><img class="ft__car" id="ftCar" src="assets/cars/l200-glx-diesel.webp" alt="Mitsubishi L200 GLX Diesel, side view" width="1000" height="426"></div></div>          </div>
-          <div class="ft__bar">
-            <dl class="ft__stats" id="ftStats" aria-live="polite">
-              <div><dt>Engine</dt><dd>2442 cc</dd></div>
-              <div><dt>Power</dt><dd>147 hp</dd></div>
-              <div><dt>Torque</dt><dd>330 Nm</dd></div>
-            </dl>
-            <ul class="ft__thumbs" id="ftThumbs" aria-label="Choose L200 variant">
-              <li><button type="button" data-slide="0" aria-label="L200 GLX Diesel" aria-pressed="true"><img src="assets/cars/l200-glx-diesel.webp" alt="" width="110" height="47" loading="lazy"></button></li>
-              <li><button type="button" data-slide="1" aria-label="L200 GL Single Cabin" aria-pressed="false"><img src="assets/cars/l200-gl-single.webp" alt="" width="110" height="43" loading="lazy"></button></li>
-              <li><button type="button" data-slide="2" aria-label="L200 2WD GL" aria-pressed="false"><img src="assets/cars/l200-2wd-gl.webp" alt="" width="110" height="36" loading="lazy"></button></li>
-            </ul>
+            <div class="story__copy" id="stCopy"></div>
           </div>
         </div>
       </div>
@@ -205,20 +180,21 @@
     <!-- 6. ABOUT -->
     <section class="about" id="about" aria-labelledby="about-title">
       <div class="wrap about__inner">
-        <p class="eyebrow" data-rv>About Us &middot; Distributors over 25 years</p>
-        <h2 class="about__lead" id="about-title" data-scrub>Middle East Group is one of Libya&rsquo;s leading automobile distributors today, became associated with Mitsubishi Motors Corporation for more than 25 years.</h2>
-        <div class="about__row">
-          <div class="about__col">
-            <div class="about__text">
-              <p data-rv>Middle East Group offers an unbeaten choice of Mitsubishi passenger cars, SUVs, commercial vehicles.</p>
-              <p data-rv>We are driven by professionalism and quality, offering the highest standards of customer service. This has positioned us as a top Mitsubishi dealer in the North African region performing impressively in individual and fleet sales.</p>
-              <p data-rv>Middle East Group has been synonymous with the auto market in Libya. We fully support the automotive market through a growing network of hi-tech service centers managed by a qualified and experienced team supported with extensive Mitsubishi spare parts.</p>
-              <p data-rv>Much of the Middle East Group&rsquo;s growth is through our strict adherence to excellence delivered by highly trained staff and continuous investment in showrooms and service facilities guaranteeing customer satisfaction and long-term relationship.</p>
-            </div>
+        <div class="about__top">
+          <div class="about__copy">
+            <p class="eyebrow" data-rv>About Us &middot; Distributors over 25 years</p>
+            <h2 class="about__lead" id="about-title" data-scrub>Middle East Group is one of Libya&rsquo;s leading automobile distributors today, became associated with Mitsubishi Motors Corporation for more than 25 years.</h2>
+            <p class="about__short" data-rv>Middle East Group offers an unbeaten choice of Mitsubishi passenger cars, SUVs and commercial vehicles, backed by professional customer service and a growing network of hi-tech service centres.</p>
             <a class="btn btn--line" href="#contact" data-rv>Connect Us <svg class="ic"><use href="#i-arrow-right"/></svg></a>
           </div>
           <figure class="about__fig" id="aboutFig"><img src="assets/img/about-bg.webp" alt="Mitsubishi pickup driving through a forest trail" width="1400" height="875" loading="lazy"></figure>
         </div>
+        <ul class="trust__list about__stats">
+          <li data-rv><strong>25</strong><span>Years creating innovative vehicles</span></li>
+          <li data-rv><strong>11</strong><span>Vehicles in the showcase</span></li>
+          <li data-rv><strong>4</strong><span>Service centres: Al Rai, Fahaheel, Ahmadi, Jahra</span></li>
+          <li data-rv><strong>7</strong><span>Days a week, open at the Al Rai showroom</span></li>
+        </ul>
       </div>
     </section>
 
@@ -265,7 +241,6 @@
           <p class="lede" data-rv>Whether there&rsquo;s just one employee in your company or 500, there is something in the range to suit. Our experienced in-house Fleet Team helps you create the right fleet for your business.</p>
           <div class="fleet__cta" data-rv>
             <a class="btn btn--solid" href="https://www.mitsubishi-motors.com.kw/en/buy/fleet" target="_blank" rel="noopener">Explore fleet solutions <svg class="ic"><use href="#i-arrow-up-right"/></svg></a>
-            <a class="btn btn--line" href="#contact" data-fleet-enquiry>Request a fleet enquiry</a>
           </div>
         </div>
       </div>
@@ -372,25 +347,18 @@
       </div>
     </section>
 
-    <!-- 11. CONTACT -->
+    <!-- 11. CONTACT + FOOTER (one compact screen) -->
     <section class="contact" id="contact" aria-labelledby="contact-title">
       <div class="wrap contact__grid">
         <div class="contact__info">
           <p class="eyebrow" data-rv>Contact us</p>
-          <h2 class="h2 h2--xl" id="contact-title" data-rv>Let&rsquo;s talk cars.</h2>
+          <h2 class="h2" id="contact-title" data-rv>Let&rsquo;s talk cars.</h2>
           <a class="contact__phone" href="#" data-tel data-rv><span data-tel-text></span><small>Libya office</small></a>
           <ul class="contact__list" data-rv>
             <li><svg class="ic"><use href="#i-whatsapp"/></svg><a href="#" data-wa target="_blank" rel="noopener">Chat on WhatsApp</a></li>
-            <li><svg class="ic"><use href="#i-map-pin"/></svg><a href="#" data-maps target="_blank" rel="noopener"><address data-address></address></a></li>
-            <li><svg class="ic"><use href="#i-mail"/></svg><a href="#" data-mail hidden></a><span data-mail-fallback>Use the enquiry form, or WhatsApp and phone above.</span></li>
+            <li hidden><svg class="ic"><use href="#i-mail"/></svg><a href="#" data-mail hidden></a><span data-mail-fallback></span></li>
           </ul>
-          <div class="contact__cols" data-rv data-contact-offices></div>
-          <ul class="social" aria-label="Social media" data-rv>
-            <li><a href="#" data-social="facebook" target="_blank" rel="noopener" aria-label="Facebook"><svg class="ic"><use href="#i-facebook"/></svg></a></li>
-            <li><a href="#" data-social="instagram" target="_blank" rel="noopener" aria-label="Instagram"><svg class="ic"><use href="#i-instagram"/></svg></a></li>
-            <li><a href="#" data-social="x" target="_blank" rel="noopener" aria-label="X (Twitter)"><svg class="ic"><use href="#i-x-social"/></svg></a></li>
-            <li><a href="#" data-social="youtube" target="_blank" rel="noopener" aria-label="YouTube"><svg class="ic"><use href="#i-youtube"/></svg></a></li>
-          </ul>
+          <div class="footer__offices" data-rv data-footer-offices></div>
         </div>
 
         <form class="form" id="enquiry" novalidate data-rv>
@@ -414,18 +382,20 @@
             <label for="f-vehicle">Vehicle of interest</label>
             <select id="f-vehicle" name="vehicle"></select>
           </div>
-          <div class="field">
+          <div class="field field--wide">
             <label for="f-msg">Message</label>
-            <textarea id="f-msg" name="message" rows="3"></textarea>
+            <textarea id="f-msg" name="message" rows="2"></textarea>
           </div>
-          <div class="field field--check">
+          <div class="field field--check field--wide">
             <input id="f-consent" name="consent" type="checkbox" required aria-describedby="e-consent">
             <label for="f-consent">I agree to the use of my personal data for this enquiry and have read the <a href="https://www.mitsubishi-motors.com.kw/en/legal/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a>.</label>
             <span class="err" id="e-consent" role="alert"></span>
           </div>
           <input type="text" name="website" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
-          <button class="btn btn--solid btn--block" type="submit"><span>Submit enquiry</span> <svg class="ic"><use href="#i-send"/></svg></button>
-          <p class="form__status" id="formStatus" role="status" aria-live="polite"></p>
+          <div class="form__submit field--wide">
+            <button class="btn btn--solid btn--block" type="submit"><span>Submit enquiry</span> <svg class="ic"><use href="#i-send"/></svg></button>
+            <p class="form__status" id="formStatus" role="status" aria-live="polite"></p>
+          </div>
         </form>
       </div>
     </section>
@@ -434,46 +404,47 @@
   <!-- 12. FOOTER -->
   <footer class="footer">
     <div class="wrap">
-      <div class="footer__top">
-        <div class="footer__brand"><a class="footer__logo" href="#top" aria-label="Mitsubishi Motors Libya"><img src="assets/img/logo.svg" alt="Mitsubishi Motors" width="133" height="92" loading="lazy"></a><a class="brand-partner" href="#top" aria-label="Middle East Group"><img src="assets/img/middle-east-logo.png" alt="Middle East Group" width="345" height="186" loading="lazy"></a></div>
-        <nav class="footer__cols" aria-label="Footer">
-          <div>
-            <h3>Company</h3>
+      <div class="footer__main">
+        <div class="footer__id">
+          <div class="footer__brand"><a class="footer__logo" href="#top" aria-label="Mitsubishi Motors Libya"><img src="assets/img/logo.svg" alt="Mitsubishi Motors" width="133" height="92" loading="lazy"></a><a class="brand-partner" href="#top" aria-label="Middle East Group"><img src="assets/img/middle-east-logo.png" alt="Middle East Group" width="345" height="186" loading="lazy"></a></div>
+          <ul class="footer__social" aria-label="Social media">
+            <li><a href="#" data-social="facebook" target="_blank" rel="noopener" aria-label="Facebook"><svg class="ic"><use href="#i-facebook"/></svg></a></li>
+            <li><a href="#" data-social="instagram" target="_blank" rel="noopener" aria-label="Instagram"><svg class="ic"><use href="#i-instagram"/></svg></a></li>
+            <li><a href="#" data-social="x" target="_blank" rel="noopener" aria-label="X (Twitter)"><svg class="ic"><use href="#i-x-social"/></svg></a></li>
+            <li><a href="#" data-social="youtube" target="_blank" rel="noopener" aria-label="YouTube"><svg class="ic"><use href="#i-youtube"/></svg></a></li>
+          </ul>
+        </div>
+        <nav class="footer__grid" aria-label="Footer">
+          <div class="footer__col">
+            <h3>Explore</h3>
             <ul>
-              <li><a href="#about">About Us</a></li>
+              <li><a href="#cars">Cars</a></li>
               <li><a href="#parts">Parts</a></li>
               <li><a href="#fleet">Fleet</a></li>
               <li><a href="#media">Media</a></li>
-              <li><a href="#contact">Contact Us</a></li>
-              <li><a href="https://www.mitsubishi-motors.com.kw/en/company/careers" target="_blank" rel="noopener">Careers</a></li>
             </ul>
           </div>
-          <div>
+          <div class="footer__col">
+            <h3>Company</h3>
+            <ul>
+              <li><a href="#about">About Us</a></li>
+              <li><a href="https://www.mitsubishi-motors.com.kw/en/company/careers" target="_blank" rel="noopener">Careers</a></li>
+              <li><a href="#contact">Contact Us</a></li>
+            </ul>
+          </div>
+          <div class="footer__col">
             <h3>Owners</h3>
             <ul>
               <li><a href="https://www.mitsubishi-motors.com.kw/en/owners/book-a-service" target="_blank" rel="noopener">Book a service</a></li>
-              <li><a href="https://www.mitsubishi-motors.com.kw/en/owners/warranty" target="_blank" rel="noopener">Warranty</a></li>
               <li><a href="https://www.mitsubishi-motors.com.kw/en/test-drive" target="_blank" rel="noopener">Book a test drive</a></li>
+              <li><a href="https://www.mitsubishi-motors.com.kw/en/owners/warranty" target="_blank" rel="noopener">Warranty</a></li>
               <li><a href="https://www.mitsubishi-motors.com.kw/en/dealer-locator" target="_blank" rel="noopener">Find a dealer</a></li>
-              <li><a href="https://www.mitsubishi-motors.com.kw/en/download-a-brochure" target="_blank" rel="noopener">Download a brochure</a></li>
-            </ul>
-          </div>
-          <div>
-            <h3>Reach us</h3>
-            <ul>
-              <li class="footer__offices" data-footer-offices></li>
-              <li class="footer__social">
-                <a href="#" data-social="facebook" target="_blank" rel="noopener" aria-label="Facebook"><svg class="ic"><use href="#i-facebook"/></svg></a>
-                <a href="#" data-social="instagram" target="_blank" rel="noopener" aria-label="Instagram"><svg class="ic"><use href="#i-instagram"/></svg></a>
-                <a href="#" data-social="x" target="_blank" rel="noopener" aria-label="X (Twitter)"><svg class="ic"><use href="#i-x-social"/></svg></a>
-                <a href="#" data-social="youtube" target="_blank" rel="noopener" aria-label="YouTube"><svg class="ic"><use href="#i-youtube"/></svg></a>
-              </li>
             </ul>
           </div>
         </nav>
       </div>
       <div class="footer__base">
-        <p>&copy; Mitsubishi Motors Corporation. All rights reserved.</p>
+        <p>&copy; Mitsubishi Motors Corporation 2026. All rights reserved.</p>
         <ul>
           <li><a href="https://www.mitsubishi-motors.com.kw/en/legal/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a></li>
           <li><a href="https://www.mitsubishi-motors.com.kw/en/legal/terms-and-conditions" target="_blank" rel="noopener">Terms and Conditions</a></li>

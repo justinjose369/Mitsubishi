@@ -36,7 +36,7 @@
   if (hoursEl) hoursEl.innerHTML = C.hours.map(([d, t]) => '<div><dt>' + d + '</dt><dd>' + t + '</dd></div>').join('');
   const svcEl = $('[data-svc]');
   if (svcEl) svcEl.innerHTML = C.serviceCentres.map(s => '<li><span>' + s.name + '</span><a href="tel:' + s.tel + '">' + s.display + '</a></li>').join('');
-  if (C.enquiry.email) { const m = $('[data-mail]'); m.href = 'mailto:' + C.enquiry.email; m.textContent = C.enquiry.email; m.hidden = false; $('[data-mail-fallback]').hidden = true; }
+  if (C.enquiry.email) { const m = $('[data-mail]'); m.href = 'mailto:' + C.enquiry.email; m.textContent = C.enquiry.email; m.hidden = false; m.closest('li').hidden = false; $('[data-mail-fallback]').hidden = true; }
 
   const header = $('#header'), dock = $('#dock');
   let ctx, autoTween, destroyed = false;
@@ -75,7 +75,7 @@
 
   /* ------------------------------------------------------------------ showcase */
   const stage = $('#stage'), carBox = $('#scCar'), thumbs = $('#thumbs'), bar = $('#scBar');
-  const el = { no: $('#scNo'), name: $('#scName'), intro: $('#scIntro'), price: $('#scPrice'), specs: $('#scSpecs'), cta: $('.stage__cta'), idx: $('#scIndex'), explore: $('#scExplore'), enq: $('#scEnquire') };
+  const el = { no: $('#scNo'), name: $('#scName'), intro: $('#scIntro'), price: $('#scPrice'), specs: $('#details'), cta: $('.stage__cta'), idx: $('#scIndex'), enq: $('#scEnquire') };
   const n = M.length;
   const state = { idx: 0, busy: false, pending: null, playing: !reduceMQ.matches, inView: false, hover: false, focus: false };
   const carCache = new Map();
@@ -89,6 +89,7 @@
     const inner = document.createElement('div'); inner.className = 'car__inner';
     const img = new Image(); img.className = 'car__img'; img.src = m.img; img.alt = m.name; img.decoding = 'async'; img.width = 1000; img.height = Math.round(1000 * m.ar);
     inner.appendChild(img);
+    if (m.lift) inner.style.transform = 'translateY(' + (-m.lift / (m.scale * m.ar) * 100).toFixed(2) + '%)'; // raise cars whose tyres sit lower in their image so every car runs on the same ground line
     const [fx, rx, cyF, r, cyR] = m.wheels, s = 2 * r * WHEEL_K, hr = m.ar, wheels = [];
     [[fx, cyF], [rx, cyR == null ? cyF : cyR]].forEach(([cx, cy]) => {
       const w = document.createElement('i'); w.className = 'wheel'; w.setAttribute('aria-hidden', 'true');
@@ -109,9 +110,8 @@
 
   function fillInfo(m, i) {
     el.no.textContent = pad(i + 1); el.name.textContent = m.name; el.intro.textContent = m.intro; el.price.textContent = m.price;
-    el.specs.innerHTML = m.specs.slice(0, 3).map(([k, v]) => '<div><dt>' + k + '</dt><dd>' + v + '</dd></div>').join('');
     el.idx.textContent = pad(i + 1);
-    el.enq.dataset.vehicle = m.id;
+    el.enq.dataset.vehicle = m.id; dtShow(m);
   }
   /* Trust strip: count up 0 -> value (e.g. "100+") once when scrolled into view */
   (function counters() {
@@ -133,38 +133,149 @@
     items.forEach(e => io.observe(e.parentElement));
   })();
 
-  /* Featured vehicle: 3 L200 slides + highlight tabs */
-  (function featured() {
-    const car = $('#ftCar'), stats = $('#ftStats'); if (!car) return;
-    const SLIDES = [
-      { id: 'l200-glx-diesel', body: 'Double Cab', fuel: 'Diesel', eng: [['Engine', '2442 cc'], ['Power', '147 hp'], ['Torque', '330 Nm']] },
-      { id: 'l200-gl-single', body: 'Single Cab', fuel: 'Diesel', eng: [['Engine', '2442 cc'], ['Power', '147 hp'], ['Torque', '330 Nm']] },
-      { id: 'l200-2wd-gl', body: 'Double Cab', fuel: 'Diesel', drive: '2WD', eng: [['Engine', '2442 cc'], ['Power', '147 hp'], ['Torque', '330 Nm']] }
-    ].map(s => Object.assign({ m: M.find(v => v.id === s.id) }, s));
-    const tabsD = (s) => ({
-      highlights: s.eng,
-      design: [['Body', s.body], ['Wheels', 'Alloy'], ['Tail lamps', 'LED']],
-      performance: [['Drive', s.drive || '4WD'], ['Fuel', s.fuel], [s.eng[2][0], s.eng[2][1]]],
-      safety: [['Braking', 'ABS + BA'], ['Stability', 'ESP + TCS'], ['Assist', 'Hill start']],
-      comfort: [['Climate', 'Auto A/C'], ['Infotainment', 'Touchscreen'], ['Access', 'Keyless']]
+  /* ------------------------------------------------------------------ explore details (tabs under the showcase) */
+  const dt = { box: $('#details'), grid: $('#dtGrid'), panel: $('#dtPanel'), tabs: $$('[data-dt]') };
+  let dtTab = 'design', dtTimer, dtReady = false;
+  function dtFill(m) {
+    const d = m.details[dtTab];
+    dt.grid.innerHTML = d.rows.map(([k, v]) => '<div><dt>' + k + '</dt><dd' + (v === 'On request' ? ' class="is-na"' : '') + '>' + v + '</dd></div>').join('');
+  }
+  // smooth swap: fade the content out, fill it, fade back in (CSS handles the motion; instant when reduced motion)
+  function dtShow(m) {
+    clearTimeout(dtTimer);
+    if (!dtReady || reduceMQ.matches) { dtFill(m); dtReady = true; return; }
+    dt.box.classList.add('is-swap');
+    dtTimer = setTimeout(() => { dtFill(m); dt.box.classList.remove('is-swap'); }, 240);
+  }
+  function initDetails() {
+    const select = t => {
+      dtTab = t.dataset.dt;
+      dt.tabs.forEach(x => { const sel = x === t; x.setAttribute('aria-selected', String(sel)); x.tabIndex = sel ? 0 : -1; });
+      dt.panel.setAttribute('aria-labelledby', t.id);
+      dtShow(M[state.idx]);
+    };
+    dt.tabs.forEach(t => on(t, 'click', () => select(t)));
+    on(dt.tabs[0].parentElement, 'keydown', e => {
+      const i = dt.tabs.indexOf(document.activeElement); if (i < 0) return;
+      const k = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : e.key === 'Home' ? -i : e.key === 'End' ? dt.tabs.length - 1 - i : 0; if (!k) return;
+      e.preventDefault(); const t = dt.tabs[(i + k + dt.tabs.length) % dt.tabs.length]; t.focus(); select(t);
     });
-    const tabs = $$('[data-ft]'), thumbs = $$('#ftThumbs [data-slide]'), name = $('#ft-name');
-    let cur = 0, tab = 'highlights';
-    const fill = () => { stats.innerHTML = tabsD(SLIDES[cur])[tab].map(([k, v]) => '<div><dt>' + k + '</dt><dd>' + v + '</dd></div>').join(''); };
-    function show(i) {
-      cur = (i + SLIDES.length) % SLIDES.length; const m = SLIDES[cur].m;
-      car.src = m.img; car.alt = 'Mitsubishi ' + m.name + ', side view'; car.height = Math.round(1000 * m.ar);
-      name.textContent = m.name; fill();
-      thumbs.forEach((b, j) => b.setAttribute('aria-pressed', String(j === cur)));
-      $('.ft__btn').dataset.vehicle = m.id;
+  }
+
+  /* ------------------------------------------------------------------ cars mega menu (desktop) + mobile sub list */
+  function initMega() {
+    const mega = $('#mega'), navCars = $('#navCars'), link = $('a', navCars), desk = matchMedia('(min-width: 1024px)');
+    $('#megaGrid').innerHTML = M.map((m, i) =>
+      '<a class="mcard" href="#cars" data-mega-i="' + i + '">' +
+      '<span class="mcard__img"><img src="' + m.img + '" alt="" width="520" height="' + Math.round(520 * m.ar) + '" loading="lazy" decoding="async"></span>' +
+      '<b>' + m.name + '</b><span class="mcard__cta">Explore vehicle <svg class="ic"><use href="#i-arrow-right"/></svg></span></a>').join('');
+    $('#menuCars').innerHTML = M.map((m, i) => '<li><a href="#cars" data-mega-i="' + i + '">' + m.name + '</a></li>').join('');
+    let t;
+    const open = () => { if (!desk.matches) return; clearTimeout(t); header.classList.add('mega-open'); link.setAttribute('aria-expanded', 'true'); };
+    const close = (delay = 0) => { clearTimeout(t); t = setTimeout(() => { header.classList.remove('mega-open'); link.setAttribute('aria-expanded', 'false'); }, delay); };
+    [navCars, mega].forEach(e => { on(e, 'mouseenter', open); on(e, 'mouseleave', () => close(180)); });
+    on(navCars, 'focusin', open);
+    on(header, 'focusout', e => { if (!e.relatedTarget || !(navCars.contains(e.relatedTarget) || mega.contains(e.relatedTarget))) close(0); });
+    on(link, 'keydown', e => { if (e.key === 'ArrowDown') { e.preventDefault(); open(); $('.mcard', mega).focus(); } });
+    on(document, 'keydown', e => { if (e.key === 'Escape' && header.classList.contains('mega-open')) { close(0); link.focus(); } });
+    on(window, 'scroll', () => { if (header.classList.contains('mega-open')) close(0); }, { passive: true });
+    on(link, 'click', () => close(0));
+    on($('[data-mega-close]', mega), 'click', () => close(0));
+    // any vehicle link (mega menu, mobile menu, scroll showcase) selects that vehicle in the showcase and scrolls to it
+    on(document, 'click', e => {
+      const a = e.target.closest('[data-mega-i]'); if (!a) return;
+      e.preventDefault(); close(0);
+      go(+a.dataset.megaI, 0, true);
+      $('#cars').scrollIntoView({ behavior: reduceMQ.matches ? 'auto' : 'smooth', block: 'start' });
+    });
+  }
+
+  /* ------------------------------------------------------------------ "Mitsubishi in Libya": pinned four-vehicle scroll showcase
+   * The track is 400svh tall and the stage inside it is sticky, so the section stays pinned while the page scrolls through it.
+   * Scroll progress p (0..1) picks the active vehicle and a local value q (0..1) that drives the slow drift of its photograph.
+   * Photographs are placed so the vehicle always sits clear of the text (layout() below). Only transform and opacity animate. */
+  function initStory() {
+    const track = $('#storyTrack'), root = $('#story'), stage = $('.story__sticky'), bg = $('#stBg'), copy = $('#stCopy'), ticks = $('#stTicks'), now = $('#stNow'); if (!track) return;
+    const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+    bg.innerHTML = M.map((m, i) => {
+      const p = m.story.photo;
+      return '<div class="story__bgl" data-s="' + (i ? 'next' : 'now') + '"><img src="' + p.src + '.webp" srcset="' + p.src + '-960.webp 1000w, ' + p.src + '.webp ' + (p.big || 2400) + 'w" sizes="100vw" alt="" width="' + Math.round(1000 * p.ar) + '" height="1000" decoding="async"' + (i ? ' loading="lazy"' : '') + '></div>';
+    }).join('');
+    copy.innerHTML = M.map((m, i) => {
+      const s = m.story, sp = s.spec, last = i === n - 1;
+      const words = s.name.split(' ').map((w, k) => '<span class="w"><span style="--w:' + k + '">' + esc(w) + '</span></span>').join(' ');
+      return '<article class="story__item" data-s="' + (i ? 'next' : 'now') + '"' + (i ? ' inert' : '') + '>' +
+        '<p class="story__kind">' + esc(s.kind) + '</p>' +
+        '<h3 class="story__name" aria-label="' + esc(s.name) + '">' + words + '</h3>' +
+        '<p class="story__spec" aria-label="' + sp.value + ' ' + esc(sp.unit) + '. ' + esc(sp.label) + '"><span class="story__num" data-to="' + sp.value + '" aria-hidden="true">' + sp.value + '</span><span class="story__unit" aria-hidden="true">' + esc(sp.unit) + '</span></p>' +
+        '<p class="story__speclabel" aria-hidden="true">' + esc(sp.label) + '</p>' +
+        '<div class="story__cta">' + (last
+          ? '<a class="btn btn--solid" href="#cars">Explore all vehicles <svg class="ic"><use href="#i-arrow-right"/></svg></a>'
+          : '<a class="btn btn--line" href="#cars" data-mega-i="' + i + '">Explore vehicle <svg class="ic"><use href="#i-arrow-right"/></svg></a>') + '</div></article>';
+    }).join('');
+    ticks.innerHTML = M.map((m, i) => '<button type="button" data-i="' + i + '" aria-label="Show ' + esc(m.story.name) + ' (' + pad(i + 1) + ' of ' + pad(n) + ')"' + (i ? '' : ' aria-current="true"') + '></button>').join('');
+    const layers = $$('.story__bgl', bg), items = $$('.story__item', copy), nums = $$('.story__num', copy), tk = $$('button', ticks);
+
+    // size and place each photograph so it covers the stage and the vehicle lands in the clear area (right on desktop, upper middle on mobile)
+    function layout() {
+      const w = stage.clientWidth, h = stage.clientHeight, wide = w >= 1024;
+      layers.forEach((l, i) => {
+        const p = M[i].story.photo, img = l.firstElementChild;
+        const ih = Math.max(wide ? h * 1.05 : 0, (w + 140) / p.ar, (w * (wide ? .5 : .85) / p.cw) / p.ar), iw = ih * p.ar; // car ~half the screen wide on desktop, most of it on mobile
+        const tx = wide ? w * .66 : w * .5, ty = wide ? h * .6 : h * .34;
+        const bx = Math.min(-70, Math.max(w - iw + 70, tx - p.fx * iw)), by = (wide ? Math.min(0, Math.max(h - ih, ty - p.fy * ih)) : 0) + (p.dy || 0) * h; // dy: extra nudge down, as a share of the stage height
+        img.style.maskImage = img.style.webkitMaskImage = p.dy ? 'linear-gradient(180deg, transparent 0, #000 16%)' : '';
+        img.style.width = iw + 'px'; img.style.height = ih + 'px';
+        img.style.setProperty('--bx', bx.toFixed(1) + 'px'); img.style.setProperty('--by', by.toFixed(1) + 'px');
+      });
     }
-    tabs.forEach(t => t.addEventListener('click', () => { tab = t.dataset.ft; tabs.forEach(x => x.setAttribute('aria-selected', String(x === t))); fill(); }));
-    thumbs.forEach(b => b.addEventListener('click', () => show(+b.dataset.slide)));
-    $('#ftPrev').addEventListener('click', () => show(cur - 1));
-    $('#ftNext').addEventListener('click', () => show(cur + 1));
-    show(0);
-  })();
-  function fillFeatured() { /* Featured vehicle is fixed to the L200 GLX Diesel (static markup) */ }
+
+    // the key figure counts up from 0 each time its vehicle comes into focus
+    const counters = new Map();
+    const countUp = el => {
+      const to = +el.dataset.to; cancelAnimationFrame(counters.get(el));
+      if (reduceMQ.matches) { el.textContent = to; return; }
+      const t0 = performance.now(), dur = 1300;
+      el.textContent = '0';
+      (function tick(t) {
+        const k = Math.min(1, (t - t0) / dur);
+        el.textContent = Math.round(to * (1 - Math.pow(1 - k, 3)));
+        if (k < 1) counters.set(el, requestAnimationFrame(tick));
+      })(t0);
+    };
+
+    let cur = 0, vis = false, raf = false;
+    const setActive = i => {
+      cur = i; now.textContent = pad(i + 1);
+      const st = j => j === i ? 'now' : j < i ? 'past' : 'next';
+      layers.forEach((f, j) => { f.dataset.s = st(j); if (j !== i) f.firstElementChild.style.removeProperty('--q'); });
+      items.forEach((it, j) => { it.dataset.s = st(j); it.inert = j !== i; });
+      tk.forEach((b, j) => { if (j === i) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current'); });
+      countUp(nums[i]);
+    };
+    const update = () => {
+      raf = false;
+      const r = track.getBoundingClientRect(), span = Math.max(1, r.height - innerHeight);
+      const p = Math.min(1, Math.max(0, -r.top / span)), x = Math.min(n - 1e-6, p * n), i = Math.floor(x);
+      if (i !== cur) setActive(i);
+      layers[i].firstElementChild.style.setProperty('--q', (x - i).toFixed(3));   // horizontal drift + slow scale (parallax depth)
+    };
+    const req = () => { if (vis && !raf) { raf = true; requestAnimationFrame(update); } };
+    on(window, 'scroll', req, { passive: true });
+    on(window, 'resize', () => { layout(); req(); });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(es => { vis = es[0].isIntersecting; req(); }, { rootMargin: '10% 0px' }).observe(track);
+      // heading: fade-up once the section is reached
+      new IntersectionObserver((es, io) => { if (es[0].isIntersecting) { root.classList.add('is-in'); countUp(nums[cur]); io.disconnect(); } }, { threshold: 0, rootMargin: '0px 0px -25% 0px' }).observe(root);
+    } else { vis = true; root.classList.add('is-in'); }
+    on(ticks, 'click', e => {
+      const b = e.target.closest('button'); if (!b) return;
+      const span = track.offsetHeight - innerHeight, top = track.getBoundingClientRect().top + scrollY;
+      scrollTo({ top: top + span * ((+b.dataset.i + .5) / n), behavior: reduceMQ.matches ? 'auto' : 'smooth' });
+    });
+    layout(); update();
+  }
+
   function setThumb(i) {
     $$('.thumb', thumbs).forEach((b, j) => { b.setAttribute('aria-selected', String(j === i)); b.tabIndex = j === i ? 0 : -1; });
     const b = thumbs.children[i];
@@ -182,19 +293,18 @@
     killTimer();
 
     if (!animate()) {
-      carBox.replaceChildren(to.el); fillInfo(m, next); fillFeatured(m); return afterGo();
+      carBox.replaceChildren(to.el); fillInfo(m, next); return afterGo();
     }
     state.busy = true;
     const dist = carBox.clientWidth * .6;
     carBox.appendChild(to.el);
     gsap.set(to.el, { x: dir * dist, opacity: 0 });
     const infoEls = [el.no, el.name, el.intro, el.price, el.cta, el.specs];
-    const featEls = [];
     const tl = gsap.timeline({ onComplete: () => { from.el.remove(); state.busy = false; afterGo(); } });
     tl.to(from.el, { x: -dir * dist * .7, opacity: 0, duration: .8, ease: 'power2.in', onUpdate: spinner(from) }, 0)
       .to(to.el, { x: 0, opacity: 1, duration: 1.5, ease: 'power3.out', onUpdate: spinner(to) }, .3)
-      .to(infoEls.concat(featEls), { opacity: 0, y: -14, duration: .28, ease: 'power2.in', stagger: .025, overwrite: 'auto',
-        onComplete: () => { fillInfo(m, next); fillFeatured(m); gsap.fromTo(infoEls.concat(featEls), { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: .9, ease: 'power3.out', stagger: .06, overwrite: 'auto' }); } }, 0);
+      .to(infoEls, { opacity: 0, y: -14, duration: .28, ease: 'power2.in', stagger: .025, overwrite: 'auto',
+        onComplete: () => { fillInfo(m, next); gsap.fromTo(infoEls, { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: .9, ease: 'power3.out', stagger: .06, overwrite: 'auto' }); } }, 0);
   }
   function afterGo() {
     if (state.pending) { const [nx, d] = state.pending; state.pending = null; return go(nx, d); }
@@ -226,11 +336,11 @@
     // thumbnails
     thumbs.innerHTML = M.map((m, i) =>
       '<button class="thumb" role="tab" type="button" aria-selected="' + (i === 0) + '" tabindex="' + (i === 0 ? 0 : -1) + '" data-i="' + i + '">' +
-      '<img src="' + m.img + '" alt="" width="214" height="' + Math.round(214 * m.ar) + '" loading="lazy" decoding="async"><b>' + m.name + '</b><small>' + m.price + '</small></button>').join('');
+      '<img src="' + m.img + '" alt="" width="420" height="' + Math.round(420 * m.ar) + '" loading="lazy" decoding="async"><b>' + m.name + '</b><small>' + m.price + '</small></button>').join('');
     // vehicle select in form
     $('#f-vehicle').innerHTML = '<option value="">Select a vehicle</option>' + M.map(m => '<option value="' + m.name + '" data-id="' + m.id + '">' + m.name + '</option>').join('') + '<option value="Not sure yet">Not sure yet</option>';
 
-    const first = buildCar(M[0]); carBox.appendChild(first.el); fillInfo(M[0], 0); fillFeatured(M[0]);
+    const first = buildCar(M[0]); carBox.appendChild(first.el); fillInfo(M[0], 0);
     if (hasGSAP) gsap.set(first.el, { x: 0 });
 
     on(thumbs, 'click', e => { const b = e.target.closest('.thumb'); if (b) go(+b.dataset.i, 0, true); });
@@ -364,6 +474,119 @@
     });
   }
 
+  /* ------------------------------------------------------------------ one-scroll snapping (desktop)
+   * Every full-screen section is a stop; the pinned "Mitsubishi in Libya" showcase has one stop per vehicle and the fleet one per row.
+   * One wheel flick / swipe / key press moves exactly one stop with a GSAP tween. "Why Mitsubishi" (#why) scrolls freely. */
+  function initSnap() {
+    const root = document.documentElement, footer = $('.footer'), mq = matchMedia('(min-width: 1024px) and (min-height: 600px)');
+    const TOL = 4, GAP = 80;
+    let points = [], free = { a: 0, b: 0 }, anim = null, lastEv = 0, lastAbs = 0, tStart = null, max = 0;
+    const top = el => el.getBoundingClientRect().top + scrollY;
+    const near = (a, b) => Math.abs(a - b) <= TOL;
+
+    function measure() {
+      root.classList.toggle('snap', mq.matches);
+      if (!mq.matches) return;
+      root.style.setProperty('--footer-h', footer.offsetHeight + 'px');
+      const vh = innerHeight; max = Math.max(0, root.scrollHeight - vh);
+      const tk = $('#storyTrack'), tt = top(tk), span = tk.offsetHeight - vh;
+      const pts = [0, top($('#cars'))];
+      for (let i = 0; i < n; i++) pts.push(tt + span * (i + .5) / n);
+      free = { a: top($('#why')), b: top($('#fleet')) };
+      pts.push(top($('#about')), free.a, free.b);
+      $$('.frow__text').forEach(r => pts.push(top(r)));
+      pts.push(top($('#parts')), top($('#media')), max);
+      points = [...new Set(pts.map(p => Math.round(Math.min(max, Math.max(0, p)))))].sort((x, y) => x - y);
+      free.a = Math.round(Math.min(free.a, max)); free.b = Math.round(Math.min(free.b, max));
+    }
+
+    function goTo(y) {
+      y = Math.round(Math.min(max, Math.max(0, y)));
+      if (anim) anim.kill();
+      const o = { y: scrollY }, dist = Math.abs(y - o.y);
+      if (reduceMQ.matches || !dist) { scrollTo(0, y); anim = null; return; }
+      anim = gsap.to(o, { y, duration: Math.min(1.15, .55 + dist / innerHeight * .28), ease: 'power3.inOut', onUpdate: () => scrollTo(0, o.y), onComplete: () => { anim = null; lastEv = performance.now(); } });
+    }
+
+    // returns true when the input was consumed (the caller then prevents the native scroll)
+    function step(dir, delta, gated) {
+      if (!mq.matches) return false;
+      if (anim) return true;
+      const y = scrollY;
+      const inFree = (y > free.a + TOL && y < free.b - TOL) || (near(y, free.a) && dir > 0) || (near(y, free.b) && dir < 0);
+      if (inFree && free.b > free.a) {
+        const pred = y + delta;
+        if (dir > 0 && pred >= free.b - TOL) { goTo(free.b); return true; }
+        if (dir < 0 && pred <= free.a + TOL) { goTo(free.a); return true; }
+        return false; // native scrolling through the "Why" section
+      }
+      if (gated) return true;
+      const t = dir > 0 ? points.find(p => p > y + TOL) : [...points].reverse().find(p => p < y - TOL);
+      if (t != null) goTo(t);
+      return true;
+    }
+
+    on(window, 'wheel', e => {
+      if (!mq.matches || e.ctrlKey || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+      if (e.target.closest && e.target.closest('textarea, select, .menu')) return;
+      const dir = Math.sign(e.deltaY); if (!dir) return;
+      const now = performance.now(), abs = Math.abs(e.deltaY), gap = now - lastEv;
+      const fresh = gap > GAP || abs > lastAbs * 1.6 + 4; // a new gesture, not the tail of the previous one's inertia
+      lastEv = now; lastAbs = abs;
+      if (step(dir, e.deltaY * (e.deltaMode === 1 ? 16 : 1), !fresh)) e.preventDefault();
+    }, { passive: false });
+
+    on(window, 'touchstart', e => { tStart = e.touches.length === 1 ? { y: e.touches[0].clientY, x: e.touches[0].clientX } : null; }, { passive: true });
+    on(window, 'touchmove', e => {
+      if (!mq.matches || !tStart || (e.target.closest && e.target.closest('textarea, select'))) return;
+      if (!(scrollY > free.a + TOL && scrollY < free.b - TOL)) e.preventDefault();
+    }, { passive: false });
+    on(window, 'touchend', e => {
+      const t = tStart; tStart = null; if (!t || !mq.matches || !e.changedTouches[0]) return;
+      const dy = t.y - e.changedTouches[0].clientY, dx = t.x - e.changedTouches[0].clientX;
+      if (Math.abs(dy) > 40 && Math.abs(dy) > Math.abs(dx)) step(Math.sign(dy), dy, false);
+    }, { passive: true });
+
+    on(window, 'keydown', e => {
+      if (!mq.matches || e.altKey || e.ctrlKey || e.metaKey) return;
+      const tg = e.target; if (tg.closest && tg.closest('input, textarea, select, [contenteditable], [role="tab"], [role="tablist"]')) return;
+      const k = e.key; let dir = 0;
+      if (k === 'ArrowDown' || k === 'PageDown' || (k === ' ' && !e.shiftKey)) dir = 1; else if (k === 'ArrowUp' || k === 'PageUp' || (k === ' ' && e.shiftKey)) dir = -1;
+      else if (k === 'Home') { e.preventDefault(); goTo(0); return; } else if (k === 'End') { e.preventDefault(); goTo(max); return; }
+      if (!dir) return;
+      if (k === ' ' && tg.closest && tg.closest('button, a, summary')) return;
+      if (step(dir, dir * innerHeight * .8, false)) e.preventDefault();
+    });
+
+    // in-page links travel with the same tween and land exactly on the section
+    on(document, 'click', e => {
+      if (e.defaultPrevented || !mq.matches || e.button || e.metaKey || e.ctrlKey) return;
+      const a = e.target.closest && e.target.closest('a[href^="#"]'); if (!a || a.getAttribute('href').length < 2) return;
+      const el = $(a.getAttribute('href')); if (!el) return;
+      e.preventDefault(); goTo(top(el));
+    });
+
+    // a scrollbar drag or other native scroll that comes to rest: settle on the nearest stop (never inside #why)
+    let settle;
+    on(window, 'scroll', () => {
+      if (anim || !mq.matches) return;
+      clearTimeout(settle);
+      settle = setTimeout(() => {
+        if (anim || !points.length) return;
+        const y = scrollY; if (y > free.a - TOL && y < free.b + TOL) return;
+        const t = points.reduce((b, p) => Math.abs(p - y) < Math.abs(b - y) ? p : b, points[0]);
+        if (Math.abs(t - y) > TOL && Math.abs(t - y) < innerHeight * .5) goTo(t);
+      }, 220);
+    }, { passive: true });
+
+    let rz; on(window, 'resize', () => { clearTimeout(rz); rz = setTimeout(measure, 120); });
+    on(window, 'load', measure);
+    if (mq.addEventListener) mq.addEventListener('change', measure);
+    if (window.ScrollTrigger) ScrollTrigger.addEventListener('refresh', measure);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => !destroyed && measure());
+    measure();
+  }
+
   /* ------------------------------------------------------------------ GSAP: scroll & reveal system */
   function initMotion() {
     gsap.registerPlugin(ScrollTrigger);
@@ -439,8 +662,8 @@
 
   /* ------------------------------------------------------------------ boot & teardown */
   function boot() {
-    initShowcase(); initFleet(); initMedia(); initForm();
-    if (hasGSAP) { ctx = gsap.context(initMotion); }
+    initShowcase(); initDetails(); initMega(); initStory(); initFleet(); initMedia(); initForm();
+    if (hasGSAP) { ctx = gsap.context(initMotion); initSnap(); }
     $('#year') && ($('#year').textContent = new Date().getFullYear());
   }
   function destroy() {
