@@ -863,3 +863,5 @@ html.snap .fleet__intro { height: 48svh; }
 .nav a[aria-disabled="true"] { pointer-events: none; cursor: default; }
 .media__list a { cursor: default; }
 .footer a[aria-disabled="true"], .footer__social a[aria-disabled="true"] { cursor: default; }
+.footer__base .footer__credit { margin-left: auto; }
+@media (min-width: 701px) { .footer__base { grid-template-columns: 1fr auto; } .footer__base .footer__credit { justify-self: end; margin-left: 0; } }
