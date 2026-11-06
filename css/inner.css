@@ -406,12 +406,13 @@ body.inner:has(.art) { background: var(--paper); }
 /* fleet services: cards stack and pin one on top of the next */
 @media (min-width: 900px) {
   .fsv--stack .fsv__grid { display: block; position: relative; margin-top: 0; }
-  .fsv--stack .fsv__grid article { position: sticky; top: calc(var(--header-h) + 24px + var(--k, 0) * 28px); min-height: 52svh; padding: clamp(36px, 4vw, 64px); margin-bottom: 28px; display: grid; align-content: space-between; border: 0; box-shadow: 0 -20px 40px -24px rgba(0,0,0,.45); transform-origin: 50% 0; }
+  .fsv--stack .fsv__grid article { position: sticky; top: calc(var(--header-h) + 24px + var(--k, 0) * 28px); min-height: 52svh; padding: clamp(36px, 4vw, 64px); margin-bottom: 28px; display: grid; grid-template-rows: auto auto 1fr; align-content: start; justify-items: start; text-align: left; border: 0; box-shadow: 0 -20px 40px -24px rgba(0,0,0,.45); transform-origin: 50% 0; }
   .fsv--stack .fsv__grid article:nth-child(1) { --k: 0; background: var(--ink); color: #fff; }
   .fsv--stack .fsv__grid article:nth-child(2) { --k: 1; background: var(--red); color: #fff; }
   .fsv--stack .fsv__grid article:nth-child(3) { --k: 2; background: #fff; color: var(--ink); }
   .fsv--stack .fsv__grid span { font-size: clamp(60px, 7vw, 110px); letter-spacing: 0; font-family: var(--display); color: inherit; opacity: .35; }
-  .fsv--stack .fsv__grid h3 { font-size: clamp(36px, 4.4vw, 68px); max-width: 16ch; }
+  .fsv--stack .fsv__grid h3 { font-size: clamp(36px, 4.4vw, 68px); max-width: 16ch; min-height: 2.1em; margin: 14px 0 12px; }
+  .fsv--stack .fsv__grid span { line-height: 1; }
   .fsv--stack .fsv__grid p { color: inherit; opacity: .85; font-size: clamp(17px, 1.4vw, 21px); max-width: 52ch; }
   .fsv--stack .fsv__grid article:nth-child(3) span { color: var(--red-deep); opacity: 1; }
 }

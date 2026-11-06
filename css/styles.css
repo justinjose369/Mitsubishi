@@ -171,7 +171,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 
 .stage { position: relative; height: clamp(520px, 68vh, 700px); border-bottom: 1px solid var(--line-dark); overflow: hidden; touch-action: pan-y; cursor: grab; user-select: none; -webkit-user-select: none; }
 .stage:active { cursor: grabbing; }
-.stage__info { position: absolute; z-index: 3; left: 0; top: 0; padding: clamp(24px, 3vw, 48px) 0 0; max-width: min(520px, 42%); }
+.stage__info { position: absolute; z-index: 3; left: 0; top: 0; padding: 0; max-width: min(520px, 42%); }
 .stage__no { font: 600 14px/1 var(--body); letter-spacing: .22em; color: var(--red-deep); margin-bottom: 18px; }
 .showcase { --name-size: clamp(34px, 5.2vw, 76px); }
 .showcase .h2, .stage__name { font-size: var(--name-size); }
@@ -247,7 +247,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .why { background: var(--paper); color: var(--ink); padding-block: var(--sec); }
 .why .eyebrow { color: var(--muted-dark); }
 .why__list { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line-dark); }
-.why__list li { padding: 36px 28px 8px 0; display: grid; align-content: start; gap: 16px; }
+.why__list li { padding: 36px 28px 0 0; display: grid; align-content: start; gap: 16px; }
 .why__list li + li { padding-left: 28px; border-left: 1px solid var(--line-dark); }
 .why__no { font: 600 14px/1 var(--body); letter-spacing: .2em; color: var(--red-deep); }
 .why__list h3 { font: 600 clamp(26px, 2.3vw, 36px)/1.02 var(--display); text-transform: uppercase; }
@@ -591,7 +591,7 @@ body.menu-open .dock { opacity: 0 !important; pointer-events: none !important; }
 }
 
 /* Contact + footer read as one compact, continuous screen */
-.contact { background: var(--ink); padding-block: clamp(40px, 4vw, 56px) clamp(28px, 3vw, 40px); }
+.contact { background: var(--ink); padding-block: var(--sec); }
 .contact__grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 6vw, 112px); align-items: start; }
 .contact .h2 { font-size: clamp(36px, 4vw, 60px); }
 .contact .eyebrow { margin-bottom: 14px; }
@@ -660,7 +660,7 @@ body.menu-open .dock { opacity: 0 !important; pointer-events: none !important; }
 html.snap { scroll-behavior: auto; scroll-padding-top: 0; --sgap: clamp(12px, 3svh, 32px); --sgap-s: clamp(4px, 1svh, 10px); }
 html.snap .showcase, html.snap .about, html.snap .parts, html.snap .media, html.snap .fleet__intro-sec {
   min-height: 100svh; display: flex; flex-direction: column; justify-content: center;
-  padding-top: calc(var(--header-h) + var(--sgap)); padding-bottom: var(--sgap);
+  padding-top: calc(var(--header-h) + var(--sgap)); padding-bottom: calc(var(--header-h) + var(--sgap));
 }
 html.snap .showcase > .wrap, html.snap .about > .wrap, html.snap .parts > .wrap, html.snap .media > .wrap { margin-block: auto; }
 
@@ -715,7 +715,7 @@ html.snap .media__list p { font-size: clamp(13px, 1.9svh, 15px); }
 html.snap .media__grid { align-items: center; }
 
 /* contact + footer: one screen together (--footer-h is measured by main.js) */
-html.snap .contact { min-height: calc(100svh - var(--footer-h, 270px)); display: flex; flex-direction: column; justify-content: center; padding-top: calc(var(--header-h) + var(--sgap-s)); padding-bottom: var(--sgap-s); }
+html.snap .contact { min-height: calc(100svh - var(--footer-h, 270px)); display: flex; flex-direction: column; justify-content: center; padding-top: calc(var(--header-h) + var(--sgap)); padding-bottom: calc(var(--header-h) + var(--sgap)); }
 html.snap .contact .h2 { font-size: clamp(30px, 6svh, 52px); }
 html.snap .contact__phone { margin-top: 10px; padding: 10px 0; font-size: clamp(26px, 5.4svh, 46px); }
 html.snap .contact__list { margin-top: 12px; }
@@ -732,7 +732,7 @@ html.snap .footer__main { padding-block: clamp(18px, 3.4svh, 32px); }
 html.snap .showcase .stage__car { width: min(54%, 820px); bottom: 4%; }
 
 /* Why + Fleet intro share one screen: Why on top (50%), Fleet solutions below (50%) */
-html.snap .why { height: 50svh; min-height: 0; display: flex; flex-direction: column; justify-content: center; padding-top: calc(var(--header-h) + var(--sgap-s)); padding-bottom: var(--sgap-s); }
+html.snap .why { height: auto; min-height: 0; display: flex; flex-direction: column; justify-content: center; padding-top: calc(var(--header-h) + var(--sgap)); padding-bottom: calc(var(--header-h) + var(--sgap)); }
 html.snap .why .sec-head { margin-bottom: clamp(10px, 2.4svh, 24px); }
 html.snap .why .eyebrow { margin-bottom: 10px; }
 html.snap .why .h2 { font-size: clamp(26px, 5svh, 46px); }
@@ -740,7 +740,7 @@ html.snap .why__list li { padding-top: clamp(10px, 1.8svh, 18px); padding-bottom
 html.snap .why__list h3 { font-size: clamp(18px, 2.8svh, 24px); }
 html.snap .why__list p { font-size: clamp(12px, 1.7svh, 14px); line-height: 1.4; }
 html.snap .fleet { padding-top: 0; }
-html.snap .fleet__intro { height: 50svh; min-height: 0; display: flex; flex-direction: column; justify-content: center; padding-block: 12px; }
+html.snap .fleet__intro { height: auto; min-height: 50svh; display: flex; flex-direction: column; justify-content: center; padding-block: calc(var(--header-h) + var(--sgap)); }
 html.snap .fleet__intro .eyebrow { margin-bottom: 10px; }
 html.snap .fleet__intro .h2--xl { font-size: clamp(30px, 7.4svh, 68px); }
 html.snap .fleet__introrow { margin-top: clamp(10px, 2svh, 20px); }
@@ -839,7 +839,7 @@ html.snap .media__list li:last-child a { border-bottom: 1px solid var(--line-dar
 .details__tabs button:hover, .details__tabs button[aria-selected="true"] { color: var(--ink); }
 .thumb img { opacity: .8; }
 .thumb:hover img, .thumb[aria-selected="true"] img { opacity: 1; }
-html.snap .why { height: 54svh; }
+html.snap .why { height: auto; }
 html.snap .fleet__intro { height: 46svh; }
 html.snap .why .sec-head { margin-bottom: clamp(14px, 3svh, 30px); }
 html.snap .why__list li { padding-top: clamp(14px, 2.6svh, 26px); gap: 8px; padding-right: 28px; }
@@ -850,7 +850,7 @@ html.snap .media__list p { font-size: clamp(13px, 1.9svh, 15px); color: #34343a;
 html.snap .showcase .stage__intro { font-size: 18px; }
 html.snap .showcase .stage__info > * + * { margin-top: clamp(14px, 2.6svh, 24px); }
 html.snap .showcase .stage__cta { margin-top: clamp(20px, 3.6svh, 36px); }
-html.snap .why { height: 52svh; }
+html.snap .why { height: auto; }
 html.snap .fleet__intro { height: 48svh; }
 
 /* header: phone | divider | Enquire now */
