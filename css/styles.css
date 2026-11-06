@@ -256,7 +256,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 
 /* ---------- Fleet ---------- */
 .fleet { background: var(--ink); padding-top: var(--sec); overflow: clip; }
-.fleet__intro { padding-bottom: clamp(40px, 6vw, 88px); }
+.fleet__intro { padding-bottom: var(--sec); }
 .fleet__introrow { margin-top: 32px; display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; flex-wrap: wrap; }
 .fleet__introrow .lede { color: #c9c9cc; flex: 1 1 420px; }
 .fleet__cta { display: flex; gap: 10px; flex-wrap: wrap; }
@@ -657,10 +657,10 @@ body.menu-open .dock { opacity: 0 !important; pointer-events: none !important; }
    Full-screen sections + one-scroll snapping (desktop). `snap` is set on <html> by main.js
    when the viewport is >= 1024px wide and >= 600px tall. "Why Mitsubishi" is left as normal flowing content.
    ========================================================================== */
-html.snap { scroll-behavior: auto; scroll-padding-top: 0; }
+html.snap { scroll-behavior: auto; scroll-padding-top: 0; --sgap: clamp(12px, 3svh, 32px); --sgap-s: clamp(4px, 1svh, 10px); }
 html.snap .showcase, html.snap .about, html.snap .parts, html.snap .media, html.snap .fleet__intro-sec {
   min-height: 100svh; display: flex; flex-direction: column; justify-content: center;
-  padding-top: calc(var(--header-h) + clamp(8px, 2svh, 24px)); padding-bottom: clamp(12px, 3svh, 32px);
+  padding-top: calc(var(--header-h) + var(--sgap)); padding-bottom: var(--sgap);
 }
 html.snap .showcase > .wrap, html.snap .about > .wrap, html.snap .parts > .wrap, html.snap .media > .wrap { margin-block: auto; }
 
@@ -715,7 +715,7 @@ html.snap .media__list p { font-size: clamp(13px, 1.9svh, 15px); }
 html.snap .media__grid { align-items: center; }
 
 /* contact + footer: one screen together (--footer-h is measured by main.js) */
-html.snap .contact { min-height: calc(100svh - var(--footer-h, 270px)); display: flex; flex-direction: column; justify-content: center; padding-top: calc(var(--header-h) + 8px); padding-bottom: 12px; }
+html.snap .contact { min-height: calc(100svh - var(--footer-h, 270px)); display: flex; flex-direction: column; justify-content: center; padding-top: calc(var(--header-h) + var(--sgap-s)); padding-bottom: var(--sgap-s); }
 html.snap .contact .h2 { font-size: clamp(30px, 6svh, 52px); }
 html.snap .contact__phone { margin-top: 10px; padding: 10px 0; font-size: clamp(26px, 5.4svh, 46px); }
 html.snap .contact__list { margin-top: 12px; }
@@ -732,7 +732,7 @@ html.snap .footer__main { padding-block: clamp(18px, 3.4svh, 32px); }
 html.snap .showcase .stage__car { width: min(54%, 820px); bottom: 4%; }
 
 /* Why + Fleet intro share one screen: Why on top (50%), Fleet solutions below (50%) */
-html.snap .why { height: 50svh; min-height: 0; display: flex; flex-direction: column; justify-content: center; padding-top: calc(var(--header-h) + 4px); padding-bottom: 6px; }
+html.snap .why { height: 50svh; min-height: 0; display: flex; flex-direction: column; justify-content: center; padding-top: calc(var(--header-h) + var(--sgap-s)); padding-bottom: var(--sgap-s); }
 html.snap .why .sec-head { margin-bottom: clamp(10px, 2.4svh, 24px); }
 html.snap .why .eyebrow { margin-bottom: 10px; }
 html.snap .why .h2 { font-size: clamp(26px, 5svh, 46px); }
@@ -865,3 +865,8 @@ html.snap .fleet__intro { height: 48svh; }
 .footer a[aria-disabled="true"], .footer__social a[aria-disabled="true"] { cursor: default; }
 .footer__base .footer__credit { margin-left: auto; }
 @media (min-width: 701px) { .footer__base { grid-template-columns: 1fr auto; } .footer__base .footer__credit { justify-self: end; margin-left: 0; } }
+@media (max-width: 700px) { .footer__base { grid-template-columns: 1fr; justify-items: start; } .footer__base .footer__credit { margin-left: 0; justify-self: start; } }
+/* home logo (logo-main.png, taller proportions than the old wordmark) */
+.header__logo--main { width: 68px; }
+.footer__logo--main { width: 76px; }
+@media (max-width: 1023px) { .header__logo--main { width: 58px; } .footer__logo--main { width: 70px; } }

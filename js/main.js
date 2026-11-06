@@ -663,7 +663,7 @@
   /* ------------------------------------------------------------------ boot & teardown */
   function boot() {
     initShowcase(); initDetails(); initMega(); initStory(); initFleet(); initMedia(); initForm();
-    if (hasGSAP) { ctx = gsap.context(initMotion); initSnap(); }
+    if (hasGSAP) { ctx = gsap.context(initMotion); /* section snap-scrolling is switched off: the page scrolls normally. Call initSnap() here to bring it back. */ }
     $('#year') && ($('#year').textContent = new Date().getFullYear());
   }
   function destroy() {

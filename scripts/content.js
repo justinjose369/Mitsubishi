@@ -6,7 +6,6 @@ const TBC = 'On request';
 
 const OFFICES = {
   libya: { name: 'Libya', lines: ['P O Box 5166, Swani Road', 'Al Fallah Street, Tripoli, Libya'], phones: [['+218 918 804 961', '+218918804961'], ['+218 925 818 264', '+218925818264']], emails: ['sales@middleeastgrp.com', 'parts@middleeastgrp.com', 'service@middleeastgrp.com'], map: 'https://www.google.com/maps/search/?api=1&query=Swani+Road+Al+Fallah+Street+Tripoli+Libya' },
-  dubai: { name: 'Dubai head office', lines: ['Baniyas Street, Al Masraf Tower', 'Office 1102, Dubai, UAE'], phones: [['+971 4 228 2211', '+97142282211']], emails: ['info@middleeastgrp.com'], map: 'https://www.google.com/maps/search/?api=1&query=Al+Masraf+Tower+Baniyas+Street+Dubai' }
 };
 const SOCIAL = {
   facebook: 'https://www.facebook.com/Middle-East-Group-101187085923646',
@@ -93,13 +92,17 @@ const ORDER = ['destinator', 'l200', 'outlander', 'xpander'];
 const NEWS = [
   { id: 'l200-sportero', cat: 'News', title: 'Now Available: The New Mitsubishi L200 Sportero', date: '', img: 'assets/img/web/sportero-blog.jpg', ex: 'The new Sportero comes with several significant enhancements and is created on a whole new platform and chassis. This vehicle is therefore larger, more powerful, and better equipped, but is still more fuel efficient than the current model.', cta: 'Call us to find out more.' },
   { id: 'aria-week', cat: 'Event', title: 'Hot Off The Press! ARIA Week 2019 presented by Mitsubishi', date: 'July 25, 2019', img: 'assets/img/web/p_190725_m_1206_img_01.png', ex: 'Tokyo, July 25, 2019. Mitsubishi Motors Corporation today globally debuted the New Pajero Sport, mid-size SUV, in Thailand, and began its sales there. New Pajero Sport adopts a more refined, powerful appearance, complemented with a refreshed interior.' },
-  { id: 'pajero-sport', cat: 'News', title: 'Mitsubishi Motors Globally Debuts New Pajero Sport', date: 'July 25, 2019', img: 'assets/img/web/cq5dam.web_.1280.1280.jpeg', ex: 'Tokyo, July 25, 2019. Mitsubishi Motors Corporation today globally debuted the New Pajero Sport, mid-size SUV, in Thailand, and began its sales there. New Pajero Sport adopts a more refined, powerful appearance, complemented with a refreshed interior.' }
+  { id: 'pajero-sport', cat: 'News', title: 'Mitsubishi Motors Globally Debuts New Pajero Sport', date: 'July 25, 2019', img: 'assets/img/web/cq5dam.web_.1280.1280.jpeg', ex: 'Tokyo, July 25, 2019. Mitsubishi Motors Corporation today globally debuted the New Pajero Sport, mid-size SUV, in Thailand, and began its sales there. New Pajero Sport adopts a more refined, powerful appearance, complemented with a refreshed interior.' },
+  { id: 'over-25-years', cat: 'News', title: 'Middle East Group: More Than 25 Years with Mitsubishi in Libya', date: '', img: 'assets/img/dev-desert.webp', ex: 'Middle East Group is one of Libya&rsquo;s leading automobile distributors, associated with Mitsubishi Motors Corporation for more than 25 years.' }
 ];
 const BLOG = [
   { id: 'suv-lineup-2026', cat: 'Blog', title: 'Mitsubishi Expands Its SUV Lineup for 2026', date: 'July 2, 2026', img: 'assets/img/web/news1.jpg', ex: 'The latest from Mitsubishi on the expanding SUV lineup for 2026.' },
   { id: 'sedan-or-suv', cat: 'Blog', title: 'Choosing Between Mitsubishi Sedan and SUV: What Fits You Best?', date: 'June 25, 2026', img: 'assets/img/web/news2.jpg', ex: 'A guide to choosing the right model for your lifestyle.' },
   { id: 'ownership-libya', cat: 'Blog', title: 'Why Mitsubishi Ownership Is a Smart Choice in Libya', date: 'June 8, 2026', img: 'assets/img/web/news3.jpg', ex: 'Why owning a Mitsubishi makes sense in Libya.' },
-  { id: 'buying-tips', cat: 'Blog', title: 'Essential Tips Before Buying a New Mitsubishi', date: 'May 11, 2026', img: 'assets/img/web/news4.jpg', ex: 'What to check before you buy a new Mitsubishi.' }
+  { id: 'buying-tips', cat: 'Blog', title: 'Essential Tips Before Buying a New Mitsubishi', date: 'May 11, 2026', img: 'assets/img/web/news4.jpg', ex: 'What to check before you buy a new Mitsubishi.' },
+  { id: 'service-checklist', cat: 'Blog', title: 'A Simple Service Checklist to Keep Your Mitsubishi Running Well', date: '', img: 'assets/img/web/Mistubishi2-1.jpg', ex: 'Quick checks you can do between services to keep your vehicle reliable.' },
+  { id: 'genuine-parts', cat: 'Blog', title: 'Why Genuine Parts Matter for Your Mitsubishi', date: '', img: 'assets/img/web/facility4.jpeg', ex: 'What genuine parts mean for fit, performance and peace of mind.' },
+  { id: 'long-drive-prep', cat: 'Blog', title: 'Getting Your Pickup Ready for a Long Drive', date: '', img: 'assets/img/web/happy-jurney.jpg', ex: 'A short checklist to run through before a long journey.' }
 ];
 
 const PARTS = [

@@ -3,6 +3,8 @@ const fs = require('fs'), path = require('path');
 const C = require('./content.js');
 const root = path.join(__dirname, '..');
 const { MODELS, ORDER, NEWS, BLOG, PARTS, OFFICES, SOCIAL, TBC } = C;
+const { LEGAL } = require('./legal.js');
+const ASSET_V = Date.now().toString(36); // cache-busting query for local css/js so browsers never keep stale files
 const model = s => MODELS.find(m => m.slug === s);
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
 
@@ -19,6 +21,15 @@ const btn = (href, label, cls = 'btn--solid', extra = '') => `<a class="btn ${cl
 const eyebrow = (t, extra = '') => `<p class="eyebrow" data-a${extra ? ' ' + extra : ''}>${t}</p>`;
 const split = (tag, cls, t, extra = '') => `<${tag} class="${cls}" data-split${extra ? ' ' + extra : ''}>${t}</${tag}>`;
 const img = (src, alt = '', w, h, extra = '') => `<img src="${src}" alt="${esc(alt)}"${w ? ` width="${w}" height="${h}"` : ''} loading="lazy" decoding="async"${extra ? ' ' + extra : ''}>`;
+/* Spinning wheel discs for the drive-by band. Same calibrated hub data and technique as the home-page showcase (js/data.js,
+   js/main.js buildCar): a disc covering rim + inner tyre, cropped from the same image, centred on each hub. */
+const WHEEL_K = 0.84;
+const WHEEL_DATA = (() => { const ctx = { window: {} }; require('vm').runInNewContext(fs.readFileSync(path.join(__dirname, '..', 'js', 'data.js'), 'utf8'), ctx); return ctx.window.MMK_MODELS; })();
+const wheelDiscs = m => {
+  const e = WHEEL_DATA.find(x => x.img === m.cut); if (!e) return '';
+  const [fx, rx, cyF, r, cyR] = e.wheels, sz = 2 * r * WHEEL_K, hr = e.ar, f = n => +n.toFixed(4);
+  return [[fx, cyF], [rx, cyR == null ? cyF : cyR]].map(([cx, cy]) => `<i class="wheel" aria-hidden="true" style="left:${f((cx - sz / 2) * 100)}%;top:${f((cy * hr - sz / 2) / hr * 100)}%;width:${f(sz * 100)}%;background-image:url(${m.cut});background-size:${f(100 / sz)}% auto;background-position:${f((sz / 2 - cx) / (sz - 1) * 100)}% ${f((sz / 2 - cy * hr) / (sz - hr) * 100)}%"></i>`).join('');
+};
 const clip = (src, alt, w, h, cls = '', extra = '') => `<figure class="clip ${cls}" data-clip${extra ? ' ' + extra : ''}>${img(src, alt, w, h)}</figure>`;
 
 /* ---------- shared header / footer ---------- */
@@ -54,21 +65,52 @@ const social = () => `<ul class="ft__social" aria-label="Social media">
   <li><a href="${SOCIAL.linkedin}" target="_blank" rel="noopener" aria-label="LinkedIn">${ic('linkedin')}</a></li></ul>`;
 
 const footer = () => `
-  <footer class="ft">
+  <footer class="footer">
     <div class="wrap">
-      <div class="ft__top">
-        <p class="ft__big" aria-hidden="true">Drive your <span>Ambition</span></p>
-        ${btn('contact.html', 'Enquire now')}
+      <div class="footer__main">
+        <div class="footer__id">
+          <div class="footer__brand"><a class="footer__logo" href="index.html" aria-label="Mitsubishi Motors Libya"><img src="assets/img/logo.svg" alt="Mitsubishi Motors" width="133" height="92" loading="lazy"></a></div>
+          <ul class="footer__social" aria-label="Social media">
+            <li><a data-social="facebook" aria-disabled="true" aria-label="Facebook"><svg class="ic"><use href="#i-facebook"/></svg></a></li>
+            <li><a data-social="instagram" aria-disabled="true" aria-label="Instagram"><svg class="ic"><use href="#i-instagram"/></svg></a></li>
+            <li><a data-social="x" aria-disabled="true" aria-label="X (Twitter)"><svg class="ic"><use href="#i-x-social"/></svg></a></li>
+            <li><a data-social="youtube" aria-disabled="true" aria-label="YouTube"><svg class="ic"><use href="#i-youtube"/></svg></a></li>
+          </ul>
+        </div>
+        <nav class="footer__grid" aria-label="Footer">
+          <div class="footer__col">
+            <h3>Explore</h3>
+            <ul>
+              <li><a href="vehicles.html">Cars</a></li>
+              <li><a href="parts.html">Parts</a></li>
+              <li><a href="fleet.html">Fleet</a></li>
+              <li><a href="media.html">Media</a></li>
+            </ul>
+          </div>
+          <div class="footer__col">
+            <h3>Company</h3>
+            <ul>
+              <li><a href="about.html">About Us</a></li>
+              <li><a href="compare.html">Compare</a></li>
+              <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+          </div>
+          <div class="footer__col">
+            <h3>Legal information</h3>
+            <ul>
+              <li><a href="privacy-policy.html">Privacy Policy</a></li>
+              <li><a href="terms-and-conditions.html">Terms and Conditions</a></li>
+              <li><a href="data-protection.html">Data Protection</a></li>
+              <li><a href="legal-disclaimer.html">Legal Disclaimer</a></li>
+            </ul>
+          </div>
+        </nav>
       </div>
-      <div class="ft__grid">
-        <div class="ft__brand"><a href="index.html" aria-label="Mitsubishi Motors Libya, home"><img src="assets/img/logo.svg" alt="Mitsubishi Motors" width="133" height="92" loading="lazy"></a><p>Mitsubishi Motors Libya, distributed by Middle East Group.</p>${social()}</div>
-        <nav class="ft__col" aria-label="Footer navigation"><h3>Explore</h3><ul><li><a href="about.html">About Us</a></li><li><a href="parts.html">Parts</a></li><li><a href="fleet.html">Fleet</a></li><li><a href="media.html">Media</a></li><li><a href="brochures.html">Brochures</a></li></ul></nav>
-        <nav class="ft__col" aria-label="Vehicles"><h3>Vehicles</h3><ul>${ORDER.map(s => `<li><a href="${s}.html">${model(s).name}</a></li>`).join('')}<li><a href="compare.html">Compare variants</a></li></ul></nav>
-        <div class="ft__col"><h3>Contact</h3><address>${OFFICES.libya.lines.join('<br>')}</address><ul><li><a href="tel:+218918804961">+218 918 804 961</a></li><li><a href="mailto:sales@middleeastgrp.com">sales@middleeastgrp.com</a></li></ul></div>
+      <div class="footer__base">
+        <p>&copy; Mitsubishi Motors Corporation 2026. All rights reserved.</p>
+        
+        <p class="footer__credit">Designed by: <img src="assets/img/inter.png" alt="" width="10" height="13" loading="lazy"><b>iNTERSMART</b></p>
       </div>
-      <div class="ft__base"><p>&copy; Mitsubishi Motors Corporation 2026. All rights reserved.</p>
-        <ul><li><a href="https://dev18.intersmarthosting.in/mitsubishi/privacy-policy/" target="_blank" rel="noopener">Privacy Policy</a></li><li><a href="https://dev18.intersmarthosting.in/mitsubishi/terms-and-conditions/" target="_blank" rel="noopener">Terms and Conditions</a></li></ul>
-        <p class="ft__credit">Designed by: <img src="assets/img/inter.png" alt="" width="10" height="13" loading="lazy"><b>iNTERSMART</b></p></div>
     </div>
   </footer>
   <nav class="dock" id="dock" aria-label="Quick contact"><a href="#" data-wa target="_blank" rel="noopener" class="dock__wa">${ic('whatsapp')}<span>WhatsApp</span></a><a href="tel:+218918804961" class="dock__call">${ic('phone')}<span>Call us</span></a><a href="contact.html" class="dock__enq">${ic('mail')}<span>Enquire</span></a></nav>`;
@@ -86,8 +128,8 @@ function page(file, { title, desc, active, hdr = 'dark', body, preload = '', aft
   <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
   <script>document.documentElement.classList.add('js','ip');</script>
   <link rel="preload" href="assets/fonts/barlow-condensed-600.woff2" as="font" type="font/woff2" crossorigin>${preload}
-  <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="css/inner.css">
+  <link rel="stylesheet" href="css/styles.css?v=${ASSET_V}">
+  <link rel="stylesheet" href="css/inner.css?v=${ASSET_V}">
 </head>
 <body class="inner" data-header="${hdr}">
   <a class="skip" href="#main">Skip to content</a>
@@ -99,9 +141,9 @@ function page(file, { title, desc, active, hdr = 'dark', body, preload = '', aft
   <script>window.MMK_NAV=${JSON.stringify(ORDER.map(s => ({ slug: s, name: model(s).name, kind: model(s).kind, img: model(s).cut, ar: model(s).cutAr })))};</script>
   <script src="vendor/gsap.min.js"></script>
   <script src="vendor/ScrollTrigger.min.js"></script>
-  <script src="js/config.js"></script>
+  <script src="js/config.js?v=${ASSET_V}"></script>
   ${after}
-  <script src="js/inner.js"></script>
+  <script src="js/inner.js?v=${ASSET_V}"></script>
 </body>
 </html>
 `;
@@ -124,7 +166,7 @@ const vehicleOpts = [['', 'Select a vehicle'], ...MODELS.map(m => [m.name, m.nam
 const form = (type, fields, submit = 'Submit enquiry') => `
 <form class="form form--inner" data-form data-type="${type}" novalidate>
   ${fields}
-  <div class="field field--check field--wide"><input id="consent-${type}" name="consent" type="checkbox" required><label for="consent-${type}">I agree to the use of my personal data for this enquiry and have read the <a href="https://dev18.intersmarthosting.in/mitsubishi/privacy-policy/" target="_blank" rel="noopener">Privacy Policy</a>.</label><span class="err" id="e-consent-${type}" role="alert"></span></div>
+  <div class="field field--check field--wide"><input id="consent-${type}" name="consent" type="checkbox" required><label for="consent-${type}">I agree to the use of my personal data for this enquiry and have read the <a href="privacy-policy.html" target="_blank" rel="noopener">Privacy Policy</a>.</label><span class="err" id="e-consent-${type}" role="alert"></span></div>
   <input type="text" name="website" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
   <div class="form__submit field--wide"><button class="btn btn--solid btn--block" type="submit"><span>${submit}</span> ${ic('send')}</button><p class="form__status" role="status" aria-live="polite"></p></div>
 </form>`;
@@ -195,7 +237,7 @@ ORDER.forEach((s, mi) => {
   </div>
 </section>
 
-<section class="drive" style="--ac:${m.accent}" aria-hidden="true"><div class="drive__word" data-drive-word>${m.name}</div><figure class="drive__car" data-drive>${img(m.cut, "", 520, Math.round(520 * m.cutAr), "loading=\"eager\"")}</figure><i class="drive__road"></i></section>
+<section class="drive" style="--ac:${m.accent}" aria-hidden="true"><div class="drive__word" data-drive-word>${m.name}</div><figure class="drive__car" data-drive>${img(m.cut, "", 520, Math.round(520 * m.cutAr), "loading=\"eager\"")}${wheelDiscs(m)}</figure><i class="drive__road"></i></section>
 
 <section class="vfloat sec sec--ink" style="--ac:${m.accent}" aria-labelledby="vf-t">
   <div class="wrap">${eyebrow('Highlights')}${split('h2', 'h2', `The ${m.name}, up close`, 'id="vf-t"')}</div>
@@ -248,29 +290,30 @@ ${ctaBand({ title: `Own the ${m.name}`, text: 'Speak to our team about availabil
 });
 
 /* ======================================================================== COMPARE ===== */
-const compareData = MODELS.map(m => ({ slug: m.slug, name: m.name, variants: m.variants.map(v => ({ id: v.id, trim: v.trim, img: v.img, photo: !!v.photo, engine: v.engine, trans: v.trans, cyl: v.cyl, drive: v.drive, fuel: v.fuel, body: v.body, power: v.power || TBC, torque: v.torque || TBC })) }));
+const compareData = MODELS.map(m => ({ slug: m.slug, name: m.name, variants: m.variants.filter(v => !v.photo).map(v => ({ id: v.id, trim: v.trim, img: v.img.replace(/^(assets\/cars\/.*)\.webp$/, '$1.png'), photo: !!v.photo, engine: v.engine, trans: v.trans, cyl: v.cyl, drive: v.drive, fuel: v.fuel, body: v.body, power: v.power || TBC, torque: v.torque || TBC })) }));
 page('compare.html', {
   title: 'Compare Variants', desc: 'Compare Mitsubishi variants in Libya side by side: engine, transmission, drivetrain and body.', active: 'cars', hdr: 'solid',
   body: `
-<section class="ph ph--split">
-  <div class="ph__l"><div class="wrap-l">${eyebrow('Variants')}${split('h1', 'big ph__title', 'Compare <span class="accent">variants</span>')}<p class="lede" data-a>Choose a vehicle, pick up to three variants and see exactly what changes between them.</p></div></div>
-  <div class="ph__r" aria-hidden="true"><div class="stackcars">${MODELS.map((m, i) => `<figure style="--i:${i}">${img(m.cut, '', 520, Math.round(520 * m.cutAr), 'loading="eager"')}</figure>`).join('')}</div></div>
+<section class="ph ph--forge" id="cmpHero">
+  <div class="fg__trail" id="fgTrail" aria-hidden="true">${["story-l200.webp","story-outlander.webp","story-xpander.webp","story-destinator.webp","l200-ext.webp","l200-hill.webp","drive.webp","web/Destinator.jpg","web/Sportero.jpg"].map(f => `<div class="fg__item">${img('assets/img/' + f, '', 216, 270, 'loading="eager" draggable="false"')}</div>`).join('')}</div>
+  <h2 class="fg__mid" data-a>We don&rsquo;t just sell cars<br>We help you choose</h2>
+  <div class="fg__foot wrap">
+    ${split('h1', 'big ph__title', 'Compare <span class="accent">variants</span>')}
+    <p class="fg__lede" data-a>Choose up to four vehicles or variants and see exactly what changes, side by side.</p>
+  </div>
 </section>
-<section class="cmp sec sec--paper" id="compare" aria-label="Variant comparison">
+<section class="cmp sec sec--paper" id="compare" aria-label="Vehicle comparison">
   <div class="wrap">
-    <div class="cmp__sel">
-      <div><h2 class="cmp__h">1. Vehicle</h2><div class="seg" role="tablist" aria-label="Vehicle" id="cmpModels">${MODELS.map((m, i) => `<button type="button" role="tab" aria-selected="${i === 1}" data-m="${m.slug}">${m.name}</button>`).join('')}</div></div>
-      <div><h2 class="cmp__h">2. Variants <small>(choose up to 3)</small></h2><div class="seg seg--wrap" id="cmpVariants" role="group" aria-label="Variants"></div></div>
-    </div>
-    <div class="cmp__cards" id="cmpCards" aria-live="polite"></div>
-    <div class="cmp__tablewrap"><table class="cmp__table" id="cmpTable"><caption class="sr">Specification comparison</caption></table></div>
-    <h2 class="h2 cmp__dh" data-a>Highlighted differences</h2>
-    <div class="cmp__diff" id="cmpDiff"></div>
+    <div class="cmp__bar"><div><h2 class="cmp__t">Variant comparison</h2><p class="lede">Pick a vehicle, then press + to add up to four of its variants side by side.</p></div>
+      <label class="tog"><input type="checkbox" id="cmpDiffOnly"><span>Display the differences only</span></label></div>
+    <div class="cmp__wrap"><div class="cmp__grid" id="cmpTable"></div></div>
+    <p class="cmp__none" id="cmpNone" hidden>No confirmed differences between the selected vehicles.</p>
     <p class="note" data-a>Only confirmed specifications are compared. &ldquo;${TBC}&rdquo; means the figure is being confirmed.</p>
   </div>
 </section>
-${ctaBand({ title: 'Found your variant?', text: 'Tell us which one you prefer and we will take it from there.', imgSrc: 'assets/img/fleet-tailored.jpg' })}`,
-  after: `<script>window.MMK_COMPARE=${JSON.stringify(compareData)};</script>`
+${ctaBand({ title: 'Found your variant?', text: 'Tell us which one you prefer and we will take it from there.', imgSrc: 'assets/img/drive.webp' })}`,
+  after: `<script>window.MMK_COMPARE=${JSON.stringify(compareData)};</script>
+<script src="js/trail.js?v=${ASSET_V}"></script>`
 });
 
 /* ======================================================================== PARTS ===== */
@@ -319,7 +362,7 @@ page('parts.html', {
     ${form('Parts', baseFields('pp-') + field('pp-vehicle', 'Vehicle model', 'select', { opts: vehicleOpts }) + field('pp-part', 'Part requirement', 'text', { ph: 'e.g. cabin air filter' }) + field('pp-message', 'Message', 'textarea', { wide: 1, rows: 3 }), 'Send part enquiry')}
   </div>
 </section>
-${ctaBand({ title: 'Need advice on a part?', text: 'Our parts team is ready to help you find the right fit.', imgSrc: 'assets/img/web/facility3.jpeg', href: 'contact.html', label: 'Contact parts team' })}`
+${ctaBand({ title: 'Need advice on a part?', text: 'Our parts team is ready to help you find the right fit.', imgSrc: 'assets/img/story-l200.webp', href: 'contact.html', label: 'Contact parts team' })}`
 });
 
 /* ======================================================================== FLEET ===== */
@@ -327,7 +370,7 @@ page('fleet.html', {
   title: 'Fleet Solutions', desc: 'Fleet solutions from Mitsubishi Motors Libya: tailored business plans, the right vehicle for your business and help financing your fleet.', active: 'fleet',
   body: `
 <section class="ph ph--fleet">
-  <div class="ph__bg" data-parallax>${img('assets/img/fleet-tailored.jpg', 'Orange Mitsubishi L200 in a quarry', 1067, 741).replace('loading="lazy"', 'loading="eager"')}</div><div class="ph__shade"></div>
+  <div class="ph__bg" data-parallax>${img('assets/img/dev-dunes-single-cab.webp', 'Black Mitsubishi L200 single cab kicking up dust in the mountains', 1942, 809).replace('loading="lazy"', 'loading="eager"')}</div><div class="ph__shade"></div>
   <div class="wrap ph__in ph__in--end">${eyebrow('Fleet solutions')}${split('h1', 'big ph__title', 'Driving your business <span class="accent">further</span>')}
     <div class="ph__row"><p class="lede" data-a>Whether there&rsquo;s just one employee in your company or 500, there is something in the range to suit.</p><div data-a>${btn('#fleet-form', 'Start your enquiry')}</div></div></div>
 </section>
@@ -361,7 +404,7 @@ page('about.html', {
   body: `
 <section class="ph ph--about">
   <div class="wrap ph__in">${eyebrow('About us &middot; Distributors over 25 years')}${split('h1', 'big ph__title', 'More than <span class="accent">25 years</span> with Mitsubishi')}</div>
-  <div class="ph__layers" aria-hidden="true"><figure data-clip>${img('assets/img/about-bg.webp', '', 1400, 875).replace('loading="lazy"', 'loading="eager"')}</figure><figure data-clip class="l2">${img('assets/img/web/facility1.jpeg', '', 1296, 864)}</figure></div>
+  <div class="ph__layers" aria-hidden="true"><figure data-clip>${img('assets/img/dev-lineup.webp', 'Mitsubishi L200, Xforce and L200 single cab on a mountain road at sunset', 1942, 809).replace('loading="lazy"', 'loading="eager"')}</figure></div>
 </section>
 
 <section class="biz sec sec--paper" aria-labelledby="bz-t">
@@ -382,14 +425,28 @@ page('about.html', {
 
 <section class="hist" data-hs aria-labelledby="hi-t">
   <div class="hs__pin">
-    <div class="wrap hs__head">${eyebrow('Our story')}${split('h2', 'h2', 'Our history', 'id="hi-t"')}<p class="hs__count"><b data-hs-now>01</b> / 04</p></div>
+    <div class="wrap hs__head">${eyebrow('Our story')}${split('h2', 'h2', 'Our history', 'id="hi-t"')}<p class="hs__count"><b data-hs-now>01</b> / 06</p></div>
     <div class="hs__track hs__track--tl" data-hs-track>
+      <article class="tl"><i></i><p class="hs__k">1976</p><h3>A founder&rsquo;s first venture</h3><p>Our Founder, a pioneer and a visionary in business, started his business venture with a humble background in the construction industry.</p></article>
+      <article class="tl"><i></i><p class="hs__k">1977</p><h3>Middle East Group is established</h3><p>Established with its financial headquarters in Dubai, the group grew into one of the leading and respected business houses in Libya.</p></article>
       <article class="tl"><i></i><p class="hs__k">Heritage</p><h3>Associated with Mitsubishi Motors Corporation for more than 25 years</h3><p>Middle East Group became associated with Mitsubishi Motors Corporation and has been creating innovative vehicles for Libya for more than 25 years.</p></article>
       <article class="tl"><i></i><p class="hs__k">Distribution</p><h3>One of Libya&rsquo;s leading distributors</h3><p>An unbeaten choice of Mitsubishi passenger cars, SUVs and commercial vehicles.</p></article>
       <article class="tl"><i></i><p class="hs__k">Parts</p><h3>A central parts warehouse</h3><p>Fully automated and air-conditioned, covering some 25,000 sq meters, the highest parts facility in the North Africa Region.</p></article>
       <article class="tl"><i></i><p class="hs__k">Service</p><h3>A growing service network</h3><p>Professional customer service and a growing network of hi-tech service centres.</p></article>
     </div>
     <div class="hs__bar" aria-hidden="true"><i data-hs-bar></i></div>
+  </div>
+</section>
+
+<section class="grp sec sec--ink" aria-labelledby="gp-t">
+  <div class="grp__ghost" aria-hidden="true">1977</div>
+  <div class="wrap grp__grid">
+    <div class="grp__copy">${eyebrow('The group')}${split('h2', 'h2 h2--xl', 'Middle East <span class="accent">Group</span>', 'id="gp-t"')}
+      <p class="lede" data-a>Middle East Group proudly represents Mitsubishi Motors in Libya. Established in 1977 with financial headquarters in Dubai, we are one of the leading and respected business houses in Libya.</p>
+      <p data-a>Our Founder is a pioneer and a visionary in business. The group has expanded into a range of sectors, each built on the same market leadership.</p>
+      <blockquote class="grp__quote" data-a>The Middle East Group family may be diverse, but is united by a shared theme of opening up a world of opportunities to the people who work and associate with us.</blockquote>
+    </div>
+    <ul class="grp__sectors" aria-label="Business sectors"><li data-a>Automotive</li><li data-a>Industrial Equipment</li><li data-a>Oil and Gas</li><li data-a>Insurance</li><li data-a>Leasing and Rental</li><li data-a>Banking &amp; Finance</li><li data-a>Education</li><li data-a>General Trading</li><li data-a>Agriculture</li></ul>
   </div>
 </section>
 
@@ -403,9 +460,24 @@ page('about.html', {
     </ul></div>
 </section>
 
+<section class="dealer" aria-labelledby="dl-t">
+  <div class="dealer__bg" data-parallax>${img('assets/img/dev-bridge-suv.webp', 'Red Mitsubishi SUV driving across an iron bridge', 1942, 809)}</div><div class="dealer__shade"></div>
+  <div class="wrap dealer__in">${eyebrow('Authorized distributor')}${split('h2', 'big dealer__t', 'Leading Mitsubishi <span class="accent">dealer</span> in Libya', 'id="dl-t"')}
+    <p class="lede" data-a>Middle East Group is the authorized distributor of Mitsubishi Motors in Libya, delivering trusted vehicles and exceptional customer service.</p>
+    <p data-a>We have proudly served customers with a commitment to quality, genuine Mitsubishi vehicles, expert after-sales support, and modern showroom and service facilities.</p>
+    <div class="dealer__cta" data-a>${btn('vehicles.html', 'Explore vehicles')} ${btn('contact.html', 'Contact us', 'btn--line')}</div></div>
+</section>
+
 <section class="fac sec sec--paper" aria-labelledby="fc-t">
   <div class="wrap">${eyebrow('Our facility')}${split('h2', 'h2', 'Visit us in Tripoli', 'id="fc-t"')}</div>
   <div class="fac__rail" data-drag data-cursor="Drag">${[1, 2, 3, 4, 5].map(n => `<figure class="gal__i">${img('assets/img/web/facility' + n + '.jpeg', 'Mitsubishi showroom and facility in Libya', 1296, 864)}</figure>`).join('')}</div>
+</section>
+
+<section class="faq sec sec--paper" aria-labelledby="fq-t">
+  <div class="wrap faq__grid">
+    <div>${eyebrow('Genuine parts')}${split('h2', 'h2', 'Frequently asked <span class="accent">questions</span>', 'id="fq-t"')}<p class="lede" data-a>Quick answers about Mitsubishi Genuine Parts. Need more help? Our parts team is ready.</p><div data-a>${btn('parts.html', 'Spare parts', 'btn--ghost')}</div></div>
+    <div class="faq__list"><details data-a><summary>Why should I choose Mitsubishi Genuine Parts over aftermarket parts?</summary><p>Mitsubishi Genuine Parts are designed to meet factory specifications, ensuring optimal performance, reliability, and long-term durability for your vehicle.</p></details><details data-a><summary>How can I identify the correct genuine part for my Mitsubishi?</summary><p>Simply provide your vehicle&rsquo;s VIN or model details, and our parts specialists will help you find the exact part you need.</p></details><details data-a><summary>Are Mitsubishi Genuine Parts covered by a warranty?</summary><p>Yes. Genuine Mitsubishi Parts are backed by the manufacturer&rsquo;s warranty, giving you added confidence and peace of mind.</p></details><details data-a><summary>Can I order Mitsubishi Genuine Parts if they are not currently in stock?</summary><p>Yes. If a required part is unavailable, our team can arrange a special order and notify you as soon as it arrives.</p></details></div>
+  </div>
 </section>
 ${ctaBand({ title: 'Let’s talk cars', text: 'Visit our team in Tripoli or get in touch online.', imgSrc: 'assets/img/web/facility5.jpeg' })}`
 });
@@ -421,8 +493,10 @@ page('media.html', {
   ${feat(NEWS[0], 'news')}
   <div class="sec-head sec-head--sp"><h2 class="h2" data-a>Latest news</h2><div data-a>${btn('blog.html', 'Read the blog', 'btn--ghost')}</div></div>
   <ul class="ngrid">${NEWS.slice(1).map(a => card(a, 'news')).join('')}</ul>
+  <div class="sec-head sec-head--sp"><h2 class="h2" data-a>From the blog</h2><div data-a>${btn('blog.html', 'All articles', 'btn--ghost')}</div></div>
+  <ul class="ngrid">${BLOG.slice(-3).map(a => card(a, 'blog')).join('')}</ul>
 </div></section>
-${ctaBand({ title: 'Stay in the loop', text: 'Ask our team about the latest offers and vehicles.', imgSrc: 'assets/img/l200-ext.webp' })}`
+${ctaBand({ title: 'Stay in the loop', text: 'Ask our team about the latest offers and vehicles.', imgSrc: 'assets/img/dev-forest.webp' })}`
 });
 page('blog.html', {
   title: 'Blog', desc: 'Articles from Mitsubishi Motors Libya.', active: 'media', hdr: 'solid',
@@ -453,10 +527,12 @@ page('contact.html', {
   title: 'Contact Us', desc: 'Contact Mitsubishi Motors Libya: head office, phone numbers, email and enquiry form.', active: 'contact', hdr: 'solid',
   body: `
 <section class="ph ph--contact"><div class="wrap ph__in">${eyebrow('Contact us')}${split('h1', 'big ph__title', 'Let&rsquo;s talk <span class="accent">cars</span>')}<p class="lede" data-a>We would love to hear from you. Visit, call or send us a message.</p></div></section>
-<section class="cn sec sec--paper" aria-labelledby="cn-t"><div class="wrap cn__grid">
-  <div><h2 class="sr" id="cn-t">Offices</h2>${eyebrow('Head office')}${office(OFFICES.libya)}${office(OFFICES.dubai)}
-    <div class="cn__soc" data-a><h3>Follow us</h3>${social()}<a class="wa" href="#" data-wa target="_blank" rel="noopener">${ic('whatsapp')}Chat on WhatsApp</a></div></div>
-  <div class="cn__form"><h2 class="h2" data-a>Make an enquiry</h2>${form('Contact', baseFields('ct-') + field('ct-vehicle', 'Vehicle of interest', 'select', { opts: vehicleOpts }) + field('ct-message', 'Message', 'textarea', { wide: 1, rows: 4 }))}</div>
+<section class="cn sec sec--paper" aria-labelledby="cn-t"><div class="wrap">
+  <h2 class="sr" id="cn-t">Offices and enquiry form</h2>
+  <div class="cn__three">
+    <div class="cn__box">${office(OFFICES.libya)}<div class="cn__soc" data-a><h3>Follow us</h3>${social()}<a class="wa" href="#" data-wa target="_blank" rel="noopener">${ic('whatsapp')}Chat on WhatsApp</a></div></div>
+    <div class="cn__box cn__form"><h2 class="h2" data-a>Make an enquiry</h2>${form('Contact', baseFields('ct-') + field('ct-vehicle', 'Vehicle of interest', 'select', { opts: vehicleOpts }) + field('ct-message', 'Message', 'textarea', { wide: 1, rows: 4 }))}</div>
+  </div>
 </div></section>
 <section class="mapx"><iframe title="Mitsubishi Motors Libya office location" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=Swani+Road+Al+Fallah+Street+Tripoli+Libya&amp;output=embed"></iframe></section>`
 });
@@ -474,6 +550,21 @@ ${ctaBand({ title: 'Talk to the team', text: 'Questions about a model? We are he
 });
 
 /* ======================================================================== 404 ===== */
+/* ======================================================================== LEGAL ===== */
+const legalPara = x => typeof x === 'string' ? `<p>${esc(x)}</p>` : `<ul>${x.list.map(i => `<li>${esc(i)}</li>`).join('')}</ul>`;
+const legalSection = sec => `<h2 data-a>${sec.h}</h2>${sec.p.map(legalPara).join('')}`;
+LEGAL.forEach(L => page(L.file, {
+  title: L.title, desc: L.desc, active: '', hdr: 'solid',
+  body: `
+<section class="ph ph--editorial"><div class="wrap ph__in">${eyebrow('Legal information')}${split('h1', 'big ph__title', L.title)}<p class="lede" data-a>${L.intro}</p></div></section>
+<section class="legal sec sec--paper"><div class="wrap">
+  <div class="legal__body">
+    ${L.sections.map(legalSection).join('')}
+    <nav class="legal__more" aria-label="Legal information"><h2>Legal information</h2><ul>${LEGAL.filter(o => o !== L).map(o => `<li><a href="${o.file}">${o.title}</a></li>`).join('')}</ul></nav>
+  </div>
+</div></section>`
+}));
+
 page('404.html', {
   title: 'Page not found', desc: 'The page you are looking for could not be found.', active: '', hdr: 'solid',
   body: `

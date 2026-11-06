@@ -39,10 +39,7 @@ window.MMK_CONFIG = {
   footerOffices: [
     { name: 'Libya', address: ['P O Box 5166, Swani Road', 'Al Fallah Street, Tripoli, Libya'],
       phones: [{ display: '+218 918 804 961', tel: '+218918804961' }, { display: '+218 925 818 264', tel: '+218925818264' }],
-      mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Swani+Road+Al+Fallah+Street+Tripoli+Libya' },
-    { name: 'Dubai head office', address: ['Baniyas Street, Al Masraf Tower', 'Office 1102, Dubai, UAE'],
-      phones: [{ display: '+971 4 228 2211', tel: '+97142282211' }],
-      mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Al+Masraf+Tower+Baniyas+Street+Dubai' }
+      mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Swani+Road+Al+Fallah+Street+Tripoli+Libya' }
   ],
   brochures: { destinator: '', l200: '', outlander: '', xpander: '' }, // paste each brochure PDF URL here to enable the Download buttons
   officialSite: 'https://www.mitsubishi-motors.com.kw'

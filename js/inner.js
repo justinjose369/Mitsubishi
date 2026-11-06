@@ -158,8 +158,12 @@
     // drive-by band: car crosses, outline word drifts the other way
     $$('.drive').forEach(d => {
       const car = $('[data-drive]', d), word = $('[data-drive-word]', d);
-      gsap.fromTo(car, { x: () => -car.offsetWidth * 1.1 }, { x: () => d.clientWidth + car.offsetWidth * .1, ease: 'none', scrollTrigger: { trigger: d, start: 'top bottom', end: 'bottom top', scrub: .5, invalidateOnRefresh: true } });
-      gsap.fromTo(word, { x: () => d.clientWidth * .1 }, { x: () => -word.offsetWidth * .35, ease: 'none', scrollTrigger: { trigger: d, start: 'top bottom', end: 'bottom top', scrub: true, invalidateOnRefresh: true } });
+      // the cars face left, so scrolling down drives the car forward: right to left, wheels rolling with the distance
+      const wheels = $$('.wheel', car), from = () => d.clientWidth + car.offsetWidth * .1;
+      gsap.fromTo(car, { x: from }, { x: () => -car.offsetWidth * 1.1, ease: 'none',
+        onUpdate: () => { const travel = from() - gsap.getProperty(car, 'x'); wheels.forEach(w => gsap.set(w, { rotation: -(travel / (w.offsetWidth / 1.68)) * 180 / Math.PI })); },
+        scrollTrigger: { trigger: d, start: 'top bottom', end: 'bottom top', scrub: .5, invalidateOnRefresh: true } });
+      gsap.fromTo(word, { x: () => -word.offsetWidth * .35 }, { x: () => d.clientWidth * .1, ease: 'none', scrollTrigger: { trigger: d, start: 'top bottom', end: 'bottom top', scrub: true, invalidateOnRefresh: true } });
     });
     // list dividers draw in
     $$('.ben__list li, .why2__list li').forEach(li => gsap.to(li, { '--d': 1, duration: 1.1, ease: 'power3.inOut', scrollTrigger: { trigger: li, start: 'top 92%', once: true } }));
@@ -245,39 +249,58 @@
   });
   { const q = new URLSearchParams(location.search).get('vehicle'); const sel = $('#ct-vehicle'); if (q && sel) { const o = $$('option', sel).find(x => x.value.toLowerCase() === q.toLowerCase()); if (o) sel.value = o.value; } }
 
-  /* ------------------------------------------------------------ compare */
+  /* ------------------------------------------------------------ compare (add variants one by one) */
   (function compare() {
-    const data = window.MMK_COMPARE, mWrap = $('#cmpModels'); if (!data || !mWrap) return;
-    const vWrap = $('#cmpVariants'), cards = $('#cmpCards'), table = $('#cmpTable'), diff = $('#cmpDiff'), MAX = 3;
+    const data = window.MMK_COMPARE, grid = $('#cmpTable'); if (!data || !grid) return;
+    const only = $('#cmpDiffOnly'), none = $('#cmpNone'), MAX = 4, TBC = 'On request';
     const qs = new URLSearchParams(location.search);
-    let cur = data.find(m => m.slug === qs.get('m')) || data[1], sel = [];
-    const rows = [['Trim', 'trim'], ['Engine', 'engine'], ['Fuel', 'fuel'], ['Transmission', 'trans'], ['Cylinders', 'cyl'], ['Drive', 'drive'], ['Body', 'body'], ['Power', 'power'], ['Torque', 'torque']];
-    const TBC = 'On request', esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
-    function pick(id) { const i = sel.indexOf(id); if (i > -1) sel.splice(i, 1); else if (sel.length < MAX) sel.push(id); render(); }
-    function render() {
-      $$('button', mWrap).forEach(b => b.setAttribute('aria-selected', String(b.dataset.m === cur.slug)));
-      vWrap.innerHTML = cur.variants.map(v => '<button type="button" data-v="' + v.id + '" aria-pressed="' + sel.includes(v.id) + '"' + (!sel.includes(v.id) && sel.length >= MAX ? ' disabled' : '') + '>' + esc(v.trim) + '</button>').join('');
-      $$('button', vWrap).forEach(b => b.addEventListener('click', () => pick(b.dataset.v)));
-      const vs = sel.map(id => cur.variants.find(v => v.id === id)).filter(Boolean);
-      cards.style.setProperty('--n', Math.max(vs.length, 1));
-      cards.innerHTML = vs.map(v => '<div class="ccard"><figure class="ccard__img' + (v.photo ? ' is-photo' : '') + '"><img src="' + v.img + '" alt="' + esc(cur.name + ' ' + v.trim) + '" loading="lazy"></figure><h3>' + esc(v.trim) + '</h3></div>').join('') || '<p class="note">Select at least one variant above.</p>';
-      let t = '<thead><tr><th scope="col" class="sr">Specification</th>' + vs.map(v => '<th scope="col" class="sr">' + esc(v.trim) + '</th>').join('') + '</tr></thead><tbody>';
-      const diffs = [];
-      rows.forEach(([label, k]) => {
-        const vals = vs.map(v => v[k]); const known = vals.filter(x => x && x !== TBC);
-        const differs = k !== 'trim' && vs.length > 1 && new Set(known).size > 1;
-        if (differs) diffs.push([label, vs.map((v, i) => [v.trim, vals[i]])]);
-        t += '<tr' + (differs ? ' class="is-diff"' : '') + '><th scope="row">' + label + '</th>' + vals.map(x => '<td' + (x === TBC ? ' class="is-tbc"' : '') + '>' + esc(x || TBC) + '</td>').join('') + '</tr>';
-      });
-      table.innerHTML = '<caption class="sr">Specification comparison</caption>' + t + '</tbody>';
-      diff.innerHTML = vs.length < 2 ? '<div class="dcard dcard--none"><h3>Select two or more variants</h3><ul><li>Differences will be highlighted here</li></ul></div>'
-        : diffs.length ? diffs.map(([l, a]) => '<div class="dcard"><h3>' + l + '</h3><ul>' + a.map(([n, v]) => '<li>' + esc(v) + '<small>' + esc(n) + '</small></li>').join('') + '</ul></div>').join('')
-        : '<div class="dcard dcard--none"><h3>No confirmed differences</h3><ul><li>These variants share the same confirmed specifications</li></ul></div>';
-      if (motion()) { gsap.from($$('.ccard', cards), { y: 24, opacity: 0, duration: .5, stagger: .07, ease: 'power3.out' }); gsap.from($$('.dcard', diff), { y: 24, opacity: 0, duration: .5, stagger: .06, ease: 'power3.out' }); }
+    const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+    const rows = [['Engine', 'engine'], ['Fuel', 'fuel'], ['Cylinders', 'cyl'], ['Power', 'power'], ['Torque', 'torque'], ['Transmission', 'trans'], ['Drive', 'drive'], ['Body', 'body']];
+    /* one model at a time; start with one variant, then add more with the + box */
+    let cur = data.find(m => m.slug === qs.get('m')) || data.find(m => m.slug === 'l200') || data[0], chosen = [];
+    const start = () => { chosen = [cur.variants.find(v => v.id === qs.get('v')) || cur.variants[0]]; };
+    start();
+    const opts = (list, sel, label) => (label ? '<option value="">' + label + '</option>' : '') + list.map(([val, text]) => '<option value="' + val + '"' + (val === sel ? ' selected' : '') + '>' + esc(text) + '</option>').join('');
+    function render(anim) {
+      const free = cur.variants.filter(v => !chosen.includes(v));
+      const canAdd = chosen.length < MAX && free.length > 0;
+      const shown = rows.map(([label, k]) => {
+        const vals = chosen.map(v => v[k] || TBC);
+        const known = vals.filter(x => x !== TBC);
+        return { label, vals, differs: chosen.length > 1 && new Set(known).size > 1 };
+      }).filter(r => !only.checked || r.differs);
+      const blank = shown.map(() => '<div class="spec is-blank"></div>').join('');
+      grid.style.setProperty('--rows', 4 + shown.length);
+      let html = chosen.map((v, i) => {
+        let h = '<article class="ccar"><div class="ccar__sel">' + (i === 0
+          ? '<select data-model aria-label="Vehicle">' + opts(data.map(m => [m.slug, m.name]), cur.slug) + '</select>'
+          : '<select disabled aria-label="Vehicle (set by the first column)">' + opts([[cur.slug, cur.name]], cur.slug) + '</select>')
+          + '<select data-v="' + i + '" aria-label="Variant ' + (i + 1) + '">' + opts(cur.variants.filter(x => x === v || !chosen.includes(x)).map(x => [x.id, x.trim]), v.id) + '</select></div>';
+        h += '<figure class="ccar__img' + (v.photo ? ' is-photo' : '') + '"><img src="' + v.img + '" alt="' + esc(cur.name + ' ' + v.trim) + '" loading="lazy"></figure><div class="ccar__name"><h3>' + esc(cur.name) + '</h3><p>' + esc(v.trim) + '</p></div><div class="ccar__act"><a class="btn btn--solid" href="contact.html?vehicle=' + encodeURIComponent(cur.name) + '">Enquire</a>' + (chosen.length > 1 ? '<button type="button" class="ccar__link" data-rm="' + i + '">Remove</button>' : '<a class="ccar__link" href="' + cur.slug + '.html">Discover ' + esc(cur.name) + '</a>') + '</div>';
+        shown.forEach(r => { const x = r.vals[i]; h += '<div class="spec' + (r.differs ? ' is-diff' : '') + (x === TBC ? ' is-tbc' : '') + '"><small>' + r.label + '</small><b>' + esc(x) + '</b></div>'; });
+        return h + '</article>';
+      }).join('');
+      if (canAdd) html += '<article class="ccar ccar--add"><div class="ccar__sel"><span class="ccar__ph"></span><span class="ccar__ph"></span></div>'
+        + '<div class="ccar__img ccar__img--add"><span class="plus" aria-hidden="true">+</span><span>Add a variant</span>'
+        + '<select data-add aria-label="Add a variant to compare">' + opts(free.map(x => [x.id, x.trim]), '', 'Add a variant') + '</select></div>'
+        + '<div class="ccar__name"></div><div class="ccar__act"></div>' + blank + '</article>';
+      grid.innerHTML = html;
+      none.hidden = shown.length > 0;
+      if (anim && motion()) gsap.from($$('.ccar', grid), { y: 24, opacity: 0, duration: .5, stagger: .07, ease: 'power3.out', clearProps: 'all' });
     }
-    $$('button', mWrap).forEach(b => b.addEventListener('click', () => { cur = data.find(m => m.slug === b.dataset.m); sel = cur.variants.slice(0, 2).map(v => v.id); render(); }));
-    const want = qs.get('v'); sel = want && cur.variants.some(v => v.id === want) ? [want, ...cur.variants.filter(v => v.id !== want).slice(0, 1).map(v => v.id)] : cur.variants.slice(0, 2).map(v => v.id);
-    render();
+    grid.addEventListener('change', e => {
+      const t = e.target;
+      if (t.hasAttribute('data-model')) { cur = data.find(m => m.slug === t.value) || cur; chosen = [cur.variants[0]]; render(true); const f = $('[data-model]', grid); if (f) f.focus(); return; }
+      if (t.hasAttribute('data-add')) { const v = cur.variants.find(x => x.id === t.value); if (v) { chosen.push(v); render(false); const n = $$('[data-v]', grid).pop(); if (n) n.focus(); } return; }
+      const vi = t.dataset.v; if (vi == null) return;
+      const v = cur.variants.find(x => x.id === t.value); if (v) { chosen[+vi] = v; render(false); const again = $('[data-v="' + vi + '"]', grid); if (again) again.focus(); }
+    });
+    grid.addEventListener('click', e => {
+      const b = e.target.closest('[data-rm]'); if (!b) return;
+      chosen.splice(+b.dataset.rm, 1); render(false);
+    });
+    only.addEventListener('change', () => render(false));
+    render(true);
   })();
 
   /* ------------------------------------------------------------ article page */
