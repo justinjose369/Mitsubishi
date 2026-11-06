@@ -37,7 +37,7 @@ const NAV = [['Home', 'index.html', 'home'], ['About Us', 'about.html', 'about']
 const header = active => `
   <header class="header" id="header">
     <div class="header__inner">
-      <div class="header__brand"><a class="header__logo" href="index.html" aria-label="Mitsubishi Motors Libya, home"><img src="assets/img/logo.svg" alt="Mitsubishi Motors" width="133" height="92"></a></div>
+      <div class="header__brand"><a class="header__logo header__logo--main" href="index.html" aria-label="Mitsubishi Motors Libya, home"><img src="assets/img/logo-main.png" alt="Mitsubishi Motors, Drive your Ambition" width="201" height="186"></a></div>
       <nav class="nav" aria-label="Primary"><ul>
         ${NAV.map(([t, h, k]) => k === 'cars'
           ? `<li class="nav__mega" id="navCars"><a href="${h}" data-nav="cars"${active === 'cars' ? ' class="is-active" aria-current="page"' : ''} aria-haspopup="true" aria-expanded="false" aria-controls="mega">${t}<svg class="ic nav__chev" aria-hidden="true"><use href="#i-chevron-down"/></svg></a></li>`
@@ -69,7 +69,7 @@ const footer = () => `
     <div class="wrap">
       <div class="footer__main">
         <div class="footer__id">
-          <div class="footer__brand"><a class="footer__logo" href="index.html" aria-label="Mitsubishi Motors Libya"><img src="assets/img/logo.svg" alt="Mitsubishi Motors" width="133" height="92" loading="lazy"></a></div>
+          <div class="footer__brand"><a class="footer__logo footer__logo--main" href="index.html" aria-label="Mitsubishi Motors Libya"><img src="assets/img/logo-main.png" alt="Mitsubishi Motors, Drive your Ambition" width="201" height="186" loading="lazy"></a></div>
           <ul class="footer__social" aria-label="Social media">
             <li><a data-social="facebook" aria-disabled="true" aria-label="Facebook"><svg class="ic"><use href="#i-facebook"/></svg></a></li>
             <li><a data-social="instagram" aria-disabled="true" aria-label="Instagram"><svg class="ic"><use href="#i-instagram"/></svg></a></li>
@@ -116,7 +116,7 @@ const footer = () => `
   <nav class="dock" id="dock" aria-label="Quick contact"><a href="#" data-wa target="_blank" rel="noopener" class="dock__wa">${ic('whatsapp')}<span>WhatsApp</span></a><a href="tel:+218918804961" class="dock__call">${ic('phone')}<span>Call us</span></a><a href="contact.html" class="dock__enq">${ic('mail')}<span>Enquire</span></a></nav>`;
 
 /* ---------- page shell ---------- */
-function page(file, { title, desc, active, hdr = 'dark', body, preload = '', after = '' }) {
+function page(file, { title, desc, active, hdr = 'dark', body, preload = '', after = '', bodyClass = '' }) {
   const out = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -131,7 +131,7 @@ function page(file, { title, desc, active, hdr = 'dark', body, preload = '', aft
   <link rel="stylesheet" href="css/styles.css?v=${ASSET_V}">
   <link rel="stylesheet" href="css/inner.css?v=${ASSET_V}">
 </head>
-<body class="inner" data-header="${hdr}">
+<body class="inner${bodyClass ? ' ' + bodyClass : ''}" data-header="${hdr}">
   <a class="skip" href="#main">Skip to content</a>
   ${sprite}
   <div class="pt" id="pt" aria-hidden="true"><i></i></div>
@@ -144,6 +144,7 @@ function page(file, { title, desc, active, hdr = 'dark', body, preload = '', aft
   <script src="js/config.js?v=${ASSET_V}"></script>
   ${after}
   <script src="js/inner.js?v=${ASSET_V}"></script>
+  <script src="js/megacar.js?v=${ASSET_V}"></script>
 </body>
 </html>
 `;
@@ -207,83 +208,86 @@ ${ctaBand({ title: 'Test the range', text: 'Speak to our team about the vehicle 
 });
 
 /* ======================================================================== VEHICLE DETAIL ===== */
+/* Layout follows the Mitsubishi Motors Kuwait model page: hero, Drive hero, Exterior / Interior banners,
+   50/50 Safety block, text block, tabbed trim + specification table, legal note, key buying actions. */
 ORDER.forEach((s, mi) => {
   const m = model(s), next = model(ORDER[(mi + 1) % 4]);
-  const cutSpec = m.variants[0];
-  const photoPanel = m.photo2 !== m.hero;
   const tabs = Object.keys(m.specs);
+  const enq = 'contact.html?vehicle=' + encodeURIComponent(m.name);
+  const F = [0, 1, 2, 3].map(i => m.features[i % m.features.length]), bg = i => (F[i] && F[i][3]) || m.photo2 || m.hero;
+  const banner = (i, label) => `<section class="xb" aria-labelledby="xb-${i}"><div class="xb__bg">${img(bg(i), '', 1600, 900)}</div><div class="xb__shade"></div>
+  <div class="xb__in"><div class="xb__txt"><p class="xk" data-a>${F[i][0]}</p><h2 class="xh2" id="xb-${i}" data-a>${F[i][1]}</h2><p class="xp" data-a>${F[i][2]}</p><a class="xlink" href="#specs" data-a>Explore ${label}</a></div></div></section>`;
   page(s + '.html', {
-    title: m.name, desc: `Mitsubishi ${m.name} in Libya: ${m.tag}`, active: 'cars',
+    title: m.name, desc: `Mitsubishi ${m.name} in Libya: ${m.tag}`, active: 'cars', bodyClass: 'vd xf',
     preload: `\n  <link rel="preload" href="${m.hero}" as="image">`,
     body: `
-<section class="vh" style="--ac:${m.accent}" aria-labelledby="vh-t">
-  <div class="vh__bg" data-parallax data-hero-img>${img(m.hero, '', 1600, 900).replace('loading="lazy"', 'fetchpriority="high"')}</div><div class="vh__shade"></div>
-  <div class="vh__ghost" aria-hidden="true" data-ghost>${m.name}</div>
-  <div class="wrap vh__in">
-    <p class="eyebrow" data-a>${m.kind} &middot; Mitsubishi Motors Libya</p>
-    ${split('h1', 'big vh__name', m.name, 'id="vh-t"')}
-    <p class="vh__tag" data-a>${m.tag}</p>
-    <div class="vh__cta" data-a>${btn('contact.html?vehicle=' + encodeURIComponent(m.name), 'Enquire now')}${btn('#brochure', 'Brochure', 'btn--line')}</div>
-  </div>
-  <a class="scrollcue" href="#overview" aria-label="Scroll to overview"><span>Scroll</span><i></i></a>
-</section>
-
-<section class="ov sec sec--paper" id="overview" aria-labelledby="ov-t">
-  <div class="wrap ov__grid">
-    <div class="ov__copy">${eyebrow('Model overview')}${split('h2', 'h2', m.tag, 'id="ov-t"')}<p class="lede ov__lede" data-a>${m.intro}</p>
-      <div class="ov__stat" data-a><b data-count="${m.stat.v}">${m.stat.v}</b>${m.stat.u ? `<em>${m.stat.u}</em>` : ''}<span>${m.stat.l}</span></div>
-      <div data-a>${btn('#specs', 'Technical specifications', 'btn--ghost')}</div></div>
-    ${photoPanel ? clip(m.photo2, m.name + ' in its environment', 1200, 800, 'ov__img') : `<figure class="ov__cut" data-clip>${img(m.cut, m.name, 520, Math.round(520 * m.cutAr))}</figure>`}
+<section class="xh xh--c" style="--ac:${m.accent}" aria-labelledby="xh-t">
+  <div class="xh__bg" data-parallax data-hero-img>${img(m.hero, '', 1600, 900).replace('loading="lazy"', 'fetchpriority="high"')}</div><div class="xh__shade"></div>
+  <div class="xh__in">
+    <nav class="crumb" aria-label="Breadcrumb" data-a><a href="index.html">Home</a><span>/</span><a href="vehicles.html">Cars</a><span>/</span><b>${m.name}</b></nav>
+    <p class="xk" data-a>${m.kind} &middot; Mitsubishi Motors Libya</p>
+    <h1 class="xh1" id="xh-t" data-a>${m.name}</h1>
+    <p class="xp" data-a>${m.tag}</p>
+    <ul class="xh__feat" data-a>${m.labels.slice(0, 3).map(l => `<li>${l}</li>`).join('')}</ul>
+    <div class="xh__cta" data-a><a class="btn btn--solid" href="${enq}">Book a test drive</a></div>
   </div>
 </section>
 
-<section class="drive" style="--ac:${m.accent}" aria-hidden="true"><div class="drive__word" data-drive-word>${m.name}</div><figure class="drive__car" data-drive>${img(m.cut, "", 520, Math.round(520 * m.cutAr), "loading=\"eager\"")}${wheelDiscs(m)}</figure><i class="drive__road"></i></section>
-
-<section class="vfloat sec sec--ink" style="--ac:${m.accent}" aria-labelledby="vf-t">
-  <div class="wrap">${eyebrow('Highlights')}${split('h2', 'h2', `The ${m.name}, up close`, 'id="vf-t"')}</div>
-  <div class="vfloat__stage"><div class="vfloat__ring" aria-hidden="true"></div>
-    <figure class="vfloat__car" data-float>${img(m.cut, m.name, 520, Math.round(520 * m.cutAr))}</figure>
-    ${m.labels.map((l, i) => `<span class="tagf tagf--${i + 1}" data-a><i></i>${l}</span>`).join('')}
-  </div>
+<section class="xh xh--r" aria-labelledby="xd-t">
+  <div class="xh__bg">${img(bg(0), '', 1600, 900)}</div><div class="xh__shade"></div>
+  <div class="xh__in xh__in--r"><div class="xh__box">
+    <p class="xk" data-a>Drive</p><h2 class="xh2" id="xd-t" data-a>${F[0][1]}</h2><p class="xp" data-a>${F[0][2]}</p>
+    <div data-a><a class="btn" href="#specs">Explore drive</a></div></div></div>
 </section>
 
-<section class="var sec sec--graphite" aria-labelledby="var-t">
-  <div class="wrap"><div class="sec-head"><div>${eyebrow('Variants')}${split('h2', 'h2', m.variants.length > 1 ? 'Choose your ' + m.name : 'The ' + m.name, 'id="var-t"')}</div>${m.variants.length > 1 ? `<div data-a>${btn('compare.html?m=' + s, 'Compare variants', 'btn--line')}</div>` : ''}</div></div>
-  <div class="var__rail" data-drag data-cursor="Drag"><ul class="var__list">${m.variants.map(v => `<li class="vcard" data-a><figure class="vcard__img${v.photo ? ' is-photo' : ''}">${img(v.img, m.name + ' ' + v.trim, 600, 400)}</figure><h3>${esc(v.trim)}</h3><ul class="chips chips--sm"><li>${v.engine}</li><li>${v.trans}</li><li>${v.drive}</li></ul><a class="vcard__a" href="compare.html?m=${s}&v=${v.id}">Compare ${ic('arrow-up-right')}</a></li>`).join('')}</ul></div>
+${banner(1, 'exterior')}
+${banner(2, 'interior')}
+
+<section class="x50" aria-labelledby="xs-t">
+  <div class="x50__txt"><div><p class="xk" data-a>Safety</p><h2 class="xh2 xh2--dk" id="xs-t" data-a>${F[3][1]}</h2><p class="xp xp--dk" data-a>${F[3][2]}</p><a class="xlink xlink--dk" href="#specs" data-a>Explore safety</a></div></div>
+  <div class="x50__img">${img(bg(3), m.name, 1200, 900)}</div>
 </section>
 
-<section class="hs" data-hs style="--ac:${m.accent}" aria-labelledby="hs-t">
-  <div class="hs__pin">
-    <div class="wrap hs__head">${eyebrow('Key features')}${split('h2', 'h2', 'What sets it apart', 'id="hs-t"')}<p class="hs__count"><b data-hs-now>01</b> / 0${m.features.length}</p></div>
-    <div class="hs__track" data-hs-track>${m.features.map((f, i) => `<article class="hs__p"><p class="hs__n">0${i + 1}</p><div class="hs__vis hs__vis--cut" style="--tx:${[-24, 0, 24, -8][i % 4]}%;--sc:${[2.1, 1.35, 2.1, 1.7][i % 4]}">${img(m.cut, "", 900, Math.round(900 * m.cutAr))}</div><p class="hs__k">${f[0]}</p><h3>${f[1]}</h3><p>${f[2]}</p></article>`).join('')}</div>
-    <div class="hs__bar" aria-hidden="true"><i data-hs-bar></i></div>
-  </div>
+<section class="xtx" aria-labelledby="xo-t">
+  <div class="wrap xtx__in"><p class="xk" data-a>Model overview</p><h2 class="xh2 xh2--dk" id="xo-t" data-a>${m.tag}</h2><p class="xp xp--dk" data-a>${m.intro}</p></div>
 </section>
 
-${m.gallery ? `<section class="gal sec sec--ink" aria-labelledby="gal-t"><div class="wrap">${eyebrow('Gallery')}${split('h2', 'h2', 'In its element', 'id="gal-t"')}</div>
-  <div class="gal__rail" data-drag data-cursor="Drag">${m.gallery.map(g => `<figure class="gal__i">${img(g, m.name, 1200, 800)}</figure>`).join('')}</div></section>` : ''}
+<section class="xs" id="variants" aria-labelledby="var-t">
+  <div class="wrap">
+    <h2 class="xh2 xh2--dk" id="var-t" data-a>${m.variants.length > 1 ? 'Choose your ' + m.name : 'The ' + m.name}</h2>
+    <div class="trim" data-tabs>
+      <div class="trim__tabs" role="tablist" aria-label="${m.name} variants">${m.variants.map((v, i) => `<button type="button" role="tab" id="tt-${v.id}" aria-controls="tp-${v.id}" aria-selected="${i === 0}"${i ? ' tabindex="-1"' : ''}>${esc(v.trim)}</button>`).join('')}</div>
+      ${m.variants.map((v, i) => `<div class="trim__panel" role="tabpanel" id="tp-${v.id}" aria-labelledby="tt-${v.id}"${i ? ' hidden' : ''}>
+        <div class="trim__img${v.photo ? ' is-photo' : ''}">${img(v.img, m.name + ' ' + v.trim, 900, 600)}</div>
+        <div class="trim__info"><h3>${esc(v.trim)}</h3>
+          <dl class="trim__facts"><div><dt>Engine</dt><dd>${v.engine}</dd></div><div><dt>Transmission</dt><dd>${v.trans}</dd></div><div><dt>Drive</dt><dd>${v.drive}</dd></div></dl>
+          <a class="btn btn--solid" href="compare.html?m=${s}&v=${v.id}">Compare this variant</a></div></div>`).join('')}
+    </div>
 
-<section class="spec sec sec--paper" id="specs" aria-labelledby="sp-t">
-  <div class="wrap spec__grid">
-    <div class="spec__head">${eyebrow('Technical specifications')}${split('h2', 'h2', 'The details', 'id="sp-t"')}
-      <p class="note" data-a>Figures shown are confirmed for this vehicle. Anything marked &ldquo;${TBC}&rdquo; is being confirmed: ask our showroom team for the full specification by trim.</p></div>
-    <div class="spec__body" data-tabs>
-      <div class="spec__tabs" role="tablist" aria-label="Specification categories">${tabs.map((t, i) => `<button type="button" role="tab" id="st-${t}" aria-controls="sp-${t}" aria-selected="${i === 0}"${i ? ' tabindex="-1"' : ''}>${t}</button>`).join('')}</div>
-      ${tabs.map((t, i) => `<dl class="spec__panel" role="tabpanel" id="sp-${t}" aria-labelledby="st-${t}"${i ? ' hidden' : ''}>${m.specs[t].map(r => `<div${r[1] === TBC ? ' class="is-tbc"' : ''}><dt>${r[0]}</dt><dd>${r[1]}</dd></div>`).join('')}</dl>`).join('')}
+    <div class="xs__spec" id="specs">
+      <h3 class="xh3" data-a>Specifications</h3>
+      <div data-tabs class="spec__x">
+        <div class="spec__tabs" role="tablist" aria-label="${m.name} specifications">${tabs.map((t, i) => `<button type="button" role="tab" id="st-${s}-${i}" aria-controls="sp-${s}-${i}" aria-selected="${i === 0}"${i ? ' tabindex="-1"' : ''}>${t}</button>`).join('')}</div>
+        <div class="spec__list" id="spl">${tabs.map((t, i) => `<dl class="spec__panel" role="tabpanel" id="sp-${s}-${i}" aria-labelledby="st-${s}-${i}"${i ? ' hidden' : ''}>${m.specs[t].map(r => `<div${r[1] === TBC ? ' class="is-tbc"' : ''}><dt>${r[0]}</dt><dd>${r[1]}</dd></div>`).join('')}</dl>`).join('')}</div>
+      </div>
+      <button class="spec__more" type="button" data-more-btn aria-controls="spl" aria-expanded="false"><span>Show more</span> ${ic('plus')}</button>
     </div>
   </div>
 </section>
 
-<section class="bro sec sec--graphite" id="brochure" aria-labelledby="br-t">
-  <div class="wrap bro__grid">
-    <div class="bro__mock" data-a data-tilt><div class="bro__cover" style="--ac:${m.accent}">${img(m.hero, '', 700, 900)}<span class="bro__logo"><img src="assets/img/logo.svg" alt="" width="60" height="42"></span><b>${m.name}</b><small>${m.kind}</small></div></div>
-    <div>${eyebrow('Brochure')}${split('h2', 'h2', 'Download the ' + m.name + ' brochure', 'id="br-t"')}<p class="lede" data-a>${m.tag}</p>
-      <div data-a><a class="btn btn--solid" href="contact.html?vehicle=${encodeURIComponent(m.name)}" data-brochure="${s}" data-label="Download brochure">Request the brochure ${ic('download')}</a></div>
-      <p class="note note--dark" data-a data-brochure-note>The downloadable brochure is being prepared. Request it from our team in the meantime.</p></div>
+<section class="xl" aria-label="Legal"><div class="wrap"><p class="note note--dark">Note: Equipment may vary by market. Please consult Mitsubishi Motors Libya for details. Items marked &ldquo;${TBC}&rdquo; are being confirmed.</p></div></section>
+
+<section class="xka" id="brochure" aria-labelledby="xka-t">
+  <div class="wrap"><h2 class="xh2 xh2--dk" id="xka-t" data-a>Take the next step</h2>
+    <ul class="xka__list">
+      <li data-a><a href="${enq}"><b>Book a test drive</b><span>Experience the ${m.name} for yourself.</span></a></li>
+      <li data-a><a href="${enq}" data-brochure="${s}" data-label="Download brochure"><b>Download brochure</b><span>Request the ${m.name} brochure.</span></a></li>
+      <li data-a><a href="compare.html?m=${s}"><b>Compare variants</b><span>See the variants side by side.</span></a></li>
+      <li data-a><a href="contact.html"><b>Contact us</b><span>Talk to our team about availability.</span></a></li>
+    </ul>
+    <p class="note note--dark" data-brochure-note>The downloadable brochure is being prepared. Request it from our team in the meantime.</p>
   </div>
 </section>
-
-${ctaBand({ title: `Own the ${m.name}`, text: 'Speak to our team about availability, variants and the next step.', imgSrc: s === 'l200' ? 'assets/img/l200-hill.webp' : m.hero, href: 'contact.html?vehicle=' + encodeURIComponent(m.name) })}
 
 <a class="nextm" href="${next.slug}.html" data-a><span>Next vehicle</span><b>${next.name}</b>${ic('arrow-right')}</a>`
   });

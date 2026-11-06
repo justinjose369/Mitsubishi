@@ -144,7 +144,7 @@
           </div>
           <div class="stage__car" id="scCar" aria-live="polite"></div>
           <div class="ctrl" role="group" aria-label="Showcase controls">
-          <span class="ctrl__count" aria-hidden="true"><b id="scIndex">01</b> / <span id="scTotal">4</span></span>
+          <span class="ctrl__count" aria-hidden="true"><b id="scIndex">01</b> / <span id="scTotal">5</span></span>
           <button class="ctrl__btn" id="scPrev" type="button" aria-label="Previous model"><svg class="ic"><use href="#i-arrow-left"/></svg></button>
           <button class="ctrl__btn" id="scNext" type="button" aria-label="Next model"><svg class="ic"><use href="#i-arrow-right"/></svg></button>
           <button class="ctrl__btn" id="scPlay" type="button" aria-label="Pause automatic rotation" aria-pressed="true"><svg class="ic ic--pause"><use href="#i-pause"/></svg><svg class="ic ic--play"><use href="#i-play"/></svg></button>
@@ -171,8 +171,11 @@
             <div class="story__head">
               <h2 class="story__h" id="story-title">Mitsubishi in <span class="accent">Libya</span></h2>
               <div class="story__prog">
-                <span class="story__count" aria-hidden="true"><b id="stNow">01</b>/04</span>
+                <span class="story__count" aria-hidden="true"><b id="stNow">01</b>/<span id="stTotal">04</span></span>
+                <button class="story__arr" id="stPrev" type="button" aria-label="Previous vehicle"><svg class="ic"><use href="#i-arrow-left"/></svg></button>
                 <span class="story__ticks" id="stTicks"></span>
+                <button class="story__arr" id="stNext" type="button" aria-label="Next vehicle"><svg class="ic"><use href="#i-arrow-right"/></svg></button>
+                <button class="story__arr" id="stPlay" type="button" aria-label="Pause automatic sliding" aria-pressed="true"><svg class="ic ic--pause"><use href="#i-pause"/></svg><svg class="ic ic--play"><use href="#i-play"/></svg></button>
               </div>
             </div>
             <div class="story__copy" id="stCopy"></div>
@@ -248,37 +251,6 @@
           </div>
         </div>
       </div>
-
-      <div class="frows" id="fleetRows">
-        <div class="frows__text">
-          <div class="frow__text" data-row>
-            <p class="frow__label" data-rv>Fleet service &middot; 01</p>
-            <h3 class="frow__title" data-rv>Tailored business solutions</h3>
-            <p data-rv>Our hand-picked fleet professionals bring experience, know-how and service skills, with expert knowledge of every car and finance option, plus personalised plans and exclusive deals.</p>
-            <a class="btn btn--line" href="#contact" data-fleet-enquiry data-rv>Start your enquiry</a>
-          </div>
-          <div class="frow__text" data-row>
-            <p class="frow__label" data-rv>Fleet service &middot; 02</p>
-            <h3 class="frow__title" data-rv>The right car for your business</h3>
-            <p data-rv>Whether you need a hatchback, SUV, pickup truck or electric car, the team is trained to help you find the best vehicles to create your ideal fleet.</p>
-            <a class="btn btn--line" href="#contact" data-fleet-enquiry data-rv>Start your enquiry</a>
-          </div>
-          <div class="frow__text" data-row>
-            <p class="frow__label" data-rv>Fleet service &middot; 03</p>
-            <h3 class="frow__title" data-rv>Finance your fleet</h3>
-            <p data-rv>The team will guide you through the options to find the best way to finance your fleet, so the whole experience stays simple.</p>
-            <a class="btn btn--line" href="#contact" data-fleet-enquiry data-rv>Start your enquiry</a>
-          </div>
-        </div>
-        <div class="frows__media" aria-hidden="true">
-          <div class="frows__stick" id="fleetStick">
-            <figure class="frow__img"><img src="assets/img/fleet-tailored.jpg" alt="Orange Mitsubishi L200 parked in a quarry" width="1067" height="741" loading="lazy"></figure>
-            <figure class="frow__img"><img src="assets/img/drive.webp" alt="" width="2000" height="1333" loading="lazy"></figure>
-            <figure class="frow__img"><img src="assets/img/l200-hill.webp" alt="" width="1230" height="1076" loading="lazy"></figure>
-          </div>
-        </div>
-      </div>
-      <div class="fleet__progress" id="fleetProg" aria-hidden="true"><i></i></div>
     </section>
 
     <!-- 9. PARTS -->
@@ -469,5 +441,6 @@
   <script src="js/config.js?v=20261106b"></script>
   <script src="js/data.js?v=20261106b"></script>
   <script src="js/main.js?v=20261106b"></script>
+  <script src="js/megacar.js?v=20261106b"></script>
 </body>
 </html>

@@ -19,6 +19,16 @@
 const REQ = 'On request';
 const NOTE = 'Full specification is confirmed by trim. Ask our showroom team for the details.';
 const MMK_EXTRA = {
+  'pajero-sport': {
+    tag: 'A mid-size SUV with a refined, powerful look.',
+    story: { name: 'Pajero Sport', kind: 'SUV', photo: { src: 'assets/img/story-pajero-sport', big: 2000, ar: 1.4065, fx: .665, fy: .56, cw: .49 }, spec: { value: 2019, unit: 'Debut', label: 'Global debut of the new Pajero Sport' } },
+    details: {
+      design: { lead: 'A refined, powerful appearance with a sculpted body and alloy wheels.', rows: [['Model', 'Pajero Sport'], ['Body', 'Mid-size SUV'], ['Wheels', 'Alloy']] },
+      performance: { lead: 'Full specification is confirmed by trim. Ask our showroom team for the details.', rows: [['Engine', REQ], ['Power', REQ], ['Torque', REQ], ['Transmission', REQ], ['Drive', REQ], ['Fuel', REQ]] },
+      safety: { lead: NOTE, rows: [['Braking', REQ], ['Stability', REQ], ['Airbags', REQ], ['Driver assist', REQ]] },
+      comfort: { lead: NOTE, rows: [['Climate', REQ], ['Infotainment', REQ], ['Seating', REQ], ['Access', REQ]] }
+    }
+  },
   'destinator-m-line': {
     tag: 'A bold, modern SUV built for the family.',
     story: { name: 'Destinator', kind: 'SUV', photo: { src: 'assets/img/story-destinator', ar: 1.814, fx: .55, fy: .58, cw: .33 }, spec: { value: 161, unit: 'hp', label: 'Turbocharged engine power' } },
@@ -91,8 +101,11 @@ window.MMK_MODELS = [
     specs: [['Model', 'Outlander Sport'], ['Trim', 'M Line']] },
   { id: 'xpander', slug: 'xpander', name: 'Xpander', price: 'Price upon enquiry', img: 'assets/cars/xpander.webp', ar: 0.3505, wheels: [0.2305, 0.7695, 0.773, 0.0625, 0.758], scale: 1, lift: 0.0285,
     intro: 'Mitsubishi Xpander.',
-    specs: [['Model', 'Xpander']] }
+    specs: [['Model', 'Xpander']] },
+  { id: 'pajero-sport', slug: 'pajero-sport', name: 'Pajero Sport', price: 'Price upon enquiry', img: 'assets/cars/pajero-sport.webp', ar: 0.3925, wheels: [0.191, 0.7716, 0.7506, 0.0816, 0.7506], scale: 1, lift: 0.0305,
+    intro: 'Mitsubishi Pajero Sport, the mid-size SUV.',
+    specs: [['Model', 'Pajero Sport'], ['Body', 'Mid-size SUV']] }
 ]
   /* Showcase shows one variant per model. */
-  .filter(m => ['destinator-m-line', 'outlander-sport-h-line', 'l200-glx-diesel', 'xpander'].includes(m.id))
+  .filter(m => ['destinator-m-line', 'outlander-sport-h-line', 'l200-glx-diesel', 'xpander', 'pajero-sport'].includes(m.id))
   .map(m => Object.assign({}, MMK_EXTRA[m.id], m));

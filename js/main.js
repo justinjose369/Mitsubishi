@@ -195,13 +195,14 @@
    * Scroll progress p (0..1) picks the active vehicle and a local value q (0..1) that drives the slow drift of its photograph.
    * Photographs are placed so the vehicle always sits clear of the text (layout() below). Only transform and opacity animate. */
   function initStory() {
+    const S = M.filter(m => m.story), n = S.length; // vehicles with a story photograph (appended showcase-only models are skipped)
     const track = $('#storyTrack'), root = $('#story'), stage = $('.story__sticky'), bg = $('#stBg'), copy = $('#stCopy'), ticks = $('#stTicks'), now = $('#stNow'); if (!track) return;
     const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
-    bg.innerHTML = M.map((m, i) => {
+    bg.innerHTML = S.map((m, i) => {
       const p = m.story.photo;
       return '<div class="story__bgl" data-s="' + (i ? 'next' : 'now') + '"><img src="' + p.src + '.webp" srcset="' + p.src + '-960.webp 1000w, ' + p.src + '.webp ' + (p.big || 2400) + 'w" sizes="100vw" alt="" width="' + Math.round(1000 * p.ar) + '" height="1000" decoding="async"' + (i ? ' loading="lazy"' : '') + '></div>';
     }).join('');
-    copy.innerHTML = M.map((m, i) => {
+    copy.innerHTML = S.map((m, i) => {
       const s = m.story, sp = s.spec, last = i === n - 1;
       const words = s.name.split(' ').map((w, k) => '<span class="w"><span style="--w:' + k + '">' + esc(w) + '</span></span>').join(' ');
       return '<article class="story__item" data-s="' + (i ? 'next' : 'now') + '"' + (i ? ' inert' : '') + '>' +
@@ -213,14 +214,14 @@
           ? '<a class="btn btn--solid" href="#cars">Explore all vehicles <svg class="ic"><use href="#i-arrow-right"/></svg></a>'
           : '<a class="btn btn--line" href="#cars" data-mega-i="' + i + '">Explore vehicle <svg class="ic"><use href="#i-arrow-right"/></svg></a>') + '</div></article>';
     }).join('');
-    ticks.innerHTML = M.map((m, i) => '<button type="button" data-i="' + i + '" aria-label="Show ' + esc(m.story.name) + ' (' + pad(i + 1) + ' of ' + pad(n) + ')"' + (i ? '' : ' aria-current="true"') + '></button>').join('');
+    ticks.innerHTML = S.map((m, i) => '<button type="button" data-i="' + i + '" aria-label="Show ' + esc(m.story.name) + ' (' + pad(i + 1) + ' of ' + pad(n) + ')"' + (i ? '' : ' aria-current="true"') + '></button>').join('');
     const layers = $$('.story__bgl', bg), items = $$('.story__item', copy), nums = $$('.story__num', copy), tk = $$('button', ticks);
 
     // size and place each photograph so it covers the stage and the vehicle lands in the clear area (right on desktop, upper middle on mobile)
     function layout() {
       const w = stage.clientWidth, h = stage.clientHeight, wide = w >= 1024;
       layers.forEach((l, i) => {
-        const p = M[i].story.photo, img = l.firstElementChild;
+        const p = S[i].story.photo, img = l.firstElementChild;
         const ih = Math.max(wide ? h * 1.05 : 0, (w + 140) / p.ar, (w * (wide ? .5 : .85) / p.cw) / p.ar), iw = ih * p.ar; // car ~half the screen wide on desktop, most of it on mobile
         const tx = wide ? w * .66 : w * .5, ty = wide ? h * .6 : h * .34;
         const bx = Math.min(-70, Math.max(w - iw + 70, tx - p.fx * iw)), by = (wide ? Math.min(0, Math.max(h - ih, ty - p.fy * ih)) : 0) + (p.dy || 0) * h; // dy: extra nudge down, as a share of the stage height
@@ -234,6 +235,7 @@
     const counters = new Map();
     const countUp = el => {
       const to = +el.dataset.to; cancelAnimationFrame(counters.get(el));
+      el.textContent = to; return; // no count-up: the figure shows its value straight away
       if (reduceMQ.matches) { el.textContent = to; return; }
       const t0 = performance.now(), dur = 1300;
       el.textContent = '0';
@@ -244,36 +246,41 @@
       })(t0);
     };
 
-    let cur = 0, vis = false, raf = false;
+    // auto slider: advances every few seconds, pauses on hover / focus / when off-screen / reduced motion, ticks jump to a slide
+    const DWELL = 5000;
+    let cur = 0, vis = false, focus = false, paused = false, timer = 0;
+    const drift = (i, on) => { // slow settle of the photograph while its slide is showing
+      const im = layers[i].firstElementChild; im.style.transition = 'none'; im.style.setProperty('--q', on ? '0' : '.5');
+      if (!on || reduceMQ.matches) return;
+      void im.offsetWidth; im.style.transition = 'transform ' + (DWELL + 1500) + 'ms linear'; im.style.setProperty('--q', '1');
+    };
     const setActive = i => {
-      cur = i; now.textContent = pad(i + 1);
+      cur = (i + n) % n; i = cur; now.textContent = pad(i + 1);
       const st = j => j === i ? 'now' : j < i ? 'past' : 'next';
-      layers.forEach((f, j) => { f.dataset.s = st(j); if (j !== i) f.firstElementChild.style.removeProperty('--q'); });
+      layers.forEach((f, j) => { f.dataset.s = st(j); if (j !== i) drift(j, false); });
       items.forEach((it, j) => { it.dataset.s = st(j); it.inert = j !== i; });
       tk.forEach((b, j) => { if (j === i) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current'); });
-      countUp(nums[i]);
+      drift(i, true); countUp(nums[i]);
     };
-    const update = () => {
-      raf = false;
-      const r = track.getBoundingClientRect(), span = Math.max(1, r.height - innerHeight);
-      const p = Math.min(1, Math.max(0, -r.top / span)), x = Math.min(n - 1e-6, p * n), i = Math.floor(x);
-      if (i !== cur) setActive(i);
-      layers[i].firstElementChild.style.setProperty('--q', (x - i).toFixed(3));   // horizontal drift + slow scale (parallax depth)
-    };
-    const req = () => { if (vis && !raf) { raf = true; requestAnimationFrame(update); } };
-    on(window, 'scroll', req, { passive: true });
-    on(window, 'resize', () => { layout(); req(); });
+    const stop = () => { clearTimeout(timer); timer = 0; root.classList.remove('is-playing'); };
+    const arm = () => { clearTimeout(timer); if (paused || !vis || focus || document.hidden) { root.classList.remove('is-playing'); return; } root.classList.add('is-playing'); timer = setTimeout(() => { setActive(cur + 1); restart(); }, DWELL); };
+    const restart = () => { stop(); void root.offsetWidth; arm(); };
+    on(ticks, 'click', e => { const b = e.target.closest('button'); if (!b) return; setActive(+b.dataset.i); restart(); });
+    const total = $('#stTotal'); if (total) total.textContent = pad(n);
+    on($('#stPrev'), 'click', () => { setActive(cur - 1); restart(); });
+    on($('#stNext'), 'click', () => { setActive(cur + 1); restart(); });
+    const play = $('#stPlay');
+    on(play, 'click', () => { paused = !paused; play.setAttribute('aria-pressed', String(!paused)); play.setAttribute('aria-label', paused ? 'Start automatic sliding' : 'Pause automatic sliding'); restart(); });
+    on(root, 'focusin', e => { if (!e.target.matches(':focus-visible')) return; focus = true; stop(); });
+    on(root, 'focusout', () => { focus = false; restart(); });
+    on(document, 'visibilitychange', () => { if (document.hidden) stop(); else restart(); });
+    on(window, 'resize', layout);
     if ('IntersectionObserver' in window) {
-      new IntersectionObserver(es => { vis = es[0].isIntersecting; req(); }, { rootMargin: '10% 0px' }).observe(track);
+      new IntersectionObserver(es => { vis = es[0].isIntersecting; if (vis) restart(); else stop(); }, { threshold: .35 }).observe(root);
       // heading: fade-up once the section is reached
       new IntersectionObserver((es, io) => { if (es[0].isIntersecting) { root.classList.add('is-in'); countUp(nums[cur]); io.disconnect(); } }, { threshold: 0, rootMargin: '0px 0px -25% 0px' }).observe(root);
-    } else { vis = true; root.classList.add('is-in'); }
-    on(ticks, 'click', e => {
-      const b = e.target.closest('button'); if (!b) return;
-      const span = track.offsetHeight - innerHeight, top = track.getBoundingClientRect().top + scrollY;
-      scrollTo({ top: top + span * ((+b.dataset.i + .5) / n), behavior: reduceMQ.matches ? 'auto' : 'smooth' });
-    });
-    layout(); update();
+    } else { vis = true; root.classList.add('is-in'); restart(); }
+    layout(); drift(0, true);
   }
 
   function setThumb(i) {
@@ -489,9 +496,7 @@
       if (!mq.matches) return;
       root.style.setProperty('--footer-h', footer.offsetHeight + 'px');
       const vh = innerHeight; max = Math.max(0, root.scrollHeight - vh);
-      const tk = $('#storyTrack'), tt = top(tk), span = tk.offsetHeight - vh;
-      const pts = [0, top($('#cars'))];
-      for (let i = 0; i < n; i++) pts.push(tt + span * (i + .5) / n);
+      const pts = [0, top($('#cars')), top($('#story'))];
       free = { a: top($('#why')), b: top($('#fleet')) };
       pts.push(top($('#about')), free.a, free.b);
       $$('.frow__text').forEach(r => pts.push(top(r)));
@@ -587,6 +592,37 @@
     measure();
   }
 
+  /* ------------------------------------------------------------------ smooth wheel scrolling
+   * The mouse wheel feeds a target position and the page eases toward it each frame, so a flick glides and
+   * decelerates to a soft stop instead of halting abruptly. Keys, scrollbar drags, anchors and touch stay native. */
+  function initSmooth() {
+    const mq = matchMedia('(hover: hover) and (pointer: fine)');
+    const EASE = .075; // lower = longer, softer glide
+    let target = scrollY, cur = scrollY, raf = 0;
+    const maxY = () => Math.max(0, document.documentElement.scrollHeight - innerHeight);
+    const jump = y => scrollTo({ top: y, left: 0, behavior: 'instant' });
+
+    function frame() {
+      cur += (target - cur) * EASE;
+      if (Math.abs(target - cur) < .4) { cur = target; raf = 0; jump(cur); return; }
+      jump(cur);
+      raf = requestAnimationFrame(frame);
+    }
+    on(window, 'wheel', e => {
+      if (!mq.matches || reduceMQ.matches || e.ctrlKey || e.defaultPrevented || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+      if (e.target.closest && e.target.closest('textarea, select, .menu, .thumbs')) return;
+      e.preventDefault();
+      if (!raf) { target = cur = scrollY; }
+      const d = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? innerHeight : 1);
+      target = Math.min(maxY(), Math.max(0, target + d));
+      if (!raf) raf = requestAnimationFrame(frame);
+    }, { passive: false });
+    // any other scroll source (keys, scrollbar, anchors) takes over: drop the glide
+    const stop = () => { if (raf) { cancelAnimationFrame(raf); raf = 0; } };
+    on(window, 'keydown', stop); on(window, 'mousedown', stop); on(window, 'touchstart', stop, { passive: true });
+    on(window, 'scroll', () => { if (!raf) target = cur = scrollY; }, { passive: true });
+  }
+
   /* ------------------------------------------------------------------ GSAP: scroll & reveal system */
   function initMotion() {
     gsap.registerPlugin(ScrollTrigger);
@@ -627,7 +663,6 @@
         gsap.fromTo(fimg, { scale: 1.3 }, { scale: 1, duration: 2.2, ease: 'power3.out', scrollTrigger: { trigger: fig, start: 'top 85%', once: true } });
         gsap.fromTo(fimg, { yPercent: -9 }, { yPercent: 9, ease: 'none', scrollTrigger: { trigger: fig, start: 'top bottom', end: 'bottom top', scrub: true } });
       }
-      // fleet rows: image eases from a slight zoom as each row scrolls through\n      ('.frow__img img').forEach(im => gsap.fromTo(im, { scale: 1.16 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: im.parentElement, start: 'top bottom', end: 'bottom 40%', scrub: true } }));
       // showcase entrance
       gsap.from('.stage__car .car', { x: 120, opacity: 0, duration: 1.4, ease: 'power3.out', scrollTrigger: { trigger: '#stage', start: 'top 75%', once: true } });
     });
@@ -662,7 +697,7 @@
 
   /* ------------------------------------------------------------------ boot & teardown */
   function boot() {
-    initShowcase(); initDetails(); initMega(); initStory(); initFleet(); initMedia(); initForm();
+    initSmooth(); initShowcase(); initDetails(); initMega(); initStory(); initFleet(); initMedia(); initForm();
     if (hasGSAP) { ctx = gsap.context(initMotion); /* section snap-scrolling is switched off: the page scrolls normally. Call initSnap() here to bring it back. */ }
     $('#year') && ($('#year').textContent = new Date().getFullYear());
   }

@@ -24,9 +24,9 @@ const MODELS = [
     stat: { v: '3', l: 'trim levels: P, M and H Line' },
     labels: ['Two-tone roof', 'Alloy wheels', 'Sculpted body lines', 'P / M / H Line'],
     features: [
-      ['Presence', 'A confident SUV stance', 'Two-tone roof and sculpted body lines give the Destinator a strong, modern profile.'],
-      ['Choice', 'Three trim lines', 'Choose between the P Line, M Line and H Line to match how you drive.'],
-      ['Drive', '1.5L petrol, automatic', 'A four-cylinder 1.5L petrol engine with automatic transmission and two-wheel drive.']
+      ['Presence', 'A confident SUV stance', 'Two-tone roof and sculpted body lines give the Destinator a strong, modern profile.', 'assets/img/web/Destinator.jpg'],
+      ['Choice', 'Three trim lines', 'Choose between the P Line, M Line and H Line to match how you drive.', 'assets/cars/destinator-p-line.webp'],
+      ['Drive', '1.5L petrol, automatic', 'A four-cylinder 1.5L petrol engine with automatic transmission and two-wheel drive.', 'assets/img/story-destinator.webp']
     ],
     specs: { Design: [['Model', 'Destinator'], ['Trims', 'P Line, M Line, H Line'], ['Roof', 'Two-tone'], ['Wheels', 'Alloy']], Performance: [['Engine', '1.5L petrol'], ['Cylinders', '4'], ['Transmission', 'Automatic'], ['Drive', '2WD'], ['Power', TBC], ['Torque', TBC]], Safety: [['Braking', TBC], ['Stability', TBC], ['Airbags', TBC], ['Driver assist', TBC]], Comfort: [['Climate', TBC], ['Infotainment', TBC], ['Seating', TBC], ['Access', TBC]] },
     variants: [V('destinator-p', 'P Line', { img: 'assets/cars/destinator-p-line.webp', engine: '1.5L Petrol', trans: 'Automatic', cyl: '4', drive: '2WD', fuel: 'Petrol', body: 'SUV' }), V('destinator-m', 'M Line', { img: 'assets/cars/destinator-m-line.webp', engine: '1.5L Petrol', trans: 'Automatic', cyl: '4', drive: '2WD', fuel: 'Petrol', body: 'SUV' }), V('destinator-h', 'H Line', { img: 'assets/img/web/Destinator.jpg', photo: true, engine: '1.5L Petrol', trans: 'Automatic', cyl: '4', drive: '2WD', fuel: 'Petrol', body: 'SUV' })]
@@ -39,10 +39,10 @@ const MODELS = [
     stat: { v: '330', u: 'Nm', l: 'diesel torque (2.4L, GLX)' },
     labels: ['Double cab', 'Alloy wheels', 'LED tail lamps', 'Hill start assist'],
     features: [
-      ['Toughness', 'Beyond tough', 'Engineered for the harshest conditions, with a 2442 cc diesel tuned for load-carrying and everyday strength.'],
-      ['Space', 'Class-leading cabin', 'Travel comfortably in the double cab, with generous space and ergonomically designed, high-quality seating.'],
-      ['Control', 'Active safety', 'ABS with brake assist, ESP with traction control and hill start assist come with the GLX.'],
-      ['Calm', 'A quiet, comfortable ride', 'Strategically placed sound insulation and vibration damping material keep the cabin calm.']
+      ['Toughness', 'Beyond tough', 'Engineered for the harshest conditions, with a 2442 cc diesel tuned for load-carrying and everyday strength.', 'assets/img/l200-ext.webp'],
+      ['Space', 'Class-leading cabin', 'Travel comfortably in the double cab, with generous space and ergonomically designed, high-quality seating.', 'assets/img/web/L200-SCDC.jpg'],
+      ['Control', 'Active safety', 'ABS with brake assist, ESP with traction control and hill start assist come with the GLX.', 'assets/img/l200-hill.webp'],
+      ['Calm', 'A quiet, comfortable ride', 'Strategically placed sound insulation and vibration damping material keep the cabin calm.', 'assets/img/l200-intro.webp']
     ],
     specs: { Design: [['Body', 'Double Cab'], ['Trim', 'GLX'], ['Wheels', 'Alloy'], ['Tail lamps', 'LED']], Performance: [['Engine', '2442 cc diesel'], ['Power', '147 hp'], ['Torque', '330 Nm'], ['Cylinders', '4'], ['Transmission', 'Manual'], ['Drive', '4WD']], Safety: [['Braking', 'ABS + BA'], ['Stability', 'ESP + TCS'], ['Assist', 'Hill start'], ['Airbags', TBC]], Comfort: [['Climate', 'Auto A/C'], ['Infotainment', 'Touchscreen'], ['Access', 'Keyless'], ['Seating', TBC]] },
     gallery: ['assets/img/l200-ext.webp', 'assets/img/l200-hill.webp', 'assets/img/about-bg.webp', 'assets/img/fleet-tailored.jpg'],
@@ -64,9 +64,9 @@ const MODELS = [
     stat: { v: '3', l: 'trim levels: P, H and M Line' },
     labels: ['Compact SUV profile', 'Alloy wheels', 'Sporty stance', 'P / H / M Line'],
     features: [
-      ['Agility', 'Compact and confident', 'A sleek compact SUV profile with a sporty stance, made for city streets and weekend trips.'],
-      ['Choice', 'Three trim lines', 'The Outlander Sport is offered in P Line, H Line and M Line.'],
-      ['Drive', '1.5L petrol, automatic', 'A four-cylinder 1.5L petrol engine with automatic transmission and two-wheel drive.']
+      ['Agility', 'Compact and confident', 'A sleek compact SUV profile with a sporty stance, made for city streets and weekend trips.', 'assets/img/story-outlander.webp'],
+      ['Choice', 'Three trim lines', 'The Outlander Sport is offered in P Line, H Line and M Line.', 'assets/cars/outlander-sport-m-line.webp'],
+      ['Drive', '1.5L petrol, automatic', 'A four-cylinder 1.5L petrol engine with automatic transmission and two-wheel drive.', 'assets/img/drive.webp']
     ],
     specs: { Design: [['Model', 'Outlander Sport'], ['Trims', 'P Line, H Line, M Line'], ['Body', 'Compact SUV'], ['Wheels', 'Alloy']], Performance: [['Engine', '1.5L petrol'], ['Cylinders', '4'], ['Transmission', 'Automatic'], ['Drive', '2WD'], ['Power', TBC], ['Torque', TBC]], Safety: [['Braking', TBC], ['Stability', TBC], ['Airbags', TBC], ['Driver assist', TBC]], Comfort: [['Climate', TBC], ['Infotainment', TBC], ['Seating', TBC], ['Access', TBC]] },
     variants: [V('outlander-p', 'Outlander Sport P Line', { img: 'assets/img/drive.webp', photo: true, engine: '1.5L Petrol', trans: 'Automatic', cyl: '4', drive: '2WD', fuel: 'Petrol', body: 'Compact SUV' }), V('outlander-h', 'Outlander Sport H Line', { img: 'assets/cars/outlander-sport-h-line.webp', engine: '1.5L Petrol', trans: 'Automatic', cyl: '4', drive: '2WD', fuel: 'Petrol', body: 'Compact SUV' }), V('outlander-m', 'Outlander Sport M Line', { img: 'assets/cars/outlander-sport-m-line.webp', engine: '1.5L Petrol', trans: 'Automatic', cyl: '4', drive: '2WD', fuel: 'Petrol', body: 'Compact SUV' })]
@@ -79,8 +79,8 @@ const MODELS = [
     stat: { v: '7', l: 'seats for the whole family' },
     labels: ['Seven seats', 'Tall roofline', 'Wide cabin', 'Alloy wheels'],
     features: [
-      ['Space', 'Room for seven', 'A practical, space-focused body with a tall roofline and wide cabin.'],
-      ['Family', 'Built around everyone', 'Seven seats make the Xpander the family vehicle of the range.']
+      ['Space', 'Room for seven', 'A practical, space-focused body with a tall roofline and wide cabin.', 'assets/img/story-xpander.webp'],
+      ['Family', 'Built around everyone', 'Seven seats make the Xpander the family vehicle of the range.', 'assets/cars/xpander.webp']
     ],
     specs: { Design: [['Model', 'Xpander'], ['Body', 'MPV'], ['Seating', '7 seats'], ['Wheels', 'Alloy']], Performance: [['Engine', TBC], ['Power', TBC], ['Torque', TBC], ['Transmission', TBC], ['Drive', TBC], ['Fuel', TBC]], Safety: [['Braking', TBC], ['Stability', TBC], ['Airbags', TBC], ['Driver assist', TBC]], Comfort: [['Climate', TBC], ['Infotainment', TBC], ['Seating', '7 seats'], ['Access', TBC]] },
     variants: [V('xpander', 'Xpander', { img: 'assets/cars/xpander.webp', engine: TBC, trans: TBC, cyl: TBC, drive: TBC, fuel: TBC, body: 'MPV' })]

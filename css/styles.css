@@ -190,7 +190,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .wheel { position: absolute; border-radius: 50%; aspect-ratio: 1; background-repeat: no-repeat; will-change: transform; } /* centred via GSAP xPercent/yPercent */
 
 .thumbs-wrap { position: relative; }
-.thumbs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-bottom: 1px solid var(--line-dark); }
+.thumbs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border-bottom: 1px solid var(--line-dark); }
 .thumbs::-webkit-scrollbar { display: none; }
 .thumbs__arrow { position: absolute; top: calc(50% - 20px); z-index: 2; width: 40px; height: 40px; display: grid; place-items: center; background: var(--paper); border: 1px solid var(--line-dark); color: var(--ink); transition: background-color .4s var(--ease), color .4s var(--ease), border-color .4s var(--ease), opacity .3s var(--ease); }
 .thumbs__arrow[hidden] { display: none; }
@@ -492,6 +492,17 @@ body.menu-open .dock { opacity: 0 !important; pointer-events: none !important; }
 .mcard__img { display: grid; place-items: center; width: 100%; aspect-ratio: 16 / 9; }
 .mcard__img img { width: 88%; max-height: 100%; object-fit: contain; transition: transform .7s var(--ease); will-change: transform; }
 .mcard:hover .mcard__img img, .mcard:focus-visible .mcard__img img { transform: translateY(-6px) scale(1.05); }
+/* roll forward, wheels turning, ease to a stop, then brake lights on */
+.mcar { position: relative; display: block; width: 88%; transition: transform .5s var(--ease); }
+.mcar img { width: 100%; transition: none; }
+.mcard:hover .mcar img, .mcard:focus-visible .mcar img { transform: none; }
+.mcar__wheel { position: absolute; border-radius: 50%; aspect-ratio: 1; background-repeat: no-repeat; transform: translate(-50%, -50%) rotate(0deg); transition: transform .5s var(--ease); pointer-events: none; }
+.mcar__lamp { position: absolute; transform: translate(-50%, -50%); opacity: 0; transition: opacity .2s; pointer-events: none; filter: drop-shadow(0 0 3px rgba(255, 40, 25, .95)) drop-shadow(0 0 9px rgba(255, 30, 20, .6)); }
+.mcar__lamp i { position: absolute; inset: 0; background: linear-gradient(90deg, #ff5a45 0%, #ff2418 45%, #c40d08 100%); }
+.mcard:hover .mcar, .mcard:focus-visible .mcar { transform: translateX(var(--roll)); transition: transform 1.5s cubic-bezier(.22, .61, .36, 1); }
+.mcard:hover .mcar__wheel, .mcard:focus-visible .mcar__wheel { transform: translate(-50%, -50%) rotate(var(--spin)); transition: transform 1.5s cubic-bezier(.22, .61, .36, 1); }
+.mcard:hover .mcar__lamp, .mcard:focus-visible .mcar__lamp { opacity: 1; transition: opacity .12s ease 1.35s; }
+@media (prefers-reduced-motion: reduce) { .mcard:hover .mcar, .mcard:focus-visible .mcar, .mcard:hover .mcar__wheel, .mcard:focus-visible .mcar__wheel { transition-duration: .01s; } .mcard:hover .mcar__lamp, .mcard:focus-visible .mcar__lamp { transition-delay: 0s; } }
 .mcard b { margin-top: 14px; font: 600 clamp(17px, 1.5vw, 21px)/1.1 var(--body); letter-spacing: .02em; text-transform: uppercase; color: var(--ink); transition: color .3s; }
 .mcard:hover b, .mcard:focus-visible b { color: var(--red); }
 .mcard__tag { margin-top: 8px; max-width: 26ch; font-size: 15px; line-height: 1.4; color: var(--muted-dark); }
@@ -509,8 +520,8 @@ body.menu-open .dock { opacity: 0 !important; pointer-events: none !important; }
 
 /* ---------- "Mitsubishi in Libya": pinned four-vehicle scroll showcase ---------- */
 .story { background: var(--ink); color: #fff; border-bottom: 1px solid var(--line); }
-.story__track { height: 400vh; height: 400svh; position: relative; }
-.story__sticky { position: sticky; top: 0; height: 100vh; height: 100svh; min-height: 580px; padding-top: var(--header-h); overflow: hidden; isolation: isolate; background: #09090a; }
+.story__track { position: relative; }
+.story__sticky { position: relative; height: 100vh; height: 100svh; min-height: 580px; padding-top: var(--header-h); overflow: hidden; isolation: isolate; background: #09090a; }
 
 /* each vehicle is a full-bleed photograph; they cross-fade as you scroll, with a slow drift and settle for depth */
 .story__bg { position: absolute; inset: 0; z-index: -2; }
@@ -870,3 +881,55 @@ html.snap .fleet__intro { height: 48svh; }
 .header__logo--main { width: 68px; }
 .footer__logo--main { width: 76px; }
 @media (max-width: 1023px) { .header__logo--main { width: 58px; } .footer__logo--main { width: 70px; } }
+
+/* Mitsubishi in Libya: auto slider progress on the active tick */
+.story__ticks button::after { content: ""; position: absolute; left: 0; top: 9px; height: 2px; width: 0; background: #fff; }
+.story.is-playing .story__ticks button[aria-current="true"]::after { animation: storyTick 5s linear forwards; }
+@keyframes storyTick { to { width: 100%; } }
+@media (prefers-reduced-motion: reduce) { .story.is-playing .story__ticks button[aria-current="true"]::after { animation: none; } }
+
+/* home: Fleet solutions ends cleanly after slide 3 (no lingering progress bar) */
+.fleet__progress { display: none !important; }
+
+/* home: Contact us, address on the left and the two phone numbers on the right */
+.contact__info .footer__offices { grid-template-columns: minmax(0, 1fr); }
+.contact__info .office { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: clamp(20px, 3vw, 48px); align-items: start; }
+.contact__info .office h4 { grid-column: 1 / -1; }
+.contact__info .office__addr { grid-column: 1; }
+.contact__info .office p { grid-column: 2; margin-top: 0; justify-items: start; }
+@media (max-width: 520px) { .contact__info .office { grid-template-columns: minmax(0, 1fr); row-gap: 8px; } .contact__info .office p { grid-column: 1; margin-top: 4px; } }
+
+/* footer: top line runs from the logo's left edge to the end of the Legal information column */
+.footer .wrap { border-top: 0; }
+.footer__main { border-top: 1px solid var(--line); }
+
+/* Mitsubishi in Libya: previous / next arrows */
+.story__arr { width: 40px; height: 40px; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.35); color: #fff; transition: background-color .3s var(--ease), border-color .3s var(--ease); }
+.story__arr:hover, .story__arr:focus-visible { background: var(--red); border-color: var(--red); }
+.story__arr .ic { width: 18px; height: 18px; }
+@media (max-width: 520px) { .story__arr { width: 34px; height: 34px; } }
+@media (max-width: 520px) { .story__prog { gap: 8px; flex: none; } .story__count { display: none; } .story__ticks { gap: 2px; } .story__ticks button { width: 16px !important; } .story__head { gap: 12px; } }
+
+/* Mitsubishi in Libya: the text under the vehicle name shows with its slide, no reveal animation */
+.story__kind, .story__spec, .story__speclabel, .story__cta,
+.story__item[data-s="now"] .story__kind, .story__item[data-s="now"] .story__spec, .story__item[data-s="now"] .story__speclabel, .story__item[data-s="now"] .story__cta { opacity: 1; transform: none; transition: none; }
+.story__arr .ic--play { display: none; }
+.story__arr[aria-pressed="false"] .ic--pause { display: none; }
+.story__arr[aria-pressed="false"] .ic--play { display: block; }
+
+/* home showcase thumbnails: every car drawn at the same width (cut-outs are tightly cropped, so same width = same size) */
+.thumb img, html.snap .thumb img { width: min(100%, 200px); height: auto; aspect-ratio: auto; margin-inline: auto; object-fit: contain; }
+html.snap .thumb img { width: min(100%, 170px); }
+
+/* Libya office: address lines and phone numbers share the same line grid, so they sit on the same lines */
+.contact__info .office address, .contact__info .office p a { display: block; margin: 0; padding: 0; font: 500 16px/28px var(--body); font-style: normal; }
+.contact__info .office p { gap: 0; margin-top: 0; align-self: start; }
+html.snap .contact__info .office address { font-size: 16px; line-height: 28px; }
+
+/* Mitsubishi in Libya: one clean cross-fade between slides (old text leaves quickly, new text follows), so two slides never overlap */
+.story__item { opacity: 0; transition: opacity .22s ease, visibility 0s linear .22s; }
+.story__item[data-s="now"] { opacity: 1; transition: opacity .45s ease .22s, visibility 0s; }
+
+/* Mitsubishi in Libya: no animation on the slide text at all; it swaps instantly with the slide (photo still cross-fades) */
+.story__item, .story__item[data-s="now"] { opacity: 1; transition: none; }
+.story__name .w > span, .story__item[data-s="now"] .w > span, .story__item[data-s="past"] .w > span { transform: none; transition: none; }

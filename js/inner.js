@@ -15,6 +15,28 @@
   if (!hasG) html.classList.remove('ip');
   if (hasG) gsap.registerPlugin(ScrollTrigger);
 
+  /* ------------------------------------------------------------ smooth wheel scrolling: eases toward a target so the page and the scrubbed car glide instead of stop-start */
+  if (hasG) {
+    const EASE = .08; let target = scrollY, cur = scrollY, raf = 0;
+    const maxY = () => Math.max(0, document.documentElement.scrollHeight - innerHeight);
+    const frame = () => {
+      cur += (target - cur) * EASE;
+      if (Math.abs(target - cur) < .4) { cur = target; raf = 0; scrollTo({ top: cur, behavior: 'instant' }); return; }
+      scrollTo({ top: cur, behavior: 'instant' }); raf = requestAnimationFrame(frame);
+    };
+    addEventListener('wheel', e => {
+      if (!fine.matches || reduce.matches || e.ctrlKey || e.defaultPrevented || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+      if (e.target.closest && e.target.closest('textarea, select, .menu, .thumbs')) return;
+      e.preventDefault();
+      if (!raf) target = cur = scrollY;
+      target = Math.min(maxY(), Math.max(0, target + e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? innerHeight : 1)));
+      if (!raf) raf = requestAnimationFrame(frame);
+    }, { passive: false });
+    const stop = () => { if (raf) { cancelAnimationFrame(raf); raf = 0; } };
+    ['keydown', 'mousedown', 'touchstart'].forEach(t => addEventListener(t, stop, { passive: true }));
+    addEventListener('scroll', () => { if (!raf) target = cur = scrollY; }, { passive: true });
+  }
+
   /* ------------------------------------------------------------ config wiring */
   const wa = 'https://wa.me/' + (C.whatsapp ? C.whatsapp.number : '218918804961') + '?text=' + encodeURIComponent(C.whatsapp ? C.whatsapp.text : 'Hello Mitsubishi Motors Libya, I would like to make an enquiry.');
   $$('[data-wa]').forEach(a => { a.href = wa; });
@@ -89,10 +111,10 @@
   /* ------------------------------------------------------------ scroll motion */
   function initMotion() {
     const E = 'power3.out';
-    const heroEls = $$('.vh [data-a], .ph [data-a]');
+    const heroEls = $$('.vh [data-a], .ph [data-a], .xh [data-a]');
     // words
     $$('[data-split]').forEach(el => {
-      const ws = $$('.w > span', el), inHero = !!el.closest('.vh, .ph, .nf');
+      const ws = $$('.w > span', el), inHero = !!el.closest('.vh, .ph, .nf, .xh');
       const vars = { y: 0, duration: 1.1, stagger: .07, ease: 'power4.out' };
       if (inHero) gsap.to(ws, Object.assign(vars, { delay: .45 }));
       else ScrollTrigger.create({ trigger: el, start: 'top 88%', once: true, onEnter: () => gsap.to(ws, vars) });
@@ -106,6 +128,12 @@
       const tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.inOut', duration: 1.3 } });
       tl.to(f, { clipPath: 'inset(0 0% 0 0)' }, 0).to(img, { scale: 1, duration: 1.8, ease: 'power3.out' }, 0);
       if (hero) tl.delay(.3).play(); else ScrollTrigger.create({ trigger: f, start: 'top 85%', once: true, onEnter: () => tl.play() });
+    });
+    // model overview car: runs in from the right edge to the left and comes to rest in place
+    $$('[data-runin]').forEach(f => {
+      const im = $('img', f); if (!im) return;
+      gsap.fromTo(im, { x: () => f.clientWidth * .75 + im.offsetWidth * .5 }, { x: 0, ease: 'power2.out',
+        scrollTrigger: { trigger: f, start: 'top 90%', end: 'center 55%', scrub: 1, invalidateOnRefresh: true } });
     });
     // parallax (image wrapper moves less than the page)
     $$('[data-parallax]').forEach(w => {
@@ -142,8 +170,25 @@
       $$('[data-hs]').forEach(sec => {
         const track = $('[data-hs-track]', sec), bar = $('[data-hs-bar]', sec), now = $('[data-hs-now]', sec), n = track.children.length;
         const dist = () => Math.max(0, track.scrollWidth - innerWidth + parseFloat(getComputedStyle(track).paddingLeft) * 2);
+        /* history timeline: a car drives along the red line. It starts as the previous-generation L200 (1.png), rolls to the centre where it hands over to the new L200 (2.png), then carries on to the end */
+        let driveCar = null;
+        const CW = 240; // car width in px (the photos are 847x360)
+        if (bar && track.classList.contains('hs__track--tl')) {
+          const barEl = bar.parentElement;
+          const ERAS = [{ y: '2015', src: 'assets/img/hist-l200-1.webp' }, { y: 'Today', src: 'assets/img/hist-l200-2.webp' }];
+          driveCar = document.createElement('div'); driveCar.className = 'hs__car'; driveCar.setAttribute('aria-hidden', 'true');
+          driveCar.innerHTML = ERAS.map(e => `<span class="hs__era"><img src="${e.src}" alt="" width="847" height="360" decoding="async"><em>${e.y}</em></span>`).join('');
+          barEl.appendChild(driveCar);
+        }
+        const eras = driveCar ? [...driveCar.children] : [];
+        const drive = p => {
+          driveCar.style.transform = 'translateX(' + p * (bar.parentElement.clientWidth - CW) + 'px)';
+          const k = Math.max(0, Math.min(1, (p - .46) / .08)); // hand-over at the centre
+          eras[0].style.opacity = 1 - k; eras[1].style.opacity = k;
+        };
+        if (driveCar) drive(0);
         gsap.to(track, { x: () => -dist(), ease: 'none', scrollTrigger: { trigger: sec, start: 'top top', end: () => '+=' + dist(), pin: true, scrub: .8, invalidateOnRefresh: true, anticipatePin: 1,
-          onUpdate: s => { if (bar) bar.style.transform = 'scaleX(' + s.progress + ')'; if (now) now.textContent = '0' + (Math.min(n, Math.floor(s.progress * n * .999) + 1)); } } });
+          onUpdate: s => { if (bar) bar.style.transform = 'scaleX(' + s.progress + ')'; if (driveCar) drive(s.progress); if (now) now.textContent = '0' + (Math.min(n, Math.floor(s.progress * n * .999) + 1)); } } });
       });
     });
     // scroll progress line
@@ -162,8 +207,33 @@
       const wheels = $$('.wheel', car), from = () => d.clientWidth + car.offsetWidth * .1;
       gsap.fromTo(car, { x: from }, { x: () => -car.offsetWidth * 1.1, ease: 'none',
         onUpdate: () => { const travel = from() - gsap.getProperty(car, 'x'); wheels.forEach(w => gsap.set(w, { rotation: -(travel / (w.offsetWidth / 1.68)) * 180 / Math.PI })); },
-        scrollTrigger: { trigger: d, start: 'top bottom', end: 'bottom top', scrub: .5, invalidateOnRefresh: true } });
+        scrollTrigger: { trigger: d, start: 'top bottom', end: 'bottom top', scrub: 1.2, invalidateOnRefresh: true } });
       gsap.fromTo(word, { x: () => -word.offsetWidth * .35 }, { x: () => d.clientWidth * .1, ease: 'none', scrollTrigger: { trigger: d, start: 'top bottom', end: 'bottom top', scrub: true, invalidateOnRefresh: true } });
+
+      /* lights: scroll down = headlights blink, scroll stops = brake lights, scroll up = reverse light.
+         Lamp boxes are [left, top, width, height] in % of the car image, per model (front lamp, rear lamp). */
+      const LAMPS = {
+        'destinator-m-line': [[5.4, 45, 3.4, 15], [90.6, 33, 3.8, 15]],
+        'l200-glx-diesel': [[4.8, 40, 4.4, 9], [91.2, 37, 3.6, 18]],
+        'outlander-sport-h-line': [[3.4, 38, 4.6, 22], [88.5, 29, 8.5, 9]],
+        'xpander': [[9, 37, 6, 13], [85.5, 16, 5.5, 16]]
+      };
+      const key = (($('img', car) || {}).getAttribute('src') || '').split('/').pop().replace(/\.\w+$/, ''), lp = LAMPS[key];
+      if (lp) {
+        [['head', lp[0]], ['tail', lp[1]]].forEach(([k, b]) => {
+          const l = document.createElement('i'); l.className = 'lamp lamp--' + k; l.setAttribute('aria-hidden', 'true');
+          l.style.cssText = `left:${b[0]}%;top:${b[1]}%;width:${b[2]}%;height:${b[3]}%`; car.appendChild(l);
+        });
+        let last = scrollY, tBrake = 0, tOff = 0;
+        const set = s => { d.dataset.lights = s; };
+        addEventListener('scroll', () => {
+          const dy = scrollY - last; last = scrollY;
+          const r = d.getBoundingClientRect(); if (!dy || r.bottom < 0 || r.top > innerHeight) return;
+          set(dy > 0 ? 'drive' : 'reverse');
+          clearTimeout(tBrake); clearTimeout(tOff);
+          tBrake = setTimeout(() => { set('brake'); tOff = setTimeout(() => set(''), 1800); }, 160);
+        }, { passive: true });
+      }
     });
     // list dividers draw in
     $$('.ben__list li, .why2__list li').forEach(li => gsap.to(li, { '--d': 1, duration: 1.1, ease: 'power3.inOut', scrollTrigger: { trigger: li, start: 'top 92%', once: true } }));
@@ -201,6 +271,16 @@
     const tabs = $$('[role=tab]', w), panels = $$('[role=tabpanel]', w);
     const select = (t, focus) => { tabs.forEach((x, i) => { const on = x === t; x.setAttribute('aria-selected', String(on)); x.tabIndex = on ? 0 : -1; panels[i].hidden = !on; if (on && motion()) gsap.from($$('div', panels[i]), { y: 18, opacity: 0, duration: .5, stagger: .05, ease: 'power3.out' }); }); if (focus) t.focus(); };
     tabs.forEach((t, i) => { t.addEventListener('click', () => select(t)); t.addEventListener('keydown', e => { const k = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0; if (k) { e.preventDefault(); select(tabs[(i + k + tabs.length) % tabs.length], true); } }); });
+  });
+
+  /* explore pills: open the matching specification tab */
+  $$('[data-spec-go]').forEach(a => a.addEventListener('click', () => { const t = $$('#specs [role=tab]')[+a.dataset.specGo]; if (t) t.click(); }));
+
+  /* ------------------------------------------------------------ spec list: Show more */
+  $$('[data-more-btn]').forEach(b => {
+    const list = document.getElementById(b.getAttribute('aria-controls')); if (!list) return;
+    if (list.scrollHeight <= 600) { b.hidden = true; list.classList.add('is-open'); return; }
+    b.addEventListener('click', () => { const o = list.classList.toggle('is-open'); b.setAttribute('aria-expanded', String(o)); $('span', b).textContent = o ? 'Show less' : 'Show more'; });
   });
 
   /* ------------------------------------------------------------ parts composition */
@@ -318,5 +398,22 @@
   /* ------------------------------------------------------------ go */
   if (motion()) { try { initMotion(); } catch (e) { html.classList.remove('ip'); console.error(e); } }
   else if (hasG) { html.classList.remove('ip'); }
-  addEventListener('load', () => hasG && ScrollTrigger.refresh());
+  /* keep trigger positions true when fonts, images, tabs or the viewport change, and rescue any text left hidden */
+  if (hasG) {
+    const refresh = () => ScrollTrigger.refresh();
+    addEventListener('load', refresh);
+    addEventListener('orientationchange', () => setTimeout(refresh, 300));
+    addEventListener('pageshow', e => { if (e.persisted) refresh(); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(refresh);
+    let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(refresh, 250); });
+    if (motion()) {
+      const rescue = () => {
+        const vh = innerHeight;
+        $$('[data-a]').forEach(el => { if (el.getBoundingClientRect().top < vh * .98 && +gsap.getProperty(el, 'opacity') < .05 && !gsap.isTweening(el)) gsap.to(el, { opacity: 1, y: 0, duration: .7, ease: 'power3.out', overwrite: true }); });
+        $$('[data-split]').forEach(el => { if (el.getBoundingClientRect().top < vh * .98) { const ws = $$('.w > span', el).filter(w => +gsap.getProperty(w, 'yPercent') > 5 || +gsap.getProperty(w, 'y') > 5); if (ws.length && !ws.some(w => gsap.isTweening(w))) gsap.to(ws, { y: 0, yPercent: 0, duration: .8, stagger: .04, ease: 'power4.out', overwrite: true }); } });
+      };
+      let st; const queue = () => { clearTimeout(st); st = setTimeout(rescue, 700); };
+      addEventListener('scroll', queue, { passive: true }); addEventListener('resize', queue); addEventListener('load', () => setTimeout(rescue, 2500));
+    }
+  }
 })();
