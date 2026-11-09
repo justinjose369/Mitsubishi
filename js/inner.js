@@ -145,6 +145,9 @@
     // vehicle rows: car drives in
     $$('.vrow').forEach((row, i) => {
       const car = $('[data-car]', row), left = row.classList.contains('vrow--b'); if (!car) return;
+      // wheels roll with the car's travel (cars face left: moving left rolls them forward); a ticker keeps them in sync with whatever moves the car
+      const wheels = $$('.wheel', car), roll = () => { const x = gsap.getProperty(car, 'xPercent') * car.offsetWidth / 100; wheels.forEach(w => gsap.set(w, { rotation: (x / (w.offsetWidth / 1.68)) * 180 / Math.PI })); };
+      if (wheels.length) gsap.ticker.add(roll);
       gsap.fromTo(car, { xPercent: left ? -40 : 40, opacity: 0 }, { xPercent: 0, opacity: 1, ease: 'power3.out', scrollTrigger: { trigger: row, start: 'top 70%', end: 'top 15%', scrub: .6 } });
       gsap.to(car, { xPercent: left ? 8 : -8, ease: 'none', scrollTrigger: { trigger: row, start: 'center center', end: 'bottom top', scrub: true } });
     });
@@ -392,6 +395,7 @@
     $('#artTitle').textContent = a.title; $('#artMeta').textContent = a.cat + (a.date ? '  ·  ' + a.date : '');
     $('#artBack').href = kind === 'blog' ? 'blog.html' : 'media.html';
     $('#artFig').innerHTML = '<img src="' + a.img + '" alt="" width="1200" height="800">';
+    if (a.body) { $('#artBody').innerHTML = a.body.map(t => t.indexOf('## ') === 0 ? '<h3>' + t.slice(3) + '</h3>' : '<p>' + t + '</p>').join(''); return; }
     $('#artBody').innerHTML = '<p>' + a.ex + '</p>' + (a.cta ? '<p>' + a.cta + '</p>' : '') + '<p class="ph-note">The full article text is being prepared and will appear here. For details in the meantime, contact our team on +218 918 804 961.</p>';
   })();
 
