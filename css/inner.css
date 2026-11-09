@@ -820,3 +820,12 @@ html { scroll-padding-top: 56px; }
 
 /* Parts hero: request button sits on the container's right edge (desktop) */
 @media (min-width: 900px) { .ph--parts .ph__row > div:last-child { justify-self: end; text-align: right; } }
+
+/* Article body: content aligns left with the container, not centred inside it */
+.art__body .prose { margin-inline: 0; }
+.prose h3 { font: 600 clamp(26px, 2.6vw, 38px)/1.1 var(--display); text-transform: uppercase; margin: 40px 0 14px; }
+/* Article: text spans the full container width, matching the image above it */
+.art__body .prose { max-width: none; width: 100%; }
+.art__figure .clip img { object-position: center; }
+/* Article body uses the same container width as the figure on wide screens */
+.art__body.wrap { max-width: var(--max); }
