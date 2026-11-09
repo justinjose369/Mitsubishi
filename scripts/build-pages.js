@@ -26,7 +26,7 @@ const img = (src, alt = '', w, h, extra = '') => `<img src="${src}" alt="${esc(a
 const WHEEL_K = 0.84;
 const WHEEL_DATA = (() => { const ctx = { window: {} }; require('vm').runInNewContext(fs.readFileSync(path.join(__dirname, '..', 'js', 'data.js'), 'utf8'), ctx); return ctx.window.MMK_MODELS; })();
 const wheelDiscs = m => {
-  const e = WHEEL_DATA.find(x => x.img === m.cut); if (!e) return '';
+  const e = WHEEL_DATA.find(x => x.img === m.cut.replace('-hd.webp', '.webp')); if (!e) return '';
   const [fx, rx, cyF, r, cyR] = e.wheels, sz = 2 * r * WHEEL_K, hr = e.ar, f = n => +n.toFixed(4);
   return [[fx, cyF], [rx, cyR == null ? cyF : cyR]].map(([cx, cy]) => `<i class="wheel" aria-hidden="true" style="left:${f((cx - sz / 2) * 100)}%;top:${f((cy * hr - sz / 2) / hr * 100)}%;width:${f(sz * 100)}%;background-image:url(${m.cut});background-size:${f(100 / sz)}% auto;background-position:${f((sz / 2 - cx) / (sz - 1) * 100)}% ${f((sz / 2 - cy * hr) / (sz - hr) * 100)}%"></i>`).join('');
 };
@@ -197,9 +197,9 @@ ${ORDER.map((s, i) => { const m = model(s); return `
     ${split('h2', 'big vrow__name', m.name, `id="vr-${s}"`)}
     <p class="vrow__tag" data-a>${m.tag}</p>
     <ul class="chips" data-a><li>${m.kind}</li>${m.variants[0].engine !== TBC ? `<li>${m.variants[0].engine.replace('Petrol', 'petrol').replace('Diesel', 'diesel')}</li>` : ''}<li>${m.variants.length} ${m.variants.length > 1 ? 'variants' : 'variant'}</li></ul>
-    <div class="vrow__cta" data-a>${btn(s + '.html', 'Explore Model')}</div>
+    <div class="vrow__cta" data-a>${btn(s + '.html', 'Explore Model')} ${btn('contact.html?vehicle=' + encodeURIComponent(model(s).name), 'Download brochure', 'btn--line', `data-brochure="${s}" data-label="Download brochure"`)}</div>
   </div>
-  ${i === 2 ? `<figure class="vrow__car" data-car>${img(m.cut, m.name, 520, Math.round(520 * m.cutAr))}</figure>` : ""}
+  ${i === 2 ? `<figure class="vrow__car" data-car>${img(m.cut, m.name, 520, Math.round(520 * m.cutAr))}${wheelDiscs(m)}</figure>` : ""}
 </section>`; }).join('')}
 <section class="strip">
   <div class="wrap strip__in"><div>${eyebrow('Find your fit')}${split('h2', 'h2', 'Compare the variants')}<p class="lede" data-a>Put engines, drivetrains and trims side by side before you decide.</p></div><div data-a>${btn('compare.html', 'Compare variants')}</div></div>
@@ -215,8 +215,8 @@ ORDER.forEach((s, mi) => {
   const tabs = Object.keys(m.specs);
   const enq = 'contact.html?vehicle=' + encodeURIComponent(m.name);
   const F = [0, 1, 2, 3].map(i => m.features[i % m.features.length]), bg = i => (F[i] && F[i][3]) || m.photo2 || m.hero;
-  const banner = (i, label) => `<section class="xb" aria-labelledby="xb-${i}"><div class="xb__bg">${img(bg(i), '', 1600, 900)}</div><div class="xb__shade"></div>
-  <div class="xb__in"><div class="xb__txt"><p class="xk" data-a>${F[i][0]}</p><h2 class="xh2" id="xb-${i}" data-a>${F[i][1]}</h2><p class="xp" data-a>${F[i][2]}</p><a class="xlink" href="#specs" data-a>Explore ${label}</a></div></div></section>`;
+  const banner = (i, label) => `<section class="xb" id="${label}" aria-labelledby="xb-${i}"><div class="xb__bg">${img(bg(i), '', 1600, 900)}</div><div class="xb__shade"></div>
+  <div class="xb__in"><div class="xb__txt"><p class="xk" data-a>${F[i][0]}</p><h2 class="xh2" id="xb-${i}" data-a>${F[i][1]}</h2><p class="xp" data-a>${F[i][2]}</p><a class="xlink" href="#specs" data-spec="${label === 'exterior' ? 0 : 3}" data-a>Explore ${label}</a></div></div></section>`;
   page(s + '.html', {
     title: m.name, desc: `Mitsubishi ${m.name} in Libya: ${m.tag}`, active: 'cars', bodyClass: 'vd xf',
     preload: `\n  <link rel="preload" href="${m.hero}" as="image">`,
@@ -233,18 +233,20 @@ ORDER.forEach((s, mi) => {
   </div>
 </section>
 
-<section class="xh xh--r" aria-labelledby="xd-t">
+<nav class="xtabs" aria-label="Explore ${m.name}"><div class="wrap"><a href="#drive">Explore drive</a><a href="#exterior">Explore exterior</a><a href="#interior">Explore interior</a><a href="#safety">Explore safety</a><a href="#variants">Variants</a></div></nav>
+
+<section class="xh xh--r" id="drive" aria-labelledby="xd-t">
   <div class="xh__bg">${img(bg(0), '', 1600, 900)}</div><div class="xh__shade"></div>
   <div class="xh__in xh__in--r"><div class="xh__box">
     <p class="xk" data-a>Drive</p><h2 class="xh2" id="xd-t" data-a>${F[0][1]}</h2><p class="xp" data-a>${F[0][2]}</p>
-    <div data-a><a class="btn" href="#specs">Explore drive</a></div></div></div>
+    <div data-a><a class="btn" href="#specs" data-spec="1">Explore drive</a></div></div></div>
 </section>
 
 ${banner(1, 'exterior')}
 ${banner(2, 'interior')}
 
-<section class="x50" aria-labelledby="xs-t">
-  <div class="x50__txt"><div><p class="xk" data-a>Safety</p><h2 class="xh2 xh2--dk" id="xs-t" data-a>${F[3][1]}</h2><p class="xp xp--dk" data-a>${F[3][2]}</p><a class="xlink xlink--dk" href="#specs" data-a>Explore safety</a></div></div>
+<section class="x50" id="safety" aria-labelledby="xs-t">
+  <div class="x50__txt"><div><p class="xk" data-a>Safety</p><h2 class="xh2 xh2--dk" id="xs-t" data-a>${F[3][1]}</h2><p class="xp xp--dk" data-a>${F[3][2]}</p><a class="xlink xlink--dk" href="#specs" data-spec="2" data-a>Explore safety</a></div></div>
   <div class="x50__img">${img(bg(3), m.name, 1200, 900)}</div>
 </section>
 
@@ -322,7 +324,7 @@ ${ctaBand({ title: 'Found your variant?', text: 'Tell us which one you prefer an
 
 /* ======================================================================== PARTS ===== */
 page('parts.html', {
-  title: 'Genuine Mitsubishi Parts', desc: '100% genuine Mitsubishi parts and accessories for all vehicles supplied by Middle East Group in Libya.', active: 'parts',
+  title: 'Genuine Mitsubishi Parts', desc: '100% genuine Mitsubishi parts and accessories for all vehicles supplied by Middle East Group in Libya.', active: 'parts', bodyClass: 'pg-parts',
   body: `
 <section class="ph ph--parts">
   <div class="ph__bg" data-parallax data-reveal-bg>${img('assets/img/parts-bg.jpg', '', 1920, 1080).replace('loading="lazy"', 'loading="eager"')}</div><div class="ph__shade"></div>
@@ -399,7 +401,7 @@ page('fleet.html', {
     ${form('Fleet', field('fl-company', 'Company name', 'text', { auto: 'organization' }) + baseFields('fl-') + field('fl-size', 'Fleet size', 'text', { ph: 'e.g. 10 vehicles' }) + field('fl-vehicle', 'Vehicle type', 'select', { opts: vehicleOpts }) + field('fl-message', 'Message', 'textarea', { wide: 1, rows: 3 }), 'Send fleet enquiry')}
   </div>
 </section>
-${ctaBand({ title: 'The right car for your business', text: 'Talk to the fleet team about the vehicles that fit your work.', imgSrc: 'assets/img/l200-hill.webp' })}`
+${ctaBand({ title: 'The right car for your business', text: 'Talk to the fleet team about the vehicles that fit your work.', imgSrc: 'assets/img/story-l200.webp' })}`
 });
 
 /* ======================================================================== ABOUT ===== */

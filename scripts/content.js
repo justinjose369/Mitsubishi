@@ -59,7 +59,7 @@ const MODELS = [
   {
     slug: 'outlander', name: 'Outlander', kind: 'SUV', accent: '#c7ccd4',
     tag: 'An agile compact SUV for the city and the weekend.',
-    hero: 'assets/img/story-outlander.webp', photo2: 'assets/img/drive.webp', cut: 'assets/cars/outlander-sport-h-line.webp', cutAr: .382,
+    hero: 'assets/img/story-outlander.webp', photo2: 'assets/img/drive.webp', cut: 'assets/cars/outlander-sport-h-line-hd.webp', cutAr: .382,
     intro: 'A sleek compact SUV profile with a sporty stance, offered as the Outlander Sport in P Line, H Line and M Line trims.',
     stat: { v: '3', l: 'trim levels: P, H and M Line' },
     labels: ['Compact SUV profile', 'Alloy wheels', 'Sporty stance', 'P / H / M Line'],

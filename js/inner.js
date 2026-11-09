@@ -417,3 +417,10 @@
     }
   }
 })();
+
+/* Explore links open the matching specification tab */
+document.addEventListener('click', e => {
+  const a = e.target.closest && e.target.closest('a[data-spec]'); if (!a) return;
+  const tabs = document.querySelectorAll('.spec__tabs [role="tab"]'), t = tabs[+a.dataset.spec];
+  if (t) t.click();
+});

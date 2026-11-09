@@ -629,7 +629,7 @@ body.vd { background: #fff; color: #686d71; --line: #e3e5e6; --line-dark: #e3e5e
 .vd .btn--solid:hover { background-color: #fff; border-color: #fff; color: #000; }
 .vd .sec--paper, .vd .var, .vd .spec { background: #fff; }
 .vd .bro { background: #f7f7f7; }
-.vd .var, .vd .spec, .vd .bro { color: #686d71; --muted: #686d71; padding-block: clamp(64px, 8vw, 120px); }
+.vd .var, .vd .spec, .vd .bro { color: #686d71; --muted: #686d71; padding-block: var(--sec); }
 .vd .var .btn, .vd .spec .btn, .vd .bro .btn { border-color: #000; color: #000; background-image: linear-gradient(-60deg, #000 50%, transparent 50%); }
 .vd .var .btn:hover, .vd .spec .btn:hover, .vd .bro .btn:hover { color: #fff; }
 .vd .bro .btn--solid { background: var(--red); border-color: var(--red); color: #fff; background-image: none; }
@@ -720,20 +720,20 @@ body.vd { background: #fff; color: #686d71; --line: #e3e5e6; --line-dark: #e3e5e
 
 /* 50 / 50 safety block */
 .xf .x50 { display: grid; grid-template-columns: 1fr; background: #fff; }
-.xf .x50__txt { display: flex; align-items: center; justify-content: flex-end; padding: clamp(48px, 7vw, 110px) var(--pad); }
+.xf .x50__txt { display: flex; align-items: center; justify-content: flex-end; padding: var(--sec) var(--pad); }
 .xf .x50__txt > div { max-width: 520px; }
 .xf .x50__img { aspect-ratio: 4 / 3; overflow: hidden; background: #f7f7f7; }
 .xf .x50__img img { width: 100%; height: 100%; object-fit: cover; }
 @media (min-width: 900px) { .xf .x50 { grid-template-columns: 1fr 1fr; } .xf .x50__img { aspect-ratio: auto; min-height: 560px; } }
 
 /* text block, tabbed table, legal, key buying actions */
-.xf .xtx { background: #f7f7f7; padding-block: clamp(64px, 8vw, 120px); }
+.xf .xtx { background: #f7f7f7; padding-block: var(--sec); }
 .xf .xtx__in { max-width: 900px; text-align: center; margin-inline: auto; }
 .xf .xtx .xp { margin-inline: auto; max-width: 62ch; }
-.xf .xs { background: #fff; padding-block: clamp(64px, 8vw, 120px); }
+.xf .xs { background: #fff; padding-block: var(--sec); }
 .xf .xs__spec { margin-top: clamp(56px, 7vw, 100px); }
 .xf .xl { background: #fff; padding-bottom: 48px; }
-.xf .xka { background: #f7f7f7; padding-block: clamp(64px, 8vw, 110px); }
+.xf .xka { background: #f7f7f7; padding-block: var(--sec); }
 .xf .xka__list { list-style: none; margin: 32px 0 24px; padding: 0; display: grid; gap: 16px; grid-template-columns: 1fr; }
 @media (min-width: 700px) { .xf .xka__list { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 1100px) { .xf .xka__list { grid-template-columns: repeat(4, 1fr); } }
@@ -759,3 +759,61 @@ body.vd { background: #fff; color: #686d71; --line: #e3e5e6; --line-dark: #e3e5e
 .xf .trim .btn--solid, .xf .xh__cta .btn--solid { background: var(--red); border-color: var(--red); color: #fff; }
 .xf .trim .btn--solid:hover { background: #000; border-color: #000; color: #fff; }
 .xf .xh__cta .btn--solid:hover { background: #fff; border-color: #fff; color: #000; }
+
+/* Model page section tabs (Kuwait template) */
+.xtabs { position: sticky; top: 0; z-index: 20; background: rgba(255,255,255,.55); -webkit-backdrop-filter: blur(18px) saturate(180%); backdrop-filter: blur(18px) saturate(180%); border-bottom: 1px solid rgba(255,255,255,.5); box-shadow: 0 8px 30px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.7); }
+.xtabs .wrap { display: flex; gap: 28px; overflow-x: auto; scrollbar-width: none; }
+.xtabs a { padding: 18px 0; white-space: nowrap; font: 600 12px/1 var(--body); letter-spacing: .14em; text-transform: uppercase; color: #111; border-bottom: 2px solid transparent; }
+.xtabs a { transition: color .2s, border-color .2s; }
+.xtabs a:hover, .xtabs a:focus-visible { color: #e60012; border-color: #e60012; }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .xtabs { background: rgba(255,255,255,.95); } }
+html { scroll-padding-top: 56px; }
+
+/* Glass variant + specification tabs (model pages) */
+.xf .xs { background: radial-gradient(60% 40% at 15% 0%, rgba(230,0,18,.10), transparent 70%), radial-gradient(50% 40% at 90% 10%, rgba(120,140,170,.20), transparent 70%), #f4f5f7; }
+.xf .trim__tabs, .xf .spec__tabs { gap: 6px; padding: 6px; border: 1px solid rgba(255,255,255,.7); border-radius: 999px; width: fit-content; max-width: 100%; margin-bottom: 28px; background: rgba(255,255,255,.45); -webkit-backdrop-filter: blur(18px) saturate(180%); backdrop-filter: blur(18px) saturate(180%); box-shadow: 0 8px 30px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.8); }
+.xf .trim__tabs button, .xf .spec__tabs button { padding: 12px 22px; margin: 0; border: 0; border-radius: 999px; transition: background .25s, color .25s, box-shadow .25s; }
+.xf .trim__tabs button:hover, .xf .spec__tabs button:hover { background: rgba(255,255,255,.5); color: #000; }
+.xf .trim__tabs button[aria-selected="true"], .xf .spec__tabs button[aria-selected="true"] { border: 0; padding-inline: 22px; background: rgba(255,255,255,.85); color: #000; box-shadow: 0 4px 14px rgba(0,0,0,.12), inset 0 1px 0 #fff; }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .xf .trim__tabs, .xf .spec__tabs { background: rgba(255,255,255,.95); } }
+
+.vrow__cta { display: flex; flex-wrap: wrap; gap: 14px; }
+/* Outlander row: light background, so the outline brochure button is black */
+#v-outlander .btn--line { border-color: #000; color: #000; }
+#v-outlander .btn--line:hover { background: #000; border-color: #000; color: #fff; }
+/* Outlander listing image +30% (desktop) */
+@media (min-width: 900px) { #v-outlander .vrow__car { width: min(67.6vw, 962px); } }
+.vrow__car .wheel { position: absolute; aspect-ratio: 1; border-radius: 50%; background-repeat: no-repeat; will-change: transform; pointer-events: none; }
+
+/* About: Authorized distributor block aligns to the site container, with even top/bottom padding */
+.dealer { padding-block: var(--sec); }
+.dealer__in { max-width: var(--max); margin-inline: auto; }
+.dealer__in > * { max-width: 700px; }
+.dealer .dealer__t { max-width: 11ch; }
+
+/* About: Authorized distributor as a full-width banner (image spans the whole width, text overlaid inside the container) */
+.dealer { min-height: clamp(520px, 46vw, 760px); display: flex; align-items: center; width: 100%; }
+.dealer > .wrap { width: 100%; }
+.dealer__bg img { height: 112%; object-position: center; }
+.dealer__shade { background: linear-gradient(90deg, rgba(11,11,12,.82) 0, rgba(11,11,12,.45) 50%, rgba(11,11,12,.08) 100%), linear-gradient(0deg, rgba(11,11,12,.45), transparent 35%); }
+
+/* About: separate "The group" from "Why Mitsubishi Motors Libya" (both dark) */
+.why2 { background: var(--graphite); border-top: 1px solid rgba(255,255,255,.14); box-shadow: inset 0 1px 0 rgba(230,0,18,.55); }
+
+/* About: distributor image fills the whole section (extra overscan top/bottom covers the parallax shift) */
+.dealer__bg { inset: -8% 0; }
+.dealer__bg img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+
+/* Parts: "Get in touch" banner image sits to the right, text stays left */
+.pg-parts .cta__bg img { object-position: right center; }
+.pg-parts .cta__shade { background: linear-gradient(90deg, rgba(11,11,12,.92) 0, rgba(11,11,12,.6) 40%, rgba(11,11,12,.05) 100%); }
+/* Parts CTA: photo occupies the right side so the car never sits under the text */
+@media (min-width: 900px) {
+  .pg-parts .cta { background: var(--ink); }
+  .pg-parts .cta__bg { left: 42%; }
+  .pg-parts .cta__bg img { object-position: center; }
+  .pg-parts .cta__shade { background: linear-gradient(90deg, var(--ink) 0, var(--ink) 42%, rgba(11,11,12,.0) 62%), linear-gradient(0deg, rgba(11,11,12,.35), transparent 40%); }
+}
+
+/* Fleet hero: enquiry button sits on the container's right edge (desktop) */
+@media (min-width: 900px) { .ph--fleet .ph__row > div:last-child { justify-self: end; text-align: right; } }
