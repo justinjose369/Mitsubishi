@@ -331,7 +331,7 @@
 .art__body { background: var(--paper); color: var(--ink); max-width: none; padding-block: var(--sec); } .art__body .prose { max-width: 70ch; margin-inline: auto; }
 .prose p { font-size: clamp(18px, 1.4vw, 21px); line-height: 1.75; margin-bottom: 24px; } .prose p:first-child { font-size: clamp(22px, 2vw, 28px); line-height: 1.45; }
 .prose .ph-note { padding: 18px 20px; border-left: 3px solid var(--red); background: rgba(11,11,12,.05); font-size: 15px; }
-body.inner:has(.art) { background: var(--paper); }
+body.inner:has(.art) { background: var(--ink); }
 
 /* ---------- contact ---------- */
 .cn__grid { display: grid; gap: 56px; }
@@ -727,13 +727,13 @@ body.vd { background: #fff; color: #686d71; --line: #e3e5e6; --line-dark: #e3e5e
 @media (min-width: 900px) { .xf .x50 { grid-template-columns: 1fr 1fr; } .xf .x50__img { aspect-ratio: auto; min-height: 560px; } }
 
 /* text block, tabbed table, legal, key buying actions */
-.xf .xtx { background: #f7f7f7; padding-block: var(--sec); }
+.xf .xtx { background: #fff; padding-block: var(--sec); }
 .xf .xtx__in { max-width: 900px; text-align: center; margin-inline: auto; }
 .xf .xtx .xp { margin-inline: auto; max-width: 62ch; }
 .xf .xs { background: #fff; padding-block: var(--sec); }
 .xf .xs__spec { margin-top: clamp(56px, 7vw, 100px); }
 .xf .xl { background: #fff; padding-bottom: 48px; }
-.xf .xka { background: #f7f7f7; padding-block: var(--sec); }
+.xf .xka { background: #fff; padding-block: var(--sec); }
 .xf .xka__list { list-style: none; margin: 32px 0 24px; padding: 0; display: grid; gap: 16px; grid-template-columns: 1fr; }
 @media (min-width: 700px) { .xf .xka__list { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 1100px) { .xf .xka__list { grid-template-columns: repeat(4, 1fr); } }
@@ -829,3 +829,39 @@ html { scroll-padding-top: 56px; }
 .art__figure .clip img { object-position: center; }
 /* Article body uses the same container width as the figure on wide screens */
 .art__body.wrap { max-width: var(--max); }
+
+/* Variant tabs: one line, horizontal slider when they do not fit */
+.xf .trim__tabs { flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; scrollbar-width: none; cursor: grab; }
+.xf .trim__tabs::-webkit-scrollbar { display: none; }
+.xf .trim__tabs button { flex: 0 0 auto; white-space: nowrap; scroll-snap-align: center; }
+.xf .trim__tabs.is-drag { cursor: grabbing; scroll-snap-type: none; }
+.xf .trim__tabs.is-drag button { pointer-events: none; }
+.trim__slider { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; }
+.trim__slider .trim__tabs { margin-bottom: 0; flex: 0 1 auto; min-width: 0; }
+.trim__arr { display: none; flex: 0 0 auto; width: 46px; height: 46px; border-radius: 50%; place-items: center; color: #111; background: rgba(255,255,255,.55); border: 1px solid rgba(255,255,255,.7); -webkit-backdrop-filter: blur(18px) saturate(180%); backdrop-filter: blur(18px) saturate(180%); box-shadow: 0 8px 30px rgba(0,0,0,.1), inset 0 1px 0 rgba(255,255,255,.8); transition: background .2s, opacity .2s, color .2s; }
+.trim__arr .ic { width: 18px; height: 18px; }
+.trim__slider.has-arrows .trim__arr { display: grid; }
+.trim__arr:hover:not(:disabled) { background: #e60012; color: #fff; }
+.trim__arr:disabled { opacity: .35; cursor: default; }
+.trim__slider.has-arrows .trim__tabs { flex: 1 1 auto; }
+
+/* Sportero variant image has a white studio background: blend it into the panel */
+.trim__img img[src*="l200-sportero"] { mix-blend-mode: multiply; }
+
+/* Variant car: wheels roll and lamps light while the tabs switch (see js/inner.js) */
+.trim__img { position: relative; }
+.tcar { position: relative; display: block; width: 88%; }
+.trim__img .tcar img, .trim__img.is-photo .tcar img { display: block; width: 100%; height: auto; max-height: none; }
+.tcar .wheel { position: absolute; aspect-ratio: 1; border-radius: 50%; background-repeat: no-repeat; will-change: transform; pointer-events: none; }
+.tcar .lamp { position: absolute; pointer-events: none; border-radius: 50%; opacity: 0; transition: opacity .18s, box-shadow .18s; z-index: 1; }
+.tcar .lamp--head { background: radial-gradient(closest-side, #fff 0, rgba(255,244,214,.95) 40%, rgba(255,226,150,0) 100%); box-shadow: 0 0 20px 8px rgba(255,220,130,.75); }
+.tcar .lamp--head::after { display: none; }
+.tcar .lamp--tail { background: radial-gradient(closest-side, rgba(255,40,30,.95) 0, rgba(255,30,20,.65) 45%, rgba(255,0,0,0) 100%); box-shadow: 0 0 18px 6px rgba(255,30,20,.55); }
+.trim__img[data-lights="drive"] .lamp--head { animation: lampBlink .34s steps(1, end) infinite; }
+.trim__img[data-lights="drive"] .lamp--tail { opacity: .25; }
+.trim__img[data-lights="brake"] .lamp--tail { opacity: 1; box-shadow: 0 0 32px 14px rgba(255,30,20,.8); }
+@media (prefers-reduced-motion: reduce) { .trim__img[data-lights="drive"] .lamp--head { animation: none; opacity: 1; } }
+.tcar .lamp--tail { box-shadow: 0 0 10px 3px rgba(255,30,20,.5); }
+.trim__img[data-lights="brake"] .lamp--tail { box-shadow: 0 0 20px 7px rgba(255,30,20,.75); }
+/* variant car: pure white headlights (outer ring keeps the glow visible on the light panel) */
+.tcar .lamp--head { background: radial-gradient(closest-side, #fff 0, #fff 45%, rgba(255,255,255,0) 100%); box-shadow: 0 0 14px 6px rgba(255,255,255,.95), 0 0 26px 10px rgba(150,185,235,.45); }

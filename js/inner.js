@@ -428,3 +428,64 @@ document.addEventListener('click', e => {
   const tabs = document.querySelectorAll('.spec__tabs [role="tab"]'), t = tabs[+a.dataset.spec];
   if (t) t.click();
 });
+
+/* Variant tabs slider: drag with the mouse, and keep the selected tab in view */
+document.querySelectorAll('.xf .trim__tabs').forEach(bar => {
+  let down = false, sx = 0, sl = 0, moved = false;
+  bar.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') return; down = true; moved = false; sx = e.clientX; sl = bar.scrollLeft; });
+  addEventListener('pointermove', e => { if (!down) return; const d = e.clientX - sx; if (Math.abs(d) > 4) { moved = true; bar.classList.add('is-drag'); } if (moved) bar.scrollLeft = sl - d; });
+  addEventListener('pointerup', () => { if (!down) return; down = false; setTimeout(() => bar.classList.remove('is-drag'), 0); });
+  bar.addEventListener('click', e => { const b = e.target.closest('[role="tab"]'); if (b) b.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' }); });
+});
+
+/* Variant tabs: arrow buttons on both sides scroll the slider */
+document.querySelectorAll('.xf .trim__tabs').forEach(bar => {
+  const wrap = document.createElement('div'); wrap.className = 'trim__slider';
+  const mk = (dir, label) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'trim__arr trim__arr--' + dir; b.setAttribute('aria-label', label); b.innerHTML = '<svg class="ic" aria-hidden="true"><use href="#i-arrow-' + dir + '"/></svg>'; return b; };
+  const prev = mk('left', 'Previous variants'), next = mk('right', 'Next variants');
+  bar.parentNode.insertBefore(wrap, bar); wrap.append(prev, bar, next);
+  const tabs = () => Array.from(bar.querySelectorAll('[role="tab"]')), cur = () => Math.max(0, tabs().findIndex(t => t.getAttribute('aria-selected') === 'true'));
+  const go = d => { const t = tabs(), i = Math.min(t.length - 1, Math.max(0, cur() + d)); t[i].click(); t[i].focus({ preventScroll: true }); };
+  prev.addEventListener('click', () => go(-1));
+  next.addEventListener('click', () => go(1));
+  const sync = () => { const over = bar.scrollWidth > bar.clientWidth + 2; wrap.classList.toggle('has-arrows', over); prev.disabled = cur() <= 0; next.disabled = cur() >= tabs().length - 1; };
+  bar.addEventListener('click', () => setTimeout(sync, 0));
+  bar.addEventListener('scroll', sync, { passive: true }); addEventListener('resize', sync); sync(); setTimeout(sync, 400);
+});
+
+/* Variant tabs: the current car drives off to the left and the next one drives in from the right.
+   Headlights blink while they move, the brake lights come on when the new car stops. */
+(function () {
+  if (!window.gsap || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.querySelectorAll('.xf .trim__tabs').forEach(bar => {
+    const root = bar.closest('.trim') || document, state = { old: null, tl: null, ghost: null, timer: 0 };
+    const visible = () => root.querySelector('.trim__panel:not([hidden])');
+    const carOf = box => box && (box.querySelector('.tcar') || box.querySelector('img'));
+    const spin = (car, x) => car.querySelectorAll('.wheel').forEach(w => gsap.set(w, { rotation: (x / (w.offsetWidth / 1.68)) * 180 / Math.PI }));
+    bar.addEventListener('click', e => { // capture: runs before the tab switches, so the outgoing car can be copied
+      const t = e.target.closest('[role="tab"]'); state.old = null;
+      if (!t || t.getAttribute('aria-selected') === 'true') return;
+      const box = (visible() || {}).querySelector && visible().querySelector('.trim__img'), c = carOf(box); if (!c) return;
+      const b = box.getBoundingClientRect(), r = c.getBoundingClientRect();
+      state.old = { node: c.cloneNode(true), l: r.left - b.left, t: r.top - b.top, w: r.width, h: r.height };
+    }, true);
+    bar.addEventListener('click', () => { // bubble: runs after the tab switched
+      const o = state.old; state.old = null; if (!o) return;
+      const box = visible() && visible().querySelector('.trim__img'), car = carOf(box); if (!box || !car) return;
+      if (state.tl) state.tl.kill(); if (state.ghost) state.ghost.remove(); clearTimeout(state.timer);
+      gsap.killTweensOf(box); gsap.set(box, { opacity: 1, y: 0 });
+      const g = state.ghost = o.node; g.removeAttribute('data-tcar');
+      g.style.cssText += ';position:absolute;margin:0;left:' + o.l + 'px;top:' + o.t + 'px;width:' + o.w + 'px;height:' + o.h + 'px;z-index:2';
+      box.appendChild(g);
+      const inX = (box.clientWidth + car.offsetWidth) / 2 + 24, outX = -(o.l + o.w + 24);
+      gsap.set(car, { x: inX }); gsap.set(g, { x: 0 }); spin(car, inX);
+      box.dataset.lights = 'drive';
+      const tl = state.tl = gsap.timeline({ onComplete: () => {
+        g.remove(); state.ghost = null; gsap.set(car, { x: 0 }); spin(car, 0);
+        box.dataset.lights = 'brake'; state.timer = setTimeout(() => { box.dataset.lights = ''; }, 1700);
+      } });
+      tl.to(g, { x: outX, duration: .95, ease: 'power2.in', onUpdate: () => spin(g, gsap.getProperty(g, 'x')) }, 0)
+        .to(car, { x: 0, duration: 1.5, ease: 'power3.out', onUpdate: () => spin(car, gsap.getProperty(car, 'x')) }, '>');
+    });
+  });
+})();

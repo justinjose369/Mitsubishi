@@ -30,6 +30,34 @@ const wheelDiscs = m => {
   const [fx, rx, cyF, r, cyR] = e.wheels, sz = 2 * r * WHEEL_K, hr = e.ar, f = n => +n.toFixed(4);
   return [[fx, cyF], [rx, cyR == null ? cyF : cyR]].map(([cx, cy]) => `<i class="wheel" aria-hidden="true" style="left:${f((cx - sz / 2) * 100)}%;top:${f((cy * hr - sz / 2) / hr * 100)}%;width:${f(sz * 100)}%;background-image:url(${m.cut});background-size:${f(100 / sz)}% auto;background-position:${f((sz / 2 - cx) / (sz - 1) * 100)}% ${f((sz / 2 - cy * hr) / (sz - hr) * 100)}%"></i>`).join('');
 };
+/* Variant car with rolling wheels + head/tail lamps, driven by js/inner.js when the variant tab changes. Lamp boxes: [left, top, width, height] in % of the image. */
+const EXTRA_WHEELS = { // wheel data for images that are not in js/data.js: { ar: height/width, wheels: [frontX, rearX, frontCy, tyreR, rearCy] }
+  'assets/cars/l200-4wd-gl-petrol': { ar: 0.358, wheels: [0.165, 0.752, 0.796, 0.075, 0.791] },
+  'assets/cars/l200-sportero': { ar: 0.4286, wheels: [0.178, 0.767, 0.727, 0.068, 0.737] }
+};
+// every car image listed in js/data.js (including ones not shown on the home page) carries measured wheel positions
+for (const m of fs.readFileSync(path.join(__dirname, '..', 'js', 'data.js'), 'utf8').matchAll(/img: '(assets[/]cars[/][^']+)[.]webp', ar: ([0-9.]+), wheels: [[]([^\]]*)[\]]/g)) if (!EXTRA_WHEELS[m[1]]) EXTRA_WHEELS[m[1]] = { ar: +m[2], wheels: m[3].split(',').map(Number) };
+const CAR_LAMPS = { // [head, tail]
+  'destinator-m-line': [[5.4, 45, 3.4, 15], [90.6, 33, 3.8, 15]],
+  'l200-glx-diesel': [[4.8, 40, 4.4, 9], [91.2, 37, 3.6, 18]],
+  'l200-4wd-gl': [[2.4, 37, 6.4, 7], [93.5, 32.8, 4, 21]],
+  'l200-2wd-gl': [[10.5, 38.9, 6.5, 6.5], [89, 32.5, 3.2, 19.2]],
+  'l200-gl-single': [[3.8, 38.8, 6.2, 11.6], [94.5, 33.6, 3.2, 20.7]],
+  'l200-gls-petrol': [[2.5, 37.9, 8.5, 10.8], [90.5, 33.3, 7, 15.4]],
+  'l200-4wd-gl-petrol': [[2.2, 41.3, 6.3, 13], [93.5, 31.3, 3.7, 23.2]],
+  'l200-sportero': [[4.2, 39.5, 6.5, 7], [94.5, 35.7, 4, 18.6]],
+  'outlander-sport-h-line': [[3.4, 38, 4.6, 22], [88.5, 29, 8.5, 9]],
+  'xpander': [[9, 37, 6, 13], [85.5, 16, 5.5, 16]]
+};
+const carFx = (src, alt, w, h) => {
+  const base = src.replace(/.(png|webp)$/, ''), name = base.split('/').pop();
+  const e = WHEEL_DATA.find(x => x.img === base + '.webp') || EXTRA_WHEELS[base];
+  let wheels = '';
+  if (e) { const [fx, rx, cyF, r, cyR] = e.wheels, sz = 2 * r * WHEEL_K, hr = e.ar, f = n => +n.toFixed(4);
+    wheels = [[fx, cyF], [rx, cyR == null ? cyF : cyR]].map(([cx, cy]) => `<i class="wheel" aria-hidden="true" style="left:${f((cx - sz / 2) * 100)}%;top:${f((cy * hr - sz / 2) / hr * 100)}%;width:${f(sz * 100)}%;background-image:url(${src});background-size:${f(100 / sz)}% auto;background-position:${f((sz / 2 - cx) / (sz - 1) * 100)}% ${f((sz / 2 - cy * hr) / (sz - hr) * 100)}%"></i>`).join(''); }
+  const lp = CAR_LAMPS[name], lamps = lp ? [['head', lp[0]], ['tail', lp[1]]].map(([k, b]) => `<i class="lamp lamp--${k}" aria-hidden="true" style="left:${b[0]}%;top:${b[1]}%;width:${b[2]}%;height:${b[3]}%"></i>`).join('') : '';
+  return `<span class="tcar" data-tcar>${img(src, alt, w, h)}${wheels}${lamps}</span>`;
+};
 const clip = (src, alt, w, h, cls = '', extra = '') => `<figure class="clip ${cls}" data-clip${extra ? ' ' + extra : ''}>${img(src, alt, w, h)}</figure>`;
 
 /* ---------- shared header / footer ---------- */
@@ -233,8 +261,6 @@ ORDER.forEach((s, mi) => {
   </div>
 </section>
 
-<nav class="xtabs" aria-label="Explore ${m.name}"><div class="wrap"><a href="#drive">Explore drive</a><a href="#exterior">Explore exterior</a><a href="#interior">Explore interior</a><a href="#safety">Explore safety</a><a href="#variants">Variants</a></div></nav>
-
 <section class="xh xh--r" id="drive" aria-labelledby="xd-t">
   <div class="xh__bg">${img(bg(0), '', 1600, 900)}</div><div class="xh__shade"></div>
   <div class="xh__in xh__in--r"><div class="xh__box">
@@ -260,7 +286,7 @@ ${banner(2, 'interior')}
     <div class="trim" data-tabs>
       <div class="trim__tabs" role="tablist" aria-label="${m.name} variants">${m.variants.map((v, i) => `<button type="button" role="tab" id="tt-${v.id}" aria-controls="tp-${v.id}" aria-selected="${i === 0}"${i ? ' tabindex="-1"' : ''}>${esc(v.trim)}</button>`).join('')}</div>
       ${m.variants.map((v, i) => `<div class="trim__panel" role="tabpanel" id="tp-${v.id}" aria-labelledby="tt-${v.id}"${i ? ' hidden' : ''}>
-        <div class="trim__img${v.photo ? ' is-photo' : ''}">${img(v.img, m.name + ' ' + v.trim, 900, 600)}</div>
+        <div class="trim__img${v.photo ? ' is-photo' : ''}">${v.img.indexOf('assets/cars/') === 0 ? carFx(v.photo ? v.img : v.img.replace(/.webp$/, '.png'), m.name + ' ' + v.trim, 900, 600) : img(v.img, m.name + ' ' + v.trim, 900, 600)}</div>
         <div class="trim__info"><h3>${esc(v.trim)}</h3>
           <dl class="trim__facts"><div><dt>Engine</dt><dd>${v.engine}</dd></div><div><dt>Transmission</dt><dd>${v.trans}</dd></div><div><dt>Drive</dt><dd>${v.drive}</dd></div></dl>
           <a class="btn btn--solid" href="compare.html?m=${s}&v=${v.id}">Compare this variant</a></div></div>`).join('')}

@@ -52,8 +52,8 @@ const MODELS = [
       V('l200-gl2', '2WD GL Diesel Double Cabin', { img: 'assets/cars/l200-2wd-gl.webp', engine: '2.4L Diesel', trans: 'Manual', cyl: '4', drive: '2WD', fuel: 'Diesel', body: 'Double Cabin', power: '147 hp', torque: '330 Nm' }),
       V('l200-gls', '4WD GL Diesel Single Cabin', { img: 'assets/cars/l200-gl-single.webp', engine: '2.4L Diesel', trans: 'Manual', cyl: '4', drive: '4WD', fuel: 'Diesel', body: 'Single Cabin', power: '147 hp', torque: '330 Nm' }),
       V('l200-gls-p', '4WD GLS Petrol Double Cabin', { img: 'assets/cars/l200-gls-petrol.webp', engine: '2.4L Petrol', trans: 'Manual', cyl: '4', drive: '4WD', fuel: 'Petrol', body: 'Double Cabin' }),
-      V('l200-gl-p', '4WD GL Petrol Double Cabin', { img: 'assets/img/l200-ext.webp', photo: true, engine: '2.4L Petrol', trans: 'Manual', cyl: '4', drive: '4WD', fuel: 'Petrol', body: 'Double Cabin' }),
-      V('l200-sportero', 'Sportero Diesel Double Cabin', { img: 'assets/img/web/Sportero.jpg', photo: true, engine: '2.4L Diesel', trans: 'Automatic', cyl: '4', drive: '4WD', fuel: 'Diesel', body: 'Double Cabin' })
+      V('l200-gl-p', '4WD GL Petrol Double Cabin', { img: 'assets/cars/l200-4wd-gl-petrol.webp', engine: '2.4L Petrol', trans: 'Manual', cyl: '4', drive: '4WD', fuel: 'Petrol', body: 'Double Cabin' }),
+      V('l200-sportero', 'Sportero Diesel Double Cabin', { img: 'assets/cars/l200-sportero.png', photo: true, engine: '2.4L Diesel', trans: 'Automatic', cyl: '4', drive: '4WD', fuel: 'Diesel', body: 'Double Cabin' })
     ]
   },
   {
