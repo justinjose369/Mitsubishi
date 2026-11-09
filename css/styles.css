@@ -933,3 +933,6 @@ html.snap .contact__info .office address { font-size: 16px; line-height: 28px; }
 /* Mitsubishi in Libya: no animation on the slide text at all; it swaps instantly with the slide (photo still cross-fades) */
 .story__item, .story__item[data-s="now"] { opacity: 1; transition: none; }
 .story__name .w > span, .story__item[data-s="now"] .w > span, .story__item[data-s="past"] .w > span { transform: none; transition: none; }
+
+/* Slider number counters (e.g. "01 / 06") are hidden */
+.ctrl__count, .story__count { display: none !important; }
