@@ -817,3 +817,6 @@ html { scroll-padding-top: 56px; }
 
 /* Fleet hero: enquiry button sits on the container's right edge (desktop) */
 @media (min-width: 900px) { .ph--fleet .ph__row > div:last-child { justify-self: end; text-align: right; } }
+
+/* Parts hero: request button sits on the container's right edge (desktop) */
+@media (min-width: 900px) { .ph--parts .ph__row > div:last-child { justify-self: end; text-align: right; } }
