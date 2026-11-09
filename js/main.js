@@ -163,13 +163,15 @@
   }
 
   /* ------------------------------------------------------------------ cars mega menu (desktop) + mobile sub list */
+  const PAGES = { destinator: 'destinator.html', l200: 'l200.html', outlander: 'outlander.html', xpander: 'xpander.html' };
+  const pageFor = m => PAGES[String(m.name).toLowerCase().replace(/[ ]+/g, '')] || 'vehicles.html'; // model detail page, or the listing for models without one
   function initMega() {
     const mega = $('#mega'), navCars = $('#navCars'), link = $('a', navCars), desk = matchMedia('(min-width: 1024px)');
     $('#megaGrid').innerHTML = M.map((m, i) =>
-      '<a class="mcard" href="#cars" data-mega-i="' + i + '">' +
+      '<a class="mcard" href="' + pageFor(m) + '">' +
       '<span class="mcard__img"><img src="' + m.img + '" alt="" width="520" height="' + Math.round(520 * m.ar) + '" loading="lazy" decoding="async"></span>' +
       '<b>' + m.name + '</b><span class="mcard__cta">Explore vehicle <svg class="ic"><use href="#i-arrow-right"/></svg></span></a>').join('');
-    $('#menuCars').innerHTML = M.map((m, i) => '<li><a href="#cars" data-mega-i="' + i + '">' + m.name + '</a></li>').join('');
+    $('#menuCars').innerHTML = M.map((m, i) => '<li><a href="' + pageFor(m) + '">' + m.name + '</a></li>').join('');
     let t;
     const open = () => { if (!desk.matches) return; clearTimeout(t); header.classList.add('mega-open'); link.setAttribute('aria-expanded', 'true'); };
     const close = (delay = 0) => { clearTimeout(t); t = setTimeout(() => { header.classList.remove('mega-open'); link.setAttribute('aria-expanded', 'false'); }, delay); };
