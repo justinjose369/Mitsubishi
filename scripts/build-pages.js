@@ -56,13 +56,18 @@ const CAR_LAMPS = { // [head, tail]
   'outlander-sport-h-line': [[3.4, 38, 4.6, 22], [88.5, 29, 8.5, 9]],
   'xpander': [[9, 37, 6, 13], [85.5, 16, 5.5, 16]]
 };
+const CAR_TAIL = { // tail lamps drawn in the real lamp shape: [left, top, width, height] in % of the image, polygon points in % of that box
+  'destinator-m-line': { b: [90.9, 34.2, 3.2, 14.4], p: '0 0,60 4,100 30,100 80,75 100,40 100,30 50' },
+  'destinator-m-line-red': { b: [90.9, 34.2, 3.2, 14.4], p: '0 0,60 4,100 30,100 80,75 100,40 100,30 50' },
+  'destinator-p-line': { b: [84.5, 18.5, 5.2, 15.8], p: '10 0,40 5,100 70,95 100,60 95,0 30' }
+};
 const carFx = (src, alt, w, h) => {
   const base = src.replace(/.(png|webp)$/, ''), name = base.split('/').pop();
   const e = WHEEL_DATA.find(x => x.img === base + '.webp') || EXTRA_WHEELS[base];
   let wheels = '';
   if (e) { const [fx, rx, cyF, r, cyR] = e.wheels, sz = 2 * r * WHEEL_K, hr = e.ar, f = n => +n.toFixed(4);
     wheels = [[fx, cyF], [rx, cyR == null ? cyF : cyR]].map(([cx, cy]) => `<i class="wheel" aria-hidden="true" style="left:${f((cx - sz / 2) * 100)}%;top:${f((cy * hr - sz / 2) / hr * 100)}%;width:${f(sz * 100)}%;background-image:url(${src});background-size:${f(100 / sz)}% auto;background-position:${f((sz / 2 - cx) / (sz - 1) * 100)}% ${f((sz / 2 - cy * hr) / (sz - hr) * 100)}%"></i>`).join(''); }
-  const lp = CAR_LAMPS[name], lamps = lp ? [['head', lp[0]], ['tail', lp[1]]].map(([k, b]) => `<i class="lamp lamp--${k}" aria-hidden="true" style="left:${b[0]}%;top:${b[1]}%;width:${b[2]}%;height:${b[3]}%"></i>`).join('') : '';
+  const f2 = n => +n.toFixed(4), lp = CAR_LAMPS[name], tl = CAR_TAIL[name], lamps = lp ? [['head', lp[0]], ['tail', lp[1]]].map(([k, b]) => k === 'tail' && tl ? `<i class="lamp lamp--tail lamp--shape" aria-hidden="true" style="left:${tl.b[0]}%;top:${tl.b[1]}%;width:${tl.b[2]}%;height:${tl.b[3]}%"><i style="clip-path:polygon(${tl.p.split(',').map(q => q.trim().split(' ').map(v => v + '%').join(' ')).join(',')});background-image:url(${src});background-size:${f2(10000 / tl.b[2])}% auto;background-position:${f2(tl.b[0] / (100 - tl.b[2]) * 100)}% ${f2(tl.b[1] / (100 - tl.b[3]) * 100)}%"></i></i>` : `<i class="lamp lamp--${k}" aria-hidden="true" style="left:${b[0]}%;top:${b[1]}%;width:${b[2]}%;height:${b[3]}%"></i>`).join('') : '';
   return `<span class="tcar" data-tcar>${img(src, alt, w, h)}${wheels}${lamps}</span>`;
 };
 const clip = (src, alt, w, h, cls = '', extra = '') => `<figure class="clip ${cls}" data-clip${extra ? ' ' + extra : ''}>${img(src, alt, w, h)}</figure>`;
@@ -460,7 +465,7 @@ page('about.html', {
   </ul>
 </section>
 
-<section class="stmt" aria-label="Our offer"><div class="wrap"><p class="eyebrow" data-a>What we offer</p><p class="stmt__t" data-scrub>Middle East Group offers an unbeaten choice of Mitsubishi passenger cars, SUVs and commercial vehicles, backed by professional customer service and a growing network of hi-tech service centres.</p></div></section>
+<section class="stmt stmt--logo" aria-label="Our offer"><div class="wrap"><p class="eyebrow" data-a>What we offer</p><p class="stmt__t" data-scrub>Middle East Group offers an unbeaten choice of Mitsubishi passenger cars, SUVs and commercial vehicles, backed by professional customer service and a growing network of hi-tech service centres.</p></div><div class="mlogo" data-mlogo aria-hidden="true"><svg class="mlogo__line" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="0.8" stroke-linejoin="miter"><polygon points="35.5,30.9 50,5.8 64.5,30.9 50,56"/><polygon points="35.5,30.9 50,5.8 64.5,30.9 50,56" transform="rotate(120 50 56)"/><polygon points="35.5,30.9 50,5.8 64.5,30.9 50,56" transform="rotate(240 50 56)"/></svg><div class="mlogo__fill"><svg viewBox="0 0 100 100" fill="#ed0000"><polygon points="35.5,30.9 50,5.8 64.5,30.9 50,56"/><polygon points="35.5,30.9 50,5.8 64.5,30.9 50,56" transform="rotate(120 50 56)"/><polygon points="35.5,30.9 50,5.8 64.5,30.9 50,56" transform="rotate(240 50 56)"/></svg></div></div></section>
 
 <section class="hist" data-hs aria-labelledby="hi-t">
   <div class="hs__pin">

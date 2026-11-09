@@ -916,3 +916,25 @@ html { scroll-padding-top: 56px; }
 
 /* Car pages: no line along the bottom of the header when it turns solid on scroll */
 .vd .header, .vd .header.is-solid, .vd .header.mega-open { border-bottom-color: transparent !important; box-shadow: none; }
+
+/* "What we offer": Mitsubishi logo on the right, filling with red as you scroll */
+.stmt--logo .stmt__t { max-width: 22ch; }
+.mlogo { position: absolute; right: max(var(--pad), calc((100% - var(--max)) / 2 + var(--pad))); top: 50%; width: clamp(160px, 26vw, 400px); aspect-ratio: 1; transform: translateY(-50%); color: #26262a; --p: 0; pointer-events: none; z-index: 1; }
+.mlogo svg { display: block; width: 100%; height: 100%; }
+.mlogo__line { position: absolute; inset: 0; }
+.mlogo__fill { position: absolute; inset: 0; clip-path: inset(0 0 calc((1 - var(--p)) * 100%) 0); }
+@media (max-width: 899px) { .stmt--logo .stmt__t { max-width: none; } .mlogo { position: relative; right: auto; top: auto; transform: none; margin: 36px auto 0; width: min(60vw, 260px); } }
+@media (prefers-reduced-motion: reduce) { .mlogo { --p: 1; } }
+
+/* Shaped tail lamps: the glow follows the real lamp outline instead of a round blob */
+.tcar .lamp--tail.lamp--shape, .trim__img[data-lights="drive"] .tcar .lamp--tail.lamp--shape, .trim__img[data-lights="brake"] .tcar .lamp--tail.lamp--shape { background: none !important; border-radius: 0; box-shadow: none !important; filter: drop-shadow(0 0 2px rgba(255,40,25,.95)) drop-shadow(0 0 7px rgba(255,30,20,.6)); }
+.tcar .lamp--shape > i { position: absolute; inset: 0; background: linear-gradient(90deg, #ff5a45 0%, #ff2418 45%, #c40d08 100%); }
+.trim__img[data-lights="brake"] .tcar .lamp--tail.lamp--shape { filter: drop-shadow(0 0 3px rgba(255,60,40,1)) drop-shadow(0 0 12px rgba(255,30,20,.85)); }
+
+/* Real tail lamp: the lit lamp is the car photo's own lamp pixels, brightened, so it keeps the true lens detail (no flat painted red) */
+.tcar .lamp--shape > i { background-color: transparent; background-repeat: no-repeat; filter: brightness(1.25) saturate(1.5); }
+.trim__img[data-lights="drive"] .tcar .lamp--tail.lamp--shape { opacity: .45; }
+.trim__img[data-lights="brake"] .tcar .lamp--tail.lamp--shape { filter: drop-shadow(0 0 5px rgba(255,40,25,.55)); }
+.trim__img[data-lights="brake"] .tcar .lamp--shape > i { filter: brightness(2.1) saturate(2.1) contrast(1.15); }
+/* Tail lamp light stays inside the lamp: no glow spilling onto the bodywork */
+.tcar .lamp--tail.lamp--shape, .trim__img[data-lights="drive"] .tcar .lamp--tail.lamp--shape, .trim__img[data-lights="brake"] .tcar .lamp--tail.lamp--shape { filter: none !important; }

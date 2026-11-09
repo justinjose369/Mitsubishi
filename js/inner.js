@@ -494,3 +494,12 @@ document.querySelectorAll('.xf .trim__tabs').forEach(bar => {
       scrollTrigger: { trigger: sec, start: 'top bottom', end: 'bottom top', scrub: true, invalidateOnRefresh: true } });
   });
 })();
+
+/* "What we offer": the Mitsubishi logo fills with red from the bottom as the section scrolls through */
+(function () {
+  const logo = document.querySelector('[data-mlogo]'); if (!logo) return;
+  if (!window.gsap || !window.ScrollTrigger || matchMedia('(prefers-reduced-motion: reduce)').matches) { logo.style.setProperty('--p', 1); return; }
+  gsap.registerPlugin(ScrollTrigger);
+  const sec = logo.closest('section');
+  gsap.fromTo(logo, { '--p': 0 }, { '--p': 1, ease: 'none', scrollTrigger: { trigger: sec, start: 'top 70%', end: 'bottom 40%', scrub: true } });
+})();
