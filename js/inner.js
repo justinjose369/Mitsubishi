@@ -178,7 +178,7 @@
         const CW = 240; // car width in px (the photos are 847x360)
         if (bar && track.classList.contains('hs__track--tl')) {
           const barEl = bar.parentElement;
-          const ERAS = [{ y: '2015', src: 'assets/img/hist-l200-1.webp' }, { y: 'Today', src: 'assets/img/hist-l200-2.webp' }];
+          const ERAS = [{ y: '1976', src: 'assets/img/hist-l200-1.webp' }, { y: 'Today', src: 'assets/img/hist-l200-2.webp' }];
           driveCar = document.createElement('div'); driveCar.className = 'hs__car'; driveCar.setAttribute('aria-hidden', 'true');
           driveCar.innerHTML = ERAS.map(e => `<span class="hs__era"><img src="${e.src}" alt="" width="847" height="360" decoding="async"><em>${e.y}</em></span>`).join('');
           barEl.appendChild(driveCar);
@@ -388,7 +388,7 @@
     document.title = a.title + ' | Mitsubishi Motors Libya';
     $('#artTitle').textContent = a.title; $('#artMeta').textContent = a.cat + (a.date ? '  ·  ' + a.date : '');
     $('#artBack').href = kind === 'blog' ? 'blog.html' : 'media.html';
-    $('#artFig').innerHTML = '<img src="' + a.img + '" alt="" width="1200" height="800">';
+    $('#artFig').innerHTML = '<img src="' + a.img + '" alt="">';
     if (a.body) { $('#artBody').innerHTML = a.body.map(t => t.indexOf('## ') === 0 ? '<h3>' + t.slice(3) + '</h3>' : '<p>' + t + '</p>').join(''); return; }
     $('#artBody').innerHTML = '<p>' + a.ex + '</p>' + (a.cta ? '<p>' + a.cta + '</p>' : '') + '<p class="ph-note">The full article text is being prepared and will appear here. For details in the meantime, contact our team on +218 918 804 961.</p>';
   })();

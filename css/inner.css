@@ -941,7 +941,7 @@ html { scroll-padding-top: 56px; }
 
 /* "The group": image slider on the right */
 .gslide { position: relative; width: 100%; }
-.gslide__track { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: #141416; }
+.gslide__track { position: relative; aspect-ratio: 3 / 2; overflow: hidden; background: #141416; }
 .gslide__i { position: absolute; inset: 0; margin: 0; opacity: 0; transition: opacity .9s var(--ease); }
 .gslide__i.is-on { opacity: 1; }
 .gslide__i img { width: 100%; height: 100%; object-fit: cover; }
@@ -956,3 +956,19 @@ html { scroll-padding-top: 56px; }
 /* "What drives us": no 01-04 numbers, so the list is two columns (title | text) */
 .why2__list li { grid-template-columns: 1fr; }
 @media (min-width: 900px) { .why2__list li { grid-template-columns: 1fr 1.2fr; } }
+
+/* "Everything your car needs": no 01-05 numbers, so the part names use the full row */
+.pcomp__list button { grid-template-columns: 1fr; }
+
+/* "Why genuine": no 01-04 numbers, so the list is two columns (title | text) */
+.ben__list li { grid-template-columns: 1fr; }
+@media (min-width: 900px) { .ben__list li { grid-template-columns: 1fr 1fr; } }
+
+/* "Why genuine": the site's standard text hover - the row nudges right and the title turns red */
+.ben__list li { transition: padding-left .5s var(--ease); }
+.ben__list h3 { transition: color .3s; }
+.ben__list li:hover { padding-left: 14px; }
+.ben__list li:hover h3 { color: var(--red); }
+
+/* "Fleet service": no 01-03 numbers, so each stacked card is just title + text */
+@media (min-width: 900px) { .fsv--stack .fsv__grid article { grid-template-rows: auto 1fr; } .fsv--stack .fsv__grid h3 { margin-top: 0; } }

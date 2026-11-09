@@ -111,9 +111,9 @@ const footer = () => `
         <div class="footer__id">
           <div class="footer__brand"><a class="footer__logo footer__logo--main" href="index.html" aria-label="Mitsubishi Motors Libya"><img src="assets/img/logo-main.png" alt="Mitsubishi Motors, Drive your Ambition" width="201" height="186" loading="lazy"></a></div>
           <ul class="footer__social" aria-label="Social media">
-            <li><a data-social="facebook" aria-disabled="true" aria-label="Facebook"><svg class="ic"><use href="#i-facebook"/></svg></a></li>
-            <li><a data-social="instagram" aria-disabled="true" aria-label="Instagram"><svg class="ic"><use href="#i-instagram"/></svg></a></li>
-            <li><a data-social="x" aria-disabled="true" aria-label="X (Twitter)"><svg class="ic"><use href="#i-x-social"/></svg></a></li>
+            <li><a href="${SOCIAL.facebook}" target="_blank" rel="noopener" aria-label="Facebook"><svg class="ic"><use href="#i-facebook"/></svg></a></li>
+            <li><a href="${SOCIAL.instagram}" target="_blank" rel="noopener" aria-label="Instagram"><svg class="ic"><use href="#i-instagram"/></svg></a></li>
+            <li><a href="${SOCIAL.linkedin}" target="_blank" rel="noopener" aria-label="LinkedIn"><svg class="ic"><use href="#i-linkedin"/></svg></a></li>
             <li><a data-social="youtube" aria-disabled="true" aria-label="YouTube"><svg class="ic"><use href="#i-youtube"/></svg></a></li>
           </ul>
         </div>
@@ -383,7 +383,7 @@ page('parts.html', {
 <section class="pcomp sec sec--ink" aria-labelledby="pc-t">
   <div class="wrap pcomp__head">${eyebrow('Parts &amp; accessories')}${split('h2', 'h2 h2--xl', 'Everything your car needs', 'id="pc-t"')}</div>
   <div class="pcomp__stage" data-pstage>
-    <ul class="pcomp__list">${PARTS.map((p, i) => `<li><button type="button" data-p="${i}" aria-pressed="${i === 0}"><span>0${i + 1}</span><b>${p.n}</b><small>${p.d}</small></button></li>`).join('')}</ul>
+    <ul class="pcomp__list">${PARTS.map((p, i) => `<li><button type="button" data-p="${i}" aria-pressed="${i === 0}"><b>${p.n}</b><small>${p.d}</small></button></li>`).join('')}</ul>
     <div class="pcomp__view" aria-live="polite">${PARTS.map((p, i) => `<figure data-pv="${i}"${i ? '' : ' class="is-on"'}>${img(p.img, p.n, 600, 600)}</figure>`).join('')}<div class="pcomp__glow" aria-hidden="true"></div></div>
   </div>
 </section>
@@ -391,10 +391,10 @@ page('parts.html', {
 <section class="ben sec sec--paper" aria-labelledby="bn-t">
   <div class="wrap">${eyebrow('Why genuine')}${split('h2', 'h2 h2--xl', 'Benefits of genuine parts', 'id="bn-t"')}
     <ol class="ben__list">
-      <li data-a><span>01</span><h3>Precise fit</h3><p>Engineered to Mitsubishi&rsquo;s exact standards so each part fits your vehicle as intended.</p></li>
-      <li data-a><span>02</span><h3>Lasting durability</h3><p>Built to perform for years, so you can drive with confidence.</p></li>
-      <li data-a><span>03</span><h3>Performance and safety</h3><p>Genuine parts maintain the performance, safety and reliability of your vehicle.</p></li>
-      <li data-a><span>04</span><h3>Expert support</h3><p>Our experienced team helps you find the right part, from routine maintenance to a major repair.</p></li>
+      <li data-a><h3>Precise fit</h3><p>Engineered to Mitsubishi&rsquo;s exact standards so each part fits your vehicle as intended.</p></li>
+      <li data-a><h3>Lasting durability</h3><p>Built to perform for years, so you can drive with confidence.</p></li>
+      <li data-a><h3>Performance and safety</h3><p>Genuine parts maintain the performance, safety and reliability of your vehicle.</p></li>
+      <li data-a><h3>Expert support</h3><p>Our experienced team helps you find the right part, from routine maintenance to a major repair.</p></li>
     </ol></div>
 </section>
 
@@ -421,9 +421,9 @@ page('fleet.html', {
 <section class="fsv fsv--stack sec sec--paper" aria-labelledby="fs-t">
   <div class="wrap">${eyebrow('How we help')}${split('h2', 'h2 h2--xl', 'Fleet service', 'id="fs-t"')}
     <div class="fsv__grid">
-      <article data-a><span>01</span><h3>Tailored business solutions</h3><p>Our hand-picked fleet professionals bring experience, know-how and service skills, with expert knowledge of every car and finance option, plus personalised plans and exclusive deals.</p></article>
-      <article data-a><span>02</span><h3>The right car for your business</h3><p>Whether you need a hatchback, SUV, pickup truck or electric car, the team is trained to help you find the best vehicles to create your ideal fleet.</p></article>
-      <article data-a><span>03</span><h3>Finance your fleet</h3><p>The team will guide you through the options to find the best way to finance your fleet, so the whole experience stays simple.</p></article>
+      <article data-a><h3>Tailored business solutions</h3><p>Our hand-picked fleet professionals bring experience, know-how and service skills, with expert knowledge of every car and finance option, plus personalised plans and exclusive deals.</p></article>
+      <article data-a><h3>The right car for your business</h3><p>Whether you need a hatchback, SUV, pickup truck or electric car, the team is trained to help you find the best vehicles to create your ideal fleet.</p></article>
+      <article data-a><h3>Finance your fleet</h3><p>The team will guide you through the options to find the best way to finance your fleet, so the whole experience stays simple.</p></article>
     </div></div>
 </section>
 
@@ -491,7 +491,7 @@ page('about.html', {
       <blockquote class="grp__quote" data-a>The Middle East Group family may be diverse, but is united by a shared theme of opening up a world of opportunities to the people who work and associate with us.</blockquote>
     </div>
     <div class="gslide" data-gslide role="region" aria-roledescription="carousel" aria-label="Middle East Group gallery" data-a>
-      <div class="gslide__track"><figure class="gslide__i is-on"><img src="assets/img/web/Grp-by-section-4th.jpg" alt="Red Mitsubishi SUV driving through the mountains" width="501" height="579" loading="lazy" decoding="async"></figure><figure class="gslide__i"><img src="assets/img/web/happy-jurney.jpg" alt="Mitsubishi pickup on an autumn forest road" width="1080" height="720" loading="lazy" decoding="async"></figure><figure class="gslide__i"><img src="assets/img/web/update-photo.jpg" alt="Mitsubishi SUV driving through water" width="501" height="750" loading="lazy" decoding="async"></figure><figure class="gslide__i"><img src="assets/img/web/Mistubishi2-1.jpg" alt="Mitsubishi pickup kicking up dust" width="1349" height="670" loading="lazy" decoding="async"></figure><figure class="gslide__i"><img src="assets/img/web/Mstbshi-2.jpg" alt="Mitsubishi pickups on a desert track" width="1349" height="670" loading="lazy" decoding="async"></figure></div>
+      <div class="gslide__track"><figure class="gslide__i is-on"><img src="assets/img/web/Grp-by-section-4th.jpg" alt="Red Mitsubishi SUV driving through the mountains" width="501" height="579" loading="lazy" decoding="async" style="object-position:50% 72%"></figure><figure class="gslide__i"><img src="assets/img/web/happy-jurney.jpg" alt="Mitsubishi pickup on an autumn forest road" width="1080" height="720" loading="lazy" decoding="async" style="object-position:50% 50%"></figure><figure class="gslide__i"><img src="assets/img/web/update-photo.jpg" alt="Mitsubishi SUV driving through water" width="501" height="750" loading="lazy" decoding="async" style="object-position:50% 38%"></figure><figure class="gslide__i"><img src="assets/img/web/Mistubishi2-1.jpg" alt="Mitsubishi pickup kicking up dust" width="1349" height="670" loading="lazy" decoding="async" style="object-position:72% 50%"></figure><figure class="gslide__i"><img src="assets/img/web/Mstbshi-2.jpg" alt="Mitsubishi pickups on a desert track" width="1349" height="670" loading="lazy" decoding="async" style="object-position:82% 50%"></figure></div>
       <div class="gslide__ctl"><button type="button" class="gslide__btn" data-gs-prev aria-label="Previous image">${ic('arrow-left')}</button><div class="gslide__dots" data-gs-dots></div><button type="button" class="gslide__btn" data-gs-next aria-label="Next image">${ic('arrow-right')}</button></div>
     </div>
   </div>
@@ -530,7 +530,7 @@ ${ctaBand({ title: 'Let’s talk cars', text: 'Visit our team in Tripoli or get 
 });
 
 /* ======================================================================== MEDIA / BLOG / ARTICLE ===== */
-const card = (a, kind) => `<li class="ncard" data-a><a href="article.html?id=${a.id}&amp;k=${kind}"><figure>${img(a.img, a.title, 600, 400)}</figure><p class="ncard__m"><span>${a.cat}</span>${a.date ? `<time>${a.date}</time>` : ''}</p><h3>${a.title}</h3><em>Read more ${ic('arrow-right')}</em></a></li>`;
+const card = (a, kind) => `<li class="ncard" data-a><a href="article.html?id=${a.id}&amp;k=${kind}"><figure>${img(a.img, a.title, 600, 400, a.pos ? `style="object-position:${a.pos}"` : '')}</figure><p class="ncard__m"><span>${a.cat}</span>${a.date ? `<time>${a.date}</time>` : ''}</p><h3>${a.title}</h3><em>Read more ${ic('arrow-right')}</em></a></li>`;
 const feat = (a, kind) => `<article class="featn"><a href="article.html?id=${a.id}&amp;k=${kind}">${clip(a.img, a.title, 1200, 800, 'featn__img')}<div><p class="ncard__m" data-a><span>Featured</span>${a.date ? `<time>${a.date}</time>` : ''}</p>${split('h2', 'h2', a.title)}<p class="lede" data-a>${a.ex}</p><em class="btn btn--solid" data-a>Read more ${ic('arrow-right')}</em></div></a></article>`;
 page('media.html', {
   title: 'News & Events', desc: 'News and events from Mitsubishi Motors Libya.', active: 'media', hdr: 'solid',
@@ -623,3 +623,29 @@ page('404.html', {
   <div class="nf__road" aria-hidden="true"><figure class="nf__car">${img(model('xpander').cut, '', 520, 182, 'loading="eager"')}</figure><i></i></div>
 </section>`
 });
+
+/* ---- image proportions: every <img width height> matches the real file, so the browser reserves the correct shape before the picture loads ---- */
+(() => {
+  const { execFileSync } = require('child_process'), cache = {};
+  const dims = src => {
+    if (src in cache) return cache[src];
+    const file = path.join(root, src.split('?')[0]);
+    if (!fs.existsSync(file)) return (cache[src] = null);
+    try { const o = execFileSync('ffprobe', ['-v', 'error', '-select_streams', 'v:0', '-show_entries', 'stream=width,height', '-of', 'csv=p=0:s=x', file], { encoding: 'utf8' }).trim().split('x').map(Number); return (cache[src] = o.length === 2 && o[0] && o[1] ? o : null); } catch (e) { return (cache[src] = null); }
+  };
+  let fixed = 0;
+  fs.readdirSync(root).filter(f => f.endsWith('.html')).forEach(f => {
+    const file = path.join(root, f), html = fs.readFileSync(file, 'utf8');
+    const out = html.replace(/<img\b[^>]*>/g, tag => {
+      const m = tag.match(/\ssrc="([^"]+)"/), w = tag.match(/\swidth="(\d+)"/), h = tag.match(/\sheight="(\d+)"/);
+      if (!m || !w || !h || /^(https?:|data:)/.test(m[1])) return tag;
+      const d = dims(m[1]); if (!d) return tag;
+      const ar = (+w[1]) / (+h[1]), nar = d[0] / d[1];
+      if (Math.abs(ar - nar) / nar <= 0.02) return tag;
+      fixed++;
+      return tag.replace(/(\swidth=")\d+(")/, '$1' + d[0] + '$2').replace(/(\sheight=")\d+(")/, '$1' + d[1] + '$2');
+    });
+    if (out !== html) fs.writeFileSync(file, out);
+  });
+  console.log('image dimensions corrected: ' + fixed);
+})();
