@@ -373,7 +373,7 @@ ${ctaBand({ title: 'Need advice on a part?', text: 'Our parts team is ready to h
 
 /* ======================================================================== FLEET ===== */
 page('fleet.html', {
-  title: 'Fleet Solutions', desc: 'Fleet solutions from Mitsubishi Motors Libya: tailored business plans, the right vehicle for your business and help financing your fleet.', active: 'fleet',
+  title: 'Fleet Solutions', desc: 'Fleet solutions from Mitsubishi Motors Libya: tailored business plans, the right vehicle for your business and help financing your fleet.', active: 'fleet', bodyClass: 'pg-fleet',
   body: `
 <section class="ph ph--fleet">
   <div class="ph__bg" data-parallax>${img('assets/img/dev-dunes-single-cab.webp', 'Black Mitsubishi L200 single cab kicking up dust in the mountains', 1942, 809).replace('loading="lazy"', 'loading="eager"')}</div><div class="ph__shade"></div>

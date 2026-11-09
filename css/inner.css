@@ -805,14 +805,14 @@ html { scroll-padding-top: 56px; }
 .dealer__bg img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
 
 /* Parts: "Get in touch" banner image sits to the right, text stays left */
-.pg-parts .cta__bg img { object-position: right center; }
-.pg-parts .cta__shade { background: linear-gradient(90deg, rgba(11,11,12,.92) 0, rgba(11,11,12,.6) 40%, rgba(11,11,12,.05) 100%); }
+.pg-parts .cta__bg img, .pg-fleet .cta__bg img { object-position: right center; }
+.pg-parts .cta__shade, .pg-fleet .cta__shade { background: linear-gradient(90deg, rgba(11,11,12,.92) 0, rgba(11,11,12,.6) 40%, rgba(11,11,12,.05) 100%); }
 /* Parts CTA: photo occupies the right side so the car never sits under the text */
 @media (min-width: 900px) {
-  .pg-parts .cta { background: var(--ink); }
-  .pg-parts .cta__bg { left: 42%; }
-  .pg-parts .cta__bg img { object-position: center; }
-  .pg-parts .cta__shade { background: linear-gradient(90deg, var(--ink) 0, var(--ink) 42%, rgba(11,11,12,.0) 62%), linear-gradient(0deg, rgba(11,11,12,.35), transparent 40%); }
+  .pg-parts .cta, .pg-fleet .cta { background: var(--ink); }
+  .pg-parts .cta__bg, .pg-fleet .cta__bg { left: 42%; }
+  .pg-parts .cta__bg img, .pg-fleet .cta__bg img { object-position: center; }
+  .pg-parts .cta__shade, .pg-fleet .cta__shade { background: linear-gradient(90deg, var(--ink) 0, var(--ink) 42%, rgba(11,11,12,.0) 62%), linear-gradient(0deg, rgba(11,11,12,.35), transparent 40%); }
 }
 
 /* Fleet hero: enquiry button sits on the container's right edge (desktop) */
