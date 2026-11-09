@@ -41,6 +41,6 @@ window.MMK_CONFIG = {
       phones: [{ display: '+218 918 804 961', tel: '+218918804961' }, { display: '+218 925 818 264', tel: '+218925818264' }],
       mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Swani+Road+Al+Fallah+Street+Tripoli+Libya' }
   ],
-  brochures: { destinator: '', l200: 'assets/brochures/l200-brochure.pdf', outlander: 'assets/brochures/outlander-brochure.pdf', xpander: '' }, // paste each brochure PDF URL here to enable the Download buttons
+  brochures: { destinator: '', l200: 'assets/brochures/l200-brochure.pdf', outlander: 'assets/brochures/outlander-brochure.pdf', xpander: '', 'pajero-sport': '' }, // paste each brochure PDF URL here to enable the Download buttons
   officialSite: 'https://www.mitsubishi-motors.com.kw'
 };

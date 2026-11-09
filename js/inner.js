@@ -484,8 +484,19 @@ document.querySelectorAll('.xf .trim__tabs').forEach(bar => {
         g.remove(); state.ghost = null; gsap.set(car, { x: 0 }); spin(car, 0);
         box.dataset.lights = 'brake'; state.timer = setTimeout(() => { box.dataset.lights = ''; }, 1700);
       } });
-      tl.to(g, { x: outX, duration: .95, ease: 'power2.in', onUpdate: () => spin(g, gsap.getProperty(g, 'x')) }, 0)
-        .to(car, { x: 0, duration: 1.5, ease: 'power3.out', onUpdate: () => spin(car, gsap.getProperty(car, 'x')) }, '>');
+      tl.to(g, { x: outX, duration: .55, ease: 'power2.in', onUpdate: () => spin(g, gsap.getProperty(g, 'x')) }, 0)
+        .to(car, { x: 0, duration: .85, ease: 'power2.out', onUpdate: () => spin(car, gsap.getProperty(car, 'x')) }, '>');
     });
+  });
+})();
+
+/* Car detail pages: banner photos drift and ease in as you scroll (parallax + slow zoom) */
+(function () {
+  if (!window.gsap || !window.ScrollTrigger || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  gsap.registerPlugin(ScrollTrigger);
+  document.querySelectorAll('.xf .xb__bg img, .xf .xh--r .xh__bg img, .xf .x50__img img').forEach(img => {
+    const sec = img.closest('section'); if (!sec) return;
+    gsap.fromTo(img, { yPercent: -6, scale: 1.22 }, { yPercent: 6, scale: 1.14, ease: 'none', transformOrigin: '50% 50%',
+      scrollTrigger: { trigger: sec, start: 'top bottom', end: 'bottom top', scrub: true, invalidateOnRefresh: true } });
   });
 })();

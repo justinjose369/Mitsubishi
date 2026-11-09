@@ -33,11 +33,14 @@ const wheelDiscs = m => {
 /* Variant car with rolling wheels + head/tail lamps, driven by js/inner.js when the variant tab changes. Lamp boxes: [left, top, width, height] in % of the image. */
 const EXTRA_WHEELS = { // wheel data for images that are not in js/data.js: { ar: height/width, wheels: [frontX, rearX, frontCy, tyreR, rearCy] }
   'assets/cars/l200-4wd-gl-petrol': { ar: 0.358, wheels: [0.165, 0.752, 0.796, 0.075, 0.791] },
+  'assets/cars/destinator-m-line-red': { ar: 0.444, wheels: [0.200, 0.782, 0.744, 0.0715, 0.730] },
+  'assets/cars/outlander-sport-p-line': { ar: 0.4113, wheels: [0.2021, 0.8064, 0.759, 0.0738, 0.738] },
   'assets/cars/l200-sportero': { ar: 0.4286, wheels: [0.178, 0.767, 0.727, 0.068, 0.737] }
 };
 // every car image listed in js/data.js (including ones not shown on the home page) carries measured wheel positions
 for (const m of fs.readFileSync(path.join(__dirname, '..', 'js', 'data.js'), 'utf8').matchAll(/img: '(assets[/]cars[/][^']+)[.]webp', ar: ([0-9.]+), wheels: [[]([^\]]*)[\]]/g)) if (!EXTRA_WHEELS[m[1]]) EXTRA_WHEELS[m[1]] = { ar: +m[2], wheels: m[3].split(',').map(Number) };
 const CAR_LAMPS = { // [head, tail]
+  'destinator-p-line': [[10, 44, 5.5, 17], [84.5, 18.5, 5.2, 15.8]],
   'destinator-m-line': [[5.4, 45, 3.4, 15], [90.6, 33, 3.8, 15]],
   'l200-glx-diesel': [[4.8, 40, 4.4, 9], [91.2, 37, 3.6, 18]],
   'l200-4wd-gl': [[2.4, 37, 6.4, 7], [93.5, 32.8, 4, 21]],
@@ -45,7 +48,11 @@ const CAR_LAMPS = { // [head, tail]
   'l200-gl-single': [[3.8, 38.8, 6.2, 11.6], [94.5, 33.6, 3.2, 20.7]],
   'l200-gls-petrol': [[2.5, 37.9, 8.5, 10.8], [90.5, 33.3, 7, 15.4]],
   'l200-4wd-gl-petrol': [[2.2, 41.3, 6.3, 13], [93.5, 31.3, 3.7, 23.2]],
+  'destinator-m-line-red': [[5.4, 45, 3.4, 15], [90.6, 33, 3.8, 15]],
+  'outlander-sport-p-line': [[3.2, 42, 4.5, 19], [91, 28.4, 5.7, 16.4]],
   'l200-sportero': [[4.2, 39.5, 6.5, 7], [94.5, 35.7, 4, 18.6]],
+  'pajero-sport': [[2.5, 36, 10, 6.5], [89.5, 19.1, 8, 14]],
+  'outlander-sport-m-line': [[3, 41.2, 5, 18], [90.5, 28.6, 6, 17.4]],
   'outlander-sport-h-line': [[3.4, 38, 4.6, 22], [88.5, 29, 8.5, 9]],
   'xpander': [[9, 37, 6, 13], [85.5, 16, 5.5, 16]]
 };
@@ -221,7 +228,7 @@ ${ORDER.map((s, i) => { const m = model(s); return `
 <section class="vrow vrow--${rowThemes[i]}" id="v-${s}" style="--ac:${m.accent}" aria-labelledby="vr-${s}">
   <div class="vrow__bg" data-parallax>${img(m.hero, '', 1600, 900)}</div><div class="vrow__shade"></div>
   <div class="wrap vrow__in">
-    <p class="vrow__no" data-a>0${i + 1} / 04</p>
+    <p class="vrow__no" data-a>0${i + 1} / 0${ORDER.length}</p>
     ${split('h2', 'big vrow__name', m.name, `id="vr-${s}"`)}
     <p class="vrow__tag" data-a>${m.tag}</p>
     <ul class="chips" data-a><li>${m.kind}</li>${m.variants[0].engine !== TBC ? `<li>${m.variants[0].engine.replace('Petrol', 'petrol').replace('Diesel', 'diesel')}</li>` : ''}<li>${m.variants.length} ${m.variants.length > 1 ? 'variants' : 'variant'}</li></ul>
@@ -239,14 +246,14 @@ ${ctaBand({ title: 'Test the range', text: 'Speak to our team about the vehicle 
 /* Layout follows the Mitsubishi Motors Kuwait model page: hero, Drive hero, Exterior / Interior banners,
    50/50 Safety block, text block, tabbed trim + specification table, legal note, key buying actions. */
 ORDER.forEach((s, mi) => {
-  const m = model(s), next = model(ORDER[(mi + 1) % 4]);
+  const m = model(s), next = model(ORDER[(mi + 1) % ORDER.length]);
   const tabs = Object.keys(m.specs);
   const enq = 'contact.html?vehicle=' + encodeURIComponent(m.name);
   const F = [0, 1, 2, 3].map(i => m.features[i % m.features.length]), bg = i => (F[i] && F[i][3]) || m.photo2 || m.hero;
   const banner = (i, label) => `<section class="xb" id="${label}" aria-labelledby="xb-${i}"><div class="xb__bg">${img(bg(i), '', 1600, 900)}</div><div class="xb__shade"></div>
-  <div class="xb__in"><div class="xb__txt"><p class="xk" data-a>${F[i][0]}</p><h2 class="xh2" id="xb-${i}" data-a>${F[i][1]}</h2><p class="xp" data-a>${F[i][2]}</p><a class="xlink" href="#specs" data-spec="${label === 'exterior' ? 0 : 3}" data-a>Explore ${label}</a></div></div></section>`;
+  <div class="xb__in"><div class="xb__txt"><p class="xk" data-a>${F[i][0]}</p><h2 class="xh2" id="xb-${i}" data-a>${F[i][1]}</h2><p class="xp" data-a>${F[i][2]}</p><div class="xb__btn" data-a><a class="btn" href="#specs" data-spec="${label === 'exterior' ? 0 : 3}">Explore ${label}</a></div></div></div></section>`;
   page(s + '.html', {
-    title: m.name, desc: `Mitsubishi ${m.name} in Libya: ${m.tag}`, active: 'cars', bodyClass: 'vd xf',
+    title: m.name, desc: `Mitsubishi ${m.name} in Libya: ${m.tag}`, active: 'cars', bodyClass: 'vd xf pg-' + s,
     preload: `\n  <link rel="preload" href="${m.hero}" as="image">`,
     body: `
 <section class="xh xh--c" style="--ac:${m.accent}" aria-labelledby="xh-t">
@@ -269,12 +276,12 @@ ORDER.forEach((s, mi) => {
 </section>
 
 ${banner(1, 'exterior')}
-${banner(2, 'interior')}
+${m.features.length > 2 ? banner(2, 'interior') : ''}
 
-<section class="x50" id="safety" aria-labelledby="xs-t">
-  <div class="x50__txt"><div><p class="xk" data-a>Safety</p><h2 class="xh2 xh2--dk" id="xs-t" data-a>${F[3][1]}</h2><p class="xp xp--dk" data-a>${F[3][2]}</p><a class="xlink xlink--dk" href="#specs" data-spec="2" data-a>Explore safety</a></div></div>
+${m.features.length > 3 ? `<section class="x50" id="safety" aria-labelledby="xs-t">
+  <div class="x50__txt"><div><p class="xk" data-a>Safety</p><h2 class="xh2 xh2--dk" id="xs-t" data-a>${F[3][1]}</h2><p class="xp xp--dk" data-a>${F[3][2]}</p><div class="xb__btn" data-a><a class="btn btn--dk" href="#specs" data-spec="2">Explore safety</a></div></div></div>
   <div class="x50__img">${img(bg(3), m.name, 1200, 900)}</div>
-</section>
+</section>` : ''}
 
 <section class="xtx" aria-labelledby="xo-t">
   <div class="wrap xtx__in"><p class="xk" data-a>Model overview</p><h2 class="xh2 xh2--dk" id="xo-t" data-a>${m.tag}</h2><p class="xp xp--dk" data-a>${m.intro}</p></div>

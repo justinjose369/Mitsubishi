@@ -9,13 +9,14 @@
     'destinator-m-line': { ar: .444, w: [.200, .782, .744, .0715, .730], l: [.9246, .414, .032, .144], p: '0 0,60 4,100 30,100 80,75 100,40 100,30 50' },
     'l200-glx-diesel': { ar: .426, w: [.178, .739, .727, .0695, .735], l: [.937, .464, .035, .177], p: '8 0,90 0,100 12,100 100,0 100,10 40' },
     'outlander-sport-h-line': { ar: .382, w: [.191, .785, .770, .0788, .770], l: [.929, .333, .086, .075], p: '0 10,100 0,100 85,80 100,0 60' },
+    'pajero-sport': { ar: .3925, w: [.191, .7716, .7506, .0816, .7506], l: [.935, .261, .08, .14], p: '0 51,62 2,96 45,100 96,56 78,2 60' },
     'xpander': { ar: .3505, w: [.2305, .7695, .773, .0625, .758], l: [.882, .244, .051, .168], p: '10 0,40 5,100 70,95 100,60 95,0 30' }
   };
   const DIST = 0.12; // roll distance as a fraction of the car's width
 
   function enhance(box) {
     const img = box.querySelector('img'); if (!img || box.querySelector('.mcar')) return;
-    const m = ((img.getAttribute('src') || '').match(/([^/]+)\.webp/) || [])[1], c = CARS[m]; if (!c) return;
+    const m = (((img.getAttribute('src') || '').match(/([^/]+)\.webp/) || [])[1] || '').replace(/-hd$/, ''), c = CARS[m]; if (!c) return;
     const [fx, rx, cyF, r, cyR] = c.w, s = 2 * r * K, hr = c.ar;
     const wrap = document.createElement('span'); wrap.className = 'mcar';
     wrap.style.setProperty('--roll', (-DIST * 100) + '%');

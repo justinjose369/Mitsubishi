@@ -24,12 +24,12 @@ const MODELS = [
     stat: { v: '3', l: 'trim levels: P, M and H Line' },
     labels: ['Two-tone roof', 'Alloy wheels', 'Sculpted body lines', 'P / M / H Line'],
     features: [
-      ['Presence', 'A confident SUV stance', 'Two-tone roof and sculpted body lines give the Destinator a strong, modern profile.', 'assets/img/web/Destinator.jpg'],
-      ['Choice', 'Three trim lines', 'Choose between the P Line, M Line and H Line to match how you drive.', 'assets/cars/destinator-p-line.webp'],
+      ['Presence', 'A confident SUV stance', 'Two-tone roof and sculpted body lines give the Destinator a strong, modern profile.', 'assets/img/destinator-stance.webp'],
+      ['Choice', 'Three trim lines', 'Choose between the P Line, M Line and H Line to match how you drive.', 'assets/img/destinator-choice.webp'],
       ['Drive', '1.5L petrol, automatic', 'A four-cylinder 1.5L petrol engine with automatic transmission and two-wheel drive.', 'assets/img/story-destinator.webp']
     ],
     specs: { Design: [['Model', 'Destinator'], ['Trims', 'P Line, M Line, H Line'], ['Roof', 'Two-tone'], ['Wheels', 'Alloy']], Performance: [['Engine', '1.5L petrol'], ['Cylinders', '4'], ['Transmission', 'Automatic'], ['Drive', '2WD'], ['Power', TBC], ['Torque', TBC]], Safety: [['Braking', TBC], ['Stability', TBC], ['Airbags', TBC], ['Driver assist', TBC]], Comfort: [['Climate', TBC], ['Infotainment', TBC], ['Seating', TBC], ['Access', TBC]] },
-    variants: [V('destinator-p', 'P Line', { img: 'assets/cars/destinator-p-line.webp', engine: '1.5L Petrol', trans: 'Automatic', cyl: '4', drive: '2WD', fuel: 'Petrol', body: 'SUV' }), V('destinator-m', 'M Line', { img: 'assets/cars/destinator-m-line.webp', engine: '1.5L Petrol', trans: 'Automatic', cyl: '4', drive: '2WD', fuel: 'Petrol', body: 'SUV' }), V('destinator-h', 'H Line', { img: 'assets/img/web/Destinator.jpg', photo: true, engine: '1.5L Petrol', trans: 'Automatic', cyl: '4', drive: '2WD', fuel: 'Petrol', body: 'SUV' })]
+    variants: [V('destinator-p', 'P Line', { img: 'assets/cars/destinator-p-line.webp', engine: '1.5L Petrol', trans: 'Automatic', cyl: '4', drive: '2WD', fuel: 'Petrol', body: 'SUV' }), V('destinator-m', 'M Line', { img: 'assets/cars/destinator-m-line.webp', engine: '1.5L Petrol', trans: 'Automatic', cyl: '4', drive: '2WD', fuel: 'Petrol', body: 'SUV' }), V('destinator-h', 'H Line', { img: 'assets/cars/destinator-m-line-red.webp', engine: '1.5L Petrol', trans: 'Automatic', cyl: '4', drive: '2WD', fuel: 'Petrol', body: 'SUV' })]
   },
   {
     slug: 'l200', name: 'L200', kind: 'Pickup', accent: '#e8902a',
@@ -39,9 +39,9 @@ const MODELS = [
     stat: { v: '330', u: 'Nm', l: 'diesel torque (2.4L, GLX)' },
     labels: ['Double cab', 'Alloy wheels', 'LED tail lamps', 'Hill start assist'],
     features: [
-      ['Toughness', 'Beyond tough', 'Engineered for the harshest conditions, with a 2442 cc diesel tuned for load-carrying and everyday strength.', 'assets/img/l200-ext.webp'],
+      ['Toughness', 'Beyond tough', 'Engineered for the harshest conditions, with a 2442 cc diesel tuned for load-carrying and everyday strength.', 'assets/img/l200-beyond-tough.webp'],
       ['Space', 'Class-leading cabin', 'Travel comfortably in the double cab, with generous space and ergonomically designed, high-quality seating.', 'assets/img/web/L200-SCDC.jpg'],
-      ['Control', 'Active safety', 'ABS with brake assist, ESP with traction control and hill start assist come with the GLX.', 'assets/img/l200-hill.webp'],
+      ['Control', 'Active safety', 'ABS with brake assist, ESP with traction control and hill start assist come with the GLX.', 'assets/img/l200-active-safety.webp'],
       ['Calm', 'A quiet, comfortable ride', 'Strategically placed sound insulation and vibration damping material keep the cabin calm.', 'assets/img/l200-intro.webp']
     ],
     specs: { Design: [['Body', 'Double Cab'], ['Trim', 'GLX'], ['Wheels', 'Alloy'], ['Tail lamps', 'LED']], Performance: [['Engine', '2442 cc diesel'], ['Power', '147 hp'], ['Torque', '330 Nm'], ['Cylinders', '4'], ['Transmission', 'Manual'], ['Drive', '4WD']], Safety: [['Braking', 'ABS + BA'], ['Stability', 'ESP + TCS'], ['Assist', 'Hill start'], ['Airbags', TBC]], Comfort: [['Climate', 'Auto A/C'], ['Infotainment', 'Touchscreen'], ['Access', 'Keyless'], ['Seating', TBC]] },
@@ -53,7 +53,7 @@ const MODELS = [
       V('l200-gls', '4WD GL Diesel Single Cabin', { img: 'assets/cars/l200-gl-single.webp', engine: '2.4L Diesel', trans: 'Manual', cyl: '4', drive: '4WD', fuel: 'Diesel', body: 'Single Cabin', power: '147 hp', torque: '330 Nm' }),
       V('l200-gls-p', '4WD GLS Petrol Double Cabin', { img: 'assets/cars/l200-gls-petrol.webp', engine: '2.4L Petrol', trans: 'Manual', cyl: '4', drive: '4WD', fuel: 'Petrol', body: 'Double Cabin' }),
       V('l200-gl-p', '4WD GL Petrol Double Cabin', { img: 'assets/cars/l200-4wd-gl-petrol.webp', engine: '2.4L Petrol', trans: 'Manual', cyl: '4', drive: '4WD', fuel: 'Petrol', body: 'Double Cabin' }),
-      V('l200-sportero', 'Sportero Diesel Double Cabin', { img: 'assets/cars/l200-sportero.png', photo: true, engine: '2.4L Diesel', trans: 'Automatic', cyl: '4', drive: '4WD', fuel: 'Diesel', body: 'Double Cabin' })
+      V('l200-sportero', 'Sportero Diesel Double Cabin', { img: 'assets/cars/l200-sportero.png', engine: '2.4L Diesel', trans: 'Automatic', cyl: '4', drive: '4WD', fuel: 'Diesel', body: 'Double Cabin' })
     ]
   },
   {
@@ -64,12 +64,12 @@ const MODELS = [
     stat: { v: '3', l: 'trim levels: P, H and M Line' },
     labels: ['Compact SUV profile', 'Alloy wheels', 'Sporty stance', 'P / H / M Line'],
     features: [
-      ['Agility', 'Compact and confident', 'A sleek compact SUV profile with a sporty stance, made for city streets and weekend trips.', 'assets/img/story-outlander.webp'],
-      ['Choice', 'Three trim lines', 'The Outlander Sport is offered in P Line, H Line and M Line.', 'assets/cars/outlander-sport-m-line.webp'],
+      ['Agility', 'Compact and confident', 'A sleek compact SUV profile with a sporty stance, made for city streets and weekend trips.', 'assets/img/outlander-drive.webp'],
+      ['Choice', 'Three trim lines', 'The Outlander Sport is offered in P Line, H Line and M Line.', 'assets/img/outlander-choice.webp'],
       ['Drive', '1.5L petrol, automatic', 'A four-cylinder 1.5L petrol engine with automatic transmission and two-wheel drive.', 'assets/img/drive.webp']
     ],
     specs: { Design: [['Model', 'Outlander Sport'], ['Trims', 'P Line, H Line, M Line'], ['Body', 'Compact SUV'], ['Wheels', 'Alloy']], Performance: [['Engine', '1.5L petrol'], ['Cylinders', '4'], ['Transmission', 'Automatic'], ['Drive', '2WD'], ['Power', TBC], ['Torque', TBC]], Safety: [['Braking', TBC], ['Stability', TBC], ['Airbags', TBC], ['Driver assist', TBC]], Comfort: [['Climate', TBC], ['Infotainment', TBC], ['Seating', TBC], ['Access', TBC]] },
-    variants: [V('outlander-p', 'Outlander Sport P Line', { img: 'assets/img/drive.webp', photo: true, engine: '1.5L Petrol', trans: 'Automatic', cyl: '4', drive: '2WD', fuel: 'Petrol', body: 'Compact SUV' }), V('outlander-h', 'Outlander Sport H Line', { img: 'assets/cars/outlander-sport-h-line.webp', engine: '1.5L Petrol', trans: 'Automatic', cyl: '4', drive: '2WD', fuel: 'Petrol', body: 'Compact SUV' }), V('outlander-m', 'Outlander Sport M Line', { img: 'assets/cars/outlander-sport-m-line.webp', engine: '1.5L Petrol', trans: 'Automatic', cyl: '4', drive: '2WD', fuel: 'Petrol', body: 'Compact SUV' })]
+    variants: [V('outlander-p', 'Outlander Sport P Line', { img: 'assets/cars/outlander-sport-p-line.webp', engine: '1.5L Petrol', trans: 'Automatic', cyl: '4', drive: '2WD', fuel: 'Petrol', body: 'Compact SUV' }), V('outlander-h', 'Outlander Sport H Line', { img: 'assets/cars/outlander-sport-h-line.webp', engine: '1.5L Petrol', trans: 'Automatic', cyl: '4', drive: '2WD', fuel: 'Petrol', body: 'Compact SUV' }), V('outlander-m', 'Outlander Sport M Line', { img: 'assets/cars/outlander-sport-m-line.webp', engine: '1.5L Petrol', trans: 'Automatic', cyl: '4', drive: '2WD', fuel: 'Petrol', body: 'Compact SUV' })]
   },
   {
     slug: 'xpander', name: 'Xpander', kind: 'Family MPV', accent: '#ff4545',
@@ -79,14 +79,28 @@ const MODELS = [
     stat: { v: '7', l: 'seats for the whole family' },
     labels: ['Seven seats', 'Tall roofline', 'Wide cabin', 'Alloy wheels'],
     features: [
-      ['Space', 'Room for seven', 'A practical, space-focused body with a tall roofline and wide cabin.', 'assets/img/story-xpander.webp'],
-      ['Family', 'Built around everyone', 'Seven seats make the Xpander the family vehicle of the range.', 'assets/cars/xpander.webp']
+      ['Space', 'Room for seven', 'A practical, space-focused body with a tall roofline and wide cabin.', 'assets/img/xpander-drive.webp'],
+      ['Family', 'Built around everyone', 'Seven seats make the Xpander the family vehicle of the range.', 'assets/img/xpander-family.webp']
     ],
     specs: { Design: [['Model', 'Xpander'], ['Body', 'MPV'], ['Seating', '7 seats'], ['Wheels', 'Alloy']], Performance: [['Engine', TBC], ['Power', TBC], ['Torque', TBC], ['Transmission', TBC], ['Drive', TBC], ['Fuel', TBC]], Safety: [['Braking', TBC], ['Stability', TBC], ['Airbags', TBC], ['Driver assist', TBC]], Comfort: [['Climate', TBC], ['Infotainment', TBC], ['Seating', '7 seats'], ['Access', TBC]] },
     variants: [V('xpander', 'Xpander', { img: 'assets/cars/xpander.webp', engine: TBC, trans: TBC, cyl: TBC, drive: TBC, fuel: TBC, body: 'MPV' })]
+  },
+  {
+    slug: 'pajero-sport', name: 'Pajero Sport', kind: 'SUV', accent: '#3a7bd5',
+    tag: 'A refined, powerful mid-size SUV built for the journey.',
+    hero: 'assets/img/pajero-banner.webp', photo2: 'assets/img/pajero-drive.webp', cut: 'assets/cars/pajero-sport.webp', cutAr: .3925,
+    intro: 'A mid-size SUV with a refined, powerful look, a 2.4L MIVEC turbo diesel and Super-Select 4WD-II.',
+    stat: { v: '8', l: 'speed automatic transmission' },
+    labels: ['Mid-size SUV', '2.4L turbo diesel', 'Super-Select 4WD-II', 'Alloy wheels'],
+    features: [
+      ['Presence', 'Elevate your journey', 'An updated front design with a higher bonnet line and chrome detailing gives the Pajero Sport a refined, powerful look.', 'assets/img/pajero-elevate.webp'],
+      ['Drive', '2.4L turbo diesel, 8-speed automatic', 'A 2.4L MIVEC turbo diesel with an 8-speed automatic transmission. 4WD models add Super-Select 4WD-II with an off-road mode.', 'assets/img/pajero-turbo.webp']
+    ],
+    specs: { Design: [['Model', 'Pajero Sport'], ['Body', 'Mid-size SUV'], ['Theme', 'Elevate your Journey'], ['Wheels', 'Alloy']], Performance: [['Engine', '2.4L MIVEC turbo diesel'], ['Transmission', '8-speed automatic'], ['Drive', 'Super-Select 4WD-II (4WD models)'], ['Power', TBC], ['Torque', TBC]], Safety: [['Lane Change Assist', 'Yes'], ['Rear Cross Traffic Alert', 'Yes'], ['Braking', TBC], ['Airbags', TBC]], Comfort: [['Display audio', '8-inch Smartphone-Link'], ['Meter', '8-inch colour LCD'], ['Tailgate', 'Power, hands-free'], ['Climate', TBC]] },
+    variants: [V('pajero-sport', 'Pajero Sport', { img: 'assets/cars/pajero-sport.webp', engine: '2.4L Turbo Diesel', trans: 'Automatic', cyl: TBC, drive: '4WD', fuel: 'Diesel', body: 'Mid-size SUV' })]
   }
 ];
-const ORDER = ['destinator', 'l200', 'outlander', 'xpander'];
+const ORDER = ['destinator', 'l200', 'outlander', 'xpander', 'pajero-sport'];
 
 /* News & events (old live site) and the beta blog/news posts. Full article bodies were not available. */
 const NEWS = [

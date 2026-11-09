@@ -845,8 +845,6 @@ html { scroll-padding-top: 56px; }
 .trim__arr:disabled { opacity: .35; cursor: default; }
 .trim__slider.has-arrows .trim__tabs { flex: 1 1 auto; }
 
-/* Sportero variant image has a white studio background: blend it into the panel */
-.trim__img img[src*="l200-sportero"] { mix-blend-mode: multiply; }
 
 /* Variant car: wheels roll and lamps light while the tabs switch (see js/inner.js) */
 .trim__img { position: relative; }
@@ -868,3 +866,53 @@ html { scroll-padding-top: 56px; }
 .hs__count { display: none !important; }
 .vrow__no { display: none !important; }
 .ph__index a span { display: none; }
+
+/* Car pages: text side and text alignment match - left blocks are left-aligned, right blocks are right-aligned */
+.xf .xb#interior .xb__txt { margin-left: auto; text-align: right; }
+.xf .xb#interior .xb__txt .xp { margin-left: auto; }
+
+/* Car pages: outline buttons (e.g. "Explore drive") fill white with black text on hover */
+.xf .btn:not(.btn--solid):hover, .xf .btn:not(.btn--solid):focus-visible { background: #fff; border-color: #fff; color: #000; }
+
+/* Banner + Safety buttons use the same outline button as the Drive section */
+.xf .xb__btn { margin-top: 8px; }
+.xf .btn.btn--dk { border-color: #000; color: #000; }
+.xf .btn.btn--dk:hover, .xf .btn.btn--dk:focus-visible { background: #000; border-color: #000; color: #fff; }
+.xf .xb#interior .xb__btn { display: flex; justify-content: flex-end; }
+
+/* Drive section: text block's right edge sits on the site container's right edge */
+.xf .xh__in--r { width: 100%; max-width: var(--max); box-sizing: border-box; padding-inline: var(--pad); margin-inline: auto; }
+
+/* Choice / Drive banners: text blocks sit on the site container edges (Choice left, Drive right) */
+.xf .xb__in { width: 100%; max-width: var(--max); box-sizing: border-box; padding-inline: var(--pad); margin-inline: auto; }
+
+/* L200 "Class-leading cabin" banner: the truck sits low in a tall photo, so anchor the crop to show its whole face and bottom bumper */
+.pg-l200 #exterior .xb__bg img { object-position: 50% 70%; }
+
+/* "Next vehicle" strip: the red bar stays full width, its content fits the site container */
+.nextm { padding-inline: max(var(--pad), calc((100% - var(--max)) / 2 + var(--pad))); }
+
+/* Xpander "Built around everyone" banner: anchor the crop to the bottom so the wheels and bumper are not cut */
+.pg-xpander #exterior .xb__bg img { object-position: 70% 100%; }
+
+/* Xpander Drive ("Room for seven"): the car sits low-left in a tall photo, keep the crop on its lower part */
+.pg-xpander .xh--r .xh__bg img { object-position: 50% 100%; }
+
+/* Variant car: brake lights switch on instantly the moment the car stops */
+.trim__img[data-lights="brake"] .tcar .lamp--tail { transition: none; }
+
+/* ---- Car pages: buttons use the same hover effect as the home page ----
+   solid buttons: a fill slides up from the bottom; outline buttons: the fill fades in. */
+.inner.vd .btn { background-image: none; background-position: 0 0; transition: color .45s var(--ease), border-color .45s var(--ease), background-color .45s var(--ease); }
+.inner.vd .btn.btn--solid { border: 0; padding: 0 32px; background-color: var(--red); color: #fff; }
+.inner.vd .btn.btn--solid::before { display: block; content: ""; position: absolute; inset: 0; background: #fff; transform: translateY(101%); transition: transform .5s var(--ease); z-index: -1; }
+.inner.vd .btn.btn--solid:hover, .inner.vd .btn.btn--solid:focus-visible { background-color: var(--red); background-image: none; border-color: transparent; color: #000; }
+.inner.vd .btn.btn--solid:hover::before, .inner.vd .btn.btn--solid:focus-visible::before { transform: translateY(0); }
+.inner.vd .btn:not(.btn--solid):hover, .inner.vd .btn:not(.btn--solid):focus-visible { background-image: none; background-color: #fff; border-color: #fff; color: #000; }
+/* on light backgrounds the fill is black */
+.inner.vd .trim .btn.btn--solid::before, .inner.vd .bro .btn.btn--solid::before { background: #000; }
+.inner.vd .trim .btn.btn--solid:hover, .inner.vd .bro .btn.btn--solid:hover, .inner.vd .trim .btn.btn--solid:focus-visible, .inner.vd .bro .btn.btn--solid:focus-visible { color: #fff; background-color: var(--red); }
+.inner.vd .btn.btn--dk:hover, .inner.vd .btn.btn--dk:focus-visible, .inner.vd .var .btn:not(.btn--solid):hover, .inner.vd .spec .btn:not(.btn--solid):hover, .inner.vd .bro .btn:not(.btn--solid):hover { background-color: #000; border-color: #000; color: #fff; }
+
+/* Car pages: no line along the bottom of the header when it turns solid on scroll */
+.vd .header, .vd .header.is-solid, .vd .header.mega-open { border-bottom-color: transparent !important; box-shadow: none; }

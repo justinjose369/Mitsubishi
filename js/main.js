@@ -163,7 +163,7 @@
   }
 
   /* ------------------------------------------------------------------ cars mega menu (desktop) + mobile sub list */
-  const PAGES = { destinator: 'destinator.html', l200: 'l200.html', outlander: 'outlander.html', xpander: 'xpander.html' };
+  const PAGES = { destinator: 'destinator.html', l200: 'l200.html', outlander: 'outlander.html', xpander: 'xpander.html', pajerosport: 'pajero-sport.html' };
   const pageFor = m => PAGES[String(m.name).toLowerCase().replace(/[ ]+/g, '')] || 'vehicles.html'; // model detail page, or the listing for models without one
   function initMega() {
     const mega = $('#mega'), navCars = $('#navCars'), link = $('a', navCars), desk = matchMedia('(min-width: 1024px)');
