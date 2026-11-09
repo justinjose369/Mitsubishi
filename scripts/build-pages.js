@@ -269,7 +269,6 @@ ORDER.forEach((s, mi) => {
     <h1 class="xh1" id="xh-t" data-a>${m.name}</h1>
     <p class="xp" data-a>${m.tag}</p>
     <ul class="xh__feat" data-a>${m.labels.slice(0, 3).map(l => `<li>${l}</li>`).join('')}</ul>
-    <div class="xh__cta" data-a><a class="btn btn--solid" href="${enq}">Book a test drive</a></div>
   </div>
 </section>
 
@@ -320,7 +319,7 @@ ${m.features.length > 3 ? `<section class="x50" id="safety" aria-labelledby="xs-
 <section class="xka" id="brochure" aria-labelledby="xka-t">
   <div class="wrap"><h2 class="xh2 xh2--dk" id="xka-t" data-a>Take the next step</h2>
     <ul class="xka__list">
-      <li data-a><a href="${enq}"><b>Book a test drive</b><span>Experience the ${m.name} for yourself.</span></a></li>
+      <li data-a><a href="${enq}"><b>Enquire now</b><span>Ask our team about the ${m.name}.</span></a></li>
       <li data-a><a href="${enq}" data-brochure="${s}" data-label="Download brochure"><b>Download brochure</b><span>Request the ${m.name} brochure.</span></a></li>
       <li data-a><a href="compare.html?m=${s}"><b>Compare variants</b><span>See the variants side by side.</span></a></li>
       <li data-a><a href="contact.html"><b>Contact us</b><span>Talk to our team about availability.</span></a></li>
@@ -454,7 +453,7 @@ page('about.html', {
 <section class="biz sec sec--paper" aria-labelledby="bz-t">
   <div class="wrap biz__grid">
     <div>${eyebrow('Our business')}${split('h2', 'h2', 'A leading automobile distributor in Libya', 'id="bz-t"')}</div>
-    <div><p class="lede" data-a>Middle East Group is one of Libya&rsquo;s leading automobile distributors today, became associated with Mitsubishi Motors Corporation for more than 25 years.</p>
+    <div><p class="lede" data-a>Middle East Group, Libya&rsquo;s leading automobile distributor, has been associated with Mitsubishi Motors Corporation for more than 25 years.</p>
       <div data-a>${btn('vehicles.html', 'Explore vehicles')}</div></div>
   </div>
   <ul class="stats wrap">
@@ -471,11 +470,11 @@ page('about.html', {
   <div class="hs__pin">
     <div class="wrap hs__head">${eyebrow('Our story')}${split('h2', 'h2', 'Our history', 'id="hi-t"')}<p class="hs__count"><b data-hs-now>01</b> / 06</p></div>
     <div class="hs__track hs__track--tl" data-hs-track>
-      <article class="tl"><i></i><p class="hs__k">1976</p><h3>A founder&rsquo;s first venture</h3><p>Our Founder, a pioneer and a visionary in business, started his business venture with a humble background in the construction industry.</p></article>
-      <article class="tl"><i></i><p class="hs__k">1977</p><h3>Middle East Group is established</h3><p>Established with its financial headquarters in Dubai, the group grew into one of the leading and respected business houses in Libya.</p></article>
+      <article class="tl"><i></i><p class="hs__k">1976</p><h3>A founder&rsquo;s first venture</h3><p>Our Founder, a pioneer and a visionary in business, started his business venture with a humble background in construction and general trading.</p></article>
+      <article class="tl"><i></i><p class="hs__k">1977</p><h3>Middle East Group is established</h3><p>Established in 1977 with financial headquarters in Dubai, we are one of the leading and respected business houses in Libya.</p></article>
       <article class="tl"><i></i><p class="hs__k">Heritage</p><h3>Associated with Mitsubishi Motors Corporation for more than 25 years</h3><p>Middle East Group became associated with Mitsubishi Motors Corporation and has been creating innovative vehicles for Libya for more than 25 years.</p></article>
       <article class="tl"><i></i><p class="hs__k">Distribution</p><h3>One of Libya&rsquo;s leading distributors</h3><p>An unbeaten choice of Mitsubishi passenger cars, SUVs and commercial vehicles.</p></article>
-      <article class="tl"><i></i><p class="hs__k">Parts</p><h3>A central parts warehouse</h3><p>Fully automated and air-conditioned, covering some 25,000 sq meters, the highest parts facility in the North Africa Region.</p></article>
+      <article class="tl"><i></i><p class="hs__k">Parts</p><h3>With central parts warehouse</h3><p>Fully automated and air-conditioned, covering some 25,000 sq meters, the highest parts facility in the North Africa Region.</p></article>
       <article class="tl"><i></i><p class="hs__k">Service</p><h3>A growing service network</h3><p>Professional customer service and a growing network of hi-tech service centres.</p></article>
     </div>
     <div class="hs__bar" aria-hidden="true"><i data-hs-bar></i></div>
@@ -486,21 +485,25 @@ page('about.html', {
   <div class="grp__ghost" aria-hidden="true">1977</div>
   <div class="wrap grp__grid">
     <div class="grp__copy">${eyebrow('The group')}${split('h2', 'h2 h2--xl', 'Middle East <span class="accent">Group</span>', 'id="gp-t"')}
-      <p class="lede" data-a>Middle East Group proudly represents Mitsubishi Motors in Libya. Established in 1977 with financial headquarters in Dubai, we are one of the leading and respected business houses in Libya.</p>
+      <p class="lede lede--scrub" data-scrub>Established in 1977 with financial headquarters in Dubai, we are one of the leading and respected business houses in Libya.</p>
+      <p class="lede lede--scrub" data-scrub>Middle East Group proudly represents Mitsubishi Motors in Libya.</p>
       <p data-a>Our Founder is a pioneer and a visionary in business. The group has expanded into a range of sectors, each built on the same market leadership.</p>
       <blockquote class="grp__quote" data-a>The Middle East Group family may be diverse, but is united by a shared theme of opening up a world of opportunities to the people who work and associate with us.</blockquote>
     </div>
-    <ul class="grp__sectors" aria-label="Business sectors"><li data-a>Automotive</li><li data-a>Industrial Equipment</li><li data-a>Oil and Gas</li><li data-a>Insurance</li><li data-a>Leasing and Rental</li><li data-a>Banking &amp; Finance</li><li data-a>Education</li><li data-a>General Trading</li><li data-a>Agriculture</li></ul>
+    <div class="gslide" data-gslide role="region" aria-roledescription="carousel" aria-label="Middle East Group gallery" data-a>
+      <div class="gslide__track"><figure class="gslide__i is-on"><img src="assets/img/web/Grp-by-section-4th.jpg" alt="Red Mitsubishi SUV driving through the mountains" width="501" height="579" loading="lazy" decoding="async"></figure><figure class="gslide__i"><img src="assets/img/web/happy-jurney.jpg" alt="Mitsubishi pickup on an autumn forest road" width="1080" height="720" loading="lazy" decoding="async"></figure><figure class="gslide__i"><img src="assets/img/web/update-photo.jpg" alt="Mitsubishi SUV driving through water" width="501" height="750" loading="lazy" decoding="async"></figure><figure class="gslide__i"><img src="assets/img/web/Mistubishi2-1.jpg" alt="Mitsubishi pickup kicking up dust" width="1349" height="670" loading="lazy" decoding="async"></figure><figure class="gslide__i"><img src="assets/img/web/Mstbshi-2.jpg" alt="Mitsubishi pickups on a desert track" width="1349" height="670" loading="lazy" decoding="async"></figure></div>
+      <div class="gslide__ctl"><button type="button" class="gslide__btn" data-gs-prev aria-label="Previous image">${ic('arrow-left')}</button><div class="gslide__dots" data-gs-dots></div><button type="button" class="gslide__btn" data-gs-next aria-label="Next image">${ic('arrow-right')}</button></div>
+    </div>
   </div>
 </section>
 
 <section class="why2 sec sec--ink" aria-labelledby="wy-t">
   <div class="wrap">${eyebrow('Why Mitsubishi Motors Libya')}${split('h2', 'h2 h2--xl', 'What drives us', 'id="wy-t"')}
     <ul class="why2__list">
-      <li data-a><span>01</span><h3>Innovative engineering</h3><p>Mitsubishi combines advanced engineering, intelligent technology, and reliable performance to deliver a confident driving experience.</p></li>
-      <li data-a><span>02</span><h3>Versatile vehicle lineup</h3><p>From compact cars and family SUVs to powerful pickups, Mitsubishi offers vehicles designed for every lifestyle and adventure.</p></li>
-      <li data-a><span>03</span><h3>Proven reliability</h3><p>Built with exceptional quality and durability, Mitsubishi vehicles are engineered to perform reliably for years to come.</p></li>
-      <li data-a><span>04</span><h3>Dedicated customer care</h3><p>Our experienced team is committed to providing outstanding service, from vehicle selection to comprehensive after-sales support.</p></li>
+      <li data-a><h3>Innovative engineering</h3><p>Mitsubishi combines advanced engineering, intelligent technology, and reliable performance to deliver a confident driving experience.</p></li>
+      <li data-a><h3>Versatile vehicle lineup</h3><p>From compact cars and family SUVs to powerful pickups, Mitsubishi offers vehicles designed for every lifestyle and adventure.</p></li>
+      <li data-a><h3>Proven reliability</h3><p>Built with exceptional quality and durability, Mitsubishi vehicles are engineered to perform reliably for years to come.</p></li>
+      <li data-a><h3>Dedicated customer care</h3><p>Our experienced team is committed to providing outstanding service, from vehicle selection to comprehensive after-sales support.</p></li>
     </ul></div>
 </section>
 
@@ -514,7 +517,7 @@ page('about.html', {
 
 <section class="fac sec sec--paper" aria-labelledby="fc-t">
   <div class="wrap">${eyebrow('Our facility')}${split('h2', 'h2', 'Visit us in Tripoli', 'id="fc-t"')}</div>
-  <div class="fac__rail" data-drag data-cursor="Drag">${[1, 2, 3, 4, 5].map(n => `<figure class="gal__i">${img('assets/img/web/facility' + n + '.jpeg', 'Mitsubishi showroom and facility in Libya', 1296, 864)}</figure>`).join('')}</div>
+  <div class="fac__rail" data-drag data-cursor="Drag">${[1, 3, 4, 5].map(n => `<figure class="gal__i">${img('assets/img/web/facility' + n + '.jpeg', 'Mitsubishi showroom and facility in Libya', 1296, 864)}</figure>`).join('')}</div>
 </section>
 
 <section class="faq sec sec--paper" aria-labelledby="fq-t">

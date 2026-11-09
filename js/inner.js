@@ -503,3 +503,20 @@ document.querySelectorAll('.xf .trim__tabs').forEach(bar => {
   const sec = logo.closest('section');
   gsap.fromTo(logo, { '--p': 0 }, { '--p': 1, ease: 'none', scrollTrigger: { trigger: sec, start: 'top 70%', end: 'bottom 40%', scrub: true } });
 })();
+
+/* "The group" image slider: auto-advances, with arrows and dots; pauses on hover/focus */
+(function () {
+  document.querySelectorAll('[data-gslide]').forEach(root => {
+    const slides = Array.from(root.querySelectorAll('.gslide__i')), dotsBox = root.querySelector('[data-gs-dots]');
+    if (slides.length < 2) return;
+    let cur = 0, timer = 0, paused = false;
+    const dots = slides.map((_, i) => { const b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', 'Show image ' + (i + 1)); b.addEventListener('click', () => { go(i); restart(); }); dotsBox.appendChild(b); return b; });
+    const go = i => { cur = (i + slides.length) % slides.length; slides.forEach((s, j) => s.classList.toggle('is-on', j === cur)); dots.forEach((d, j) => d.setAttribute('aria-current', String(j === cur))); };
+    const restart = () => { clearInterval(timer); if (!matchMedia('(prefers-reduced-motion: reduce)').matches) timer = setInterval(() => { if (!paused) go(cur + 1); }, 5000); };
+    root.querySelector('[data-gs-prev]').addEventListener('click', () => { go(cur - 1); restart(); });
+    root.querySelector('[data-gs-next]').addEventListener('click', () => { go(cur + 1); restart(); });
+    ['mouseenter', 'focusin'].forEach(e => root.addEventListener(e, () => { paused = true; }));
+    ['mouseleave', 'focusout'].forEach(e => root.addEventListener(e, () => { paused = false; }));
+    go(0); restart();
+  });
+})();

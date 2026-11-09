@@ -938,3 +938,21 @@ html { scroll-padding-top: 56px; }
 .trim__img[data-lights="brake"] .tcar .lamp--shape > i { filter: brightness(2.1) saturate(2.1) contrast(1.15); }
 /* Tail lamp light stays inside the lamp: no glow spilling onto the bodywork */
 .tcar .lamp--tail.lamp--shape, .trim__img[data-lights="drive"] .tcar .lamp--tail.lamp--shape, .trim__img[data-lights="brake"] .tcar .lamp--tail.lamp--shape { filter: none !important; }
+
+/* "The group": image slider on the right */
+.gslide { position: relative; width: 100%; }
+.gslide__track { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: #141416; }
+.gslide__i { position: absolute; inset: 0; margin: 0; opacity: 0; transition: opacity .9s var(--ease); }
+.gslide__i.is-on { opacity: 1; }
+.gslide__i img { width: 100%; height: 100%; object-fit: cover; }
+.gslide__ctl { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 16px; }
+.gslide__btn { width: 46px; height: 46px; display: grid; place-items: center; border: 1px solid var(--line); color: #fff; transition: background-color .3s, color .3s, border-color .3s; }
+.gslide__btn .ic { width: 18px; height: 18px; }
+.gslide__btn:hover, .gslide__btn:focus-visible { background: #fff; border-color: #fff; color: #000; }
+.gslide__dots { display: flex; gap: 10px; }
+.gslide__dots button { width: 28px; height: 3px; background: rgba(255,255,255,.3); transition: background-color .3s, width .3s; }
+.gslide__dots button[aria-current="true"] { background: var(--red); width: 44px; }
+
+/* "What drives us": no 01-04 numbers, so the list is two columns (title | text) */
+.why2__list li { grid-template-columns: 1fr; }
+@media (min-width: 900px) { .why2__list li { grid-template-columns: 1fr 1.2fr; } }
