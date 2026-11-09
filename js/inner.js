@@ -240,12 +240,6 @@
     });
     // list dividers draw in
     $$('.ben__list li, .why2__list li').forEach(li => gsap.to(li, { '--d': 1, duration: 1.1, ease: 'power3.inOut', scrollTrigger: { trigger: li, start: 'top 92%', once: true } }));
-    // magnetic buttons
-    if (fine.matches) $$('.btn').forEach(b => {
-      const mx = gsap.quickTo(b, 'x', { duration: .4, ease: 'power3' }), my = gsap.quickTo(b, 'y', { duration: .4, ease: 'power3' });
-      b.addEventListener('mousemove', e => { const r = b.getBoundingClientRect(); mx((e.clientX - r.left - r.width / 2) * .18); my((e.clientY - r.top - r.height / 2) * .28); });
-      b.addEventListener('mouseleave', () => { mx(0); my(0); });
-    });
     // 404: the car drives across the road
     const car = $('.nf__car'); if (car) gsap.fromTo(car, { x: () => -car.offsetWidth }, { x: () => innerWidth, duration: 9, ease: 'none', repeat: -1 });
   }
