@@ -287,6 +287,7 @@
 
   function setThumb(i) {
     $$('.thumb', thumbs).forEach((b, j) => { b.setAttribute('aria-selected', String(j === i)); b.tabIndex = j === i ? 0 : -1; });
+    if (matchMedia("(max-width: 700px)").matches) thumbs.scrollTo({ left: thumbs.children[i].offsetLeft - thumbs.offsetLeft, behavior: "smooth" });
     const b = thumbs.children[i];
     thumbs.scrollTo({ left: b.offsetLeft - (thumbs.clientWidth - b.offsetWidth) / 2, behavior: reduceMQ.matches ? 'auto' : 'smooth' });
   }

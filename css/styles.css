@@ -455,9 +455,9 @@ body.menu-open .dock { opacity: 0 !important; pointer-events: none !important; }
    Thumbnails (4 equal columns), Explore details, Cars mega menu, Vehicle scroll showcase
    ========================================================================== */
 @media (max-width: 700px) {
-  .thumbs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .thumb:nth-child(odd) { border-left: 0; }
-  .thumb:nth-child(n+3) { border-top: 1px solid var(--line-dark); }
+  .thumbs { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .thumb { flex: 0 0 100%; scroll-snap-align: center; scroll-snap-stop: always; }
+  .thumb + .thumb { border-left: 0; }
 }
 
 /* ---------- Explore details (tabs + specs inside the stage) ---------- */
@@ -979,3 +979,6 @@ html.snap .footer__main { border-top: 1px solid var(--line) !important; }
 @media (min-width: 1001px) { .contact__info .footer__offices { transform: translateY(20%); } }
 /* Home contact: "Contact us" starts level with "Make an enquiry" (same top padding as the form box) */
 @media (min-width: 1001px) { html.snap .contact__info { padding-top: calc(clamp(14px, 2.6svh, 28px) + 1px); } }
+
+/* mobile: thumbnail strip shows one car at a time, swipe for the next */
+@media (max-width: 700px) { .thumb img, html.snap .thumb img { width: min(100%, 280px); } }
