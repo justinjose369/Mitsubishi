@@ -1148,3 +1148,6 @@ html { scroll-padding-top: 56px; }
 .xg__soon { margin: 0; padding: clamp(60px, 9vw, 120px) 20px; text-align: center; font: 500 clamp(16px, 1.4vw, 20px)/1.4 var(--body); color: #5d5d63; background: #f2f3f4; border: 1px dashed #cfd2d4; }
 
 .xg__i img:not(.xg__bgimg) { object-position: var(--pos, 50% 50%); }
+
+/* Footer: identical to the home page on the car pages (their light-page line colour must not leak into it) */
+.vd .footer, .xf .footer { --line: rgba(255,255,255,.14); --line-dark: rgba(255,255,255,.14); }

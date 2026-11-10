@@ -57,11 +57,16 @@ const CAR_LAMPS = { // [head, tail]
   'xpander': [[9, 37, 6, 13], [85.5, 16, 5.5, 16]]
 };
 const CAR_TAIL = { // tail lamps drawn in the real lamp shape: [left, top, width, height] in % of the image, polygon points in % of that box
+'l200-4wd-gl': { b: [93.5, 32.7, 4.1, 21.6], p: '25 0.9,91.1 0,100 31.2,100 58,92.9 89.3,71.4 100,0 99.6,10.7 89.3,19.6 67,23.2 31.2' },
+  'l200-2wd-gl': { b: [89.2, 32.5, 3.2, 19.2], p: '0 2.8,86.4 0,100 8.3,100 97.7,54.5 100,13.6 86.2,2.7 54.1,0 31.2' },
+  'l200-gl-single': { b: [93.5, 33.8, 4.1, 20.8], p: '26.5 1.4,91.2 0,100 30.9,99.1 67.3,91.2 92.3,69 100,0 99.1,14.2 85.5,23 58.2,24.8 26.4' },
+  'l200-gls-petrol': { b: [90.8, 33.6, 6.9, 16], p: '0 5.1,19.9 0,63.9 1,96.3 7.7,100 25.6,98.6 56.4,97.2 87.2,87 100,70.8 92.3,63.9 56.4,61.6 38.5,26.9 33.3,3.7 15.4' },
+  'l200-4wd-gl-petrol': { b: [93.1, 31.4, 4.2, 23.2], p: '25.5 1.4,90.9 0,100 31.2,98.2 67.9,92.7 90.8,72.7 100,0 98.6,10.9 86.2,20 58.7,22.7 26.6' },
+  'l200-sportero': { b: [94.2, 35.9, 4.1, 18.9], p: '26.5 1.8,91.2 0,100 29.9,98.2 66.1,93.8 91,73.5 100,0 98.6,11.5 84.2,20.4 57,24.8 25.3' },
   'destinator-m-line': { b: [89.6, 33.6, 5.2, 15.6], p: '0 3.3,57.4 0,82 7.4,96.7 21.8,100 34.2,95.6 52.7,91.3 69.1,84.7 85.6,71 97.1,51.9 100,47.5 52.7,45.4 32.1,32.8 17.7,8.2 7.4' },
   'destinator-m-line-red': { b: [89.6, 33.6, 5.2, 15.6], p: '0 3.3,57.4 0,82 7.4,96.7 21.8,100 34.2,95.6 52.7,91.3 69.1,84.7 85.6,71 97.1,51.9 100,47.5 52.7,45.4 32.1,32.8 17.7,8.2 7.4' },
   'l200-glx-diesel': { b: [90.9, 37.4, 3.9, 17.4], p: '23.7 1.8,88.1 0,100 34.1,96.6 73.9,91.5 99.1,13.6 100,0 99.1,13.6 91.6,20.3 58.4' },
   'outlander-sport-h-line': { b: [88.4, 30.3, 9.1, 6.9], p: '0 8.3,63.7 0,94 16.7,100 54.2,98.4 100,79.8 88.9,39.5 54.2,3.2 30.6' },
-  'xpander': { b: [86, 15.6, 5.1, 16.5], p: '9.4 0,23.5 2.1,54 31.1,96.2 72.6,100 98.3,68.1 100,25.8 90,0 81.7,4.7 60.2,7 18.7' },
   'pajero-sport': { b: [89.4, 19.6, 8.2, 13.7], p: '0 56.1,21 44.6,56.7 21,71.4 0,76.5 6.4,81.9 35,92.4 73.2,100 100,79.8 89.2,37.8 73.2,12.6 63.7' },
   'destinator-p-line': { b: [93.4, 29.3, 5.74, 18.6], p: '0.8 1.9,34.7 0,59.5 .6,77.7 6.2,95.9 18.6,99.7 23.6,99.2 33.5,95.9 41,94.2 50.9,90.9 68.3,86 80.7,77.7 90.7,67.8 98.1,52.9 99.4,52.1 68.3,49.6 43.5,47.9 31.1,43 23.6,18.2 9.9,0.8 3.1' }
 };
@@ -71,17 +76,17 @@ const CAR_HEAD = {
   'destinator-m-line-red': { b: [4.7, 47, 3.5, 14.1], p: '0 4.5,66.1 3.6,98.4 0,100 70.5,96 100,58.1 95.5,25.8 90.9,9.7 79.5,0 61.4' },
   'l200-glx-diesel': { b: [5, 46.2, 1.8, 5.4], p: '0 16.4,34.4 0,100 9.8,97.9 96.7,20.8 100,0 83.6' },
   'outlander-sport-h-line': { b: [3.9, 45.8, 2.3, 13.8], p: '19 4.1,66.7 0,93.7 15.1,100 71.2,85.7 93.8,54 100,22.2 88.4,3.2 57.5,0 19.9' },
-  'xpander': { b: [9.4, 48.3, 4.1, 7.2], p: '1.3 6.1,50.6 0,98.1 8.2,100 100,50.6 91.8,6.3 79.6,0 38.8' },
   'pajero-sport': { b: [5.1, 36.6, 8, 4.4], p: '0 42.5,33.2 7.5,65.2 0,97.3 7.5,100 42.5,65.2 62.5,38.5 82.5,3.7 100' }
 };
-const carFx = (src, alt, w, h) => {
+const carFx = (src, alt, w, h, withLamps) => {
   const base = src.replace(/.(png|webp)$/, ''), name = base.split('/').pop();
   const e = WHEEL_DATA.find(x => x.img === base + '.webp') || EXTRA_WHEELS[base];
   let wheels = '';
   if (e) { const [fx, rx, cyF, r, cyR] = e.wheels, sz = 2 * r * WHEEL_K, hr = e.ar, f = n => +n.toFixed(4);
     wheels = [[fx, cyF], [rx, cyR == null ? cyF : cyR]].map(([cx, cy]) => `<i class="wheel" aria-hidden="true" style="left:${f((cx - sz / 2) * 100)}%;top:${f((cy * hr - sz / 2) / hr * 100)}%;width:${f(sz * 100)}%;background-image:url(${src});background-size:${f(100 / sz)}% auto;background-position:${f((sz / 2 - cx) / (sz - 1) * 100)}% ${f((sz / 2 - cy * hr) / (sz - hr) * 100)}%"></i>`).join(''); }
   const f2 = n => +n.toFixed(4), lp = CAR_LAMPS[name], shp = (k, o) => `<i class="lamp lamp--${k} lamp--shape" aria-hidden="true" style="left:${o.b[0]}%;top:${o.b[1]}%;width:${o.b[2]}%;height:${o.b[3]}%"><i style="clip-path:polygon(${o.p.split(',').map(q => q.trim().split(' ').map(v => v + '%').join(' ')).join(',')});background-image:url(${src});background-size:${f2(10000 / o.b[2])}% auto;background-position:${f2(o.b[0] / (100 - o.b[2]) * 100)}% ${f2(o.b[1] / (100 - o.b[3]) * 100)}%"></i></i>`, lamps = lp ? [['head', lp[0], CAR_HEAD[name]], ['tail', lp[1], CAR_TAIL[name]]].map(([k, b, o]) => o ? shp(k, o) : `<i class="lamp lamp--${k}" aria-hidden="true" style="left:${b[0]}%;top:${b[1]}%;width:${b[2]}%;height:${b[3]}%"></i>`).join('') : '';
-  return `<span class="tcar" data-tcar>${img(src, alt, w, h)}${wheels}${lamps}</span>`;
+  /* painted lamps only where asked for (the red Next-vehicle strip); elsewhere the car keeps the real lights from its photo */
+  return `<span class="tcar" data-tcar>${img(src, alt, w, h)}${wheels}${withLamps ? lamps : ''}</span>`;
 };
 const clip = (src, alt, w, h, cls = '', extra = '') => `<figure class="clip ${cls}" data-clip${extra ? ' ' + extra : ''}>${img(src, alt, w, h)}</figure>`;
 
@@ -384,7 +389,7 @@ ${m.views ? `<section class="xg" id="gallery" aria-labelledby="xg-t">
   </div>
 </section>
 
-<a class="nextm" href="${next.slug}.html" data-a><span>Next vehicle</span><b>${next.name}</b><div class="nextm__car">${carFx(next.cut.replace('-hd.', '.'), '', 600, Math.round(600 * next.cutAr))}</div>${ic('arrow-right')}</a>`
+<a class="nextm" href="${next.slug}.html" data-a><span>Next vehicle</span><b>${next.name}</b><div class="nextm__car">${carFx(next.cut.replace('-hd.', '.'), '', 600, Math.round(600 * next.cutAr), true)}</div>${ic('arrow-right')}</a>`
   });
 });
 
