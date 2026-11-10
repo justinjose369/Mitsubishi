@@ -1245,3 +1245,7 @@ html { scroll-padding-top: 56px; }
 .art__figure.wrap, .art__body.wrap { max-width: var(--max); }
 .art__body.wrap { width: calc(100% - 2 * var(--pad)); max-width: calc(var(--max) - 2 * var(--pad)); padding-inline: clamp(20px, 3.5vw, 56px); box-sizing: border-box; }
 .art__body .prose { max-width: none; width: 100%; margin-inline: 0; }
+
+/* article: the closing white strip has the same width as the image and text panel above it */
+.strip--light { width: calc(100% - 2 * var(--pad)); max-width: calc(var(--max) - 2 * var(--pad)); margin-inline: auto; box-sizing: border-box; padding-inline: clamp(20px, 3.5vw, 56px); }
+.strip--light > .wrap { padding-inline: 0; max-width: none; }
