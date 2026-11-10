@@ -520,3 +520,10 @@ document.querySelectorAll('.xf .trim__tabs').forEach(bar => {
     go(0); restart();
   });
 })();
+
+/* variant panels: "Show more details" reveals the extra specification rows */
+document.addEventListener('click', e => {
+  const b = e.target.closest && e.target.closest('[data-spec-more]'); if (!b) return;
+  const box = b.closest('.trim__info').querySelector('.spec3s'), open = box.classList.toggle('is-open');
+  b.setAttribute('aria-expanded', String(open)); const t = b.querySelector('span'); if (t) t.textContent = open ? 'Show fewer details' : 'Show more details';
+});

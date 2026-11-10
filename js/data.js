@@ -75,7 +75,7 @@ window.MMK_MODELS = [
   { id: 'destinator-m-line', slug: 'destinator', name: 'Destinator', price: 'Price upon enquiry', img: 'assets/cars/destinator-m-line.webp', ar: 0.444, wheels: [0.200, 0.782, 0.744, 0.0715, 0.730], scale: 1,
     intro: 'Mitsubishi Destinator in the M Line trim.',
     specs: [['Model', 'Destinator'], ['Trim', 'M Line']] },
-  { id: 'destinator-p-line', slug: 'destinator', name: 'Destinator P Line', price: 'Price upon enquiry', img: 'assets/cars/destinator-p-line.webp', ar: 0.379, wheels: [0.240, 0.760, 0.736, 0.0585, 0.723], scale: 1,
+  { id: 'destinator-p-line', slug: 'destinator', name: 'Destinator P Line', price: 'Price upon enquiry', img: 'assets/cars/destinator-p-line.webp', ar: 0.4085, wheels: [0.182, 0.803, 0.791, 0.077, 0.774], scale: 1,
     intro: 'Mitsubishi Destinator in the P Line trim.',
     specs: [['Model', 'Destinator'], ['Trim', 'P Line']] },
   { id: 'l200-2wd-gl', slug: 'l200', name: 'L200 2WD GL', price: 'Price upon enquiry', img: 'assets/cars/l200-2wd-gl.webp', ar: 0.329, wheels: [0.216, 0.711, 0.711, 0.055, 0.712], scale: 1,

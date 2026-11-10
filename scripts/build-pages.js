@@ -40,7 +40,7 @@ const EXTRA_WHEELS = { // wheel data for images that are not in js/data.js: { ar
 // every car image listed in js/data.js (including ones not shown on the home page) carries measured wheel positions
 for (const m of fs.readFileSync(path.join(__dirname, '..', 'js', 'data.js'), 'utf8').matchAll(/img: '(assets[/]cars[/][^']+)[.]webp', ar: ([0-9.]+), wheels: [[]([^\]]*)[\]]/g)) if (!EXTRA_WHEELS[m[1]]) EXTRA_WHEELS[m[1]] = { ar: +m[2], wheels: m[3].split(',').map(Number) };
 const CAR_LAMPS = { // [head, tail]
-  'destinator-p-line': [[10, 44, 5.5, 17], [84.5, 18.5, 5.2, 15.8]],
+  'destinator-p-line': [[2, 47.7, 4, 13.5], [94.9, 33, 2.7, 14.7]],
   'destinator-m-line': [[5.4, 45, 3.4, 15], [90.6, 33, 3.8, 15]],
   'l200-glx-diesel': [[4.8, 40, 4.4, 9], [91.2, 37, 3.6, 18]],
   'l200-4wd-gl': [[2.4, 37, 6.4, 7], [93.5, 32.8, 4, 21]],
@@ -59,7 +59,7 @@ const CAR_LAMPS = { // [head, tail]
 const CAR_TAIL = { // tail lamps drawn in the real lamp shape: [left, top, width, height] in % of the image, polygon points in % of that box
   'destinator-m-line': { b: [90.9, 34.2, 3.2, 14.4], p: '0 0,60 4,100 30,100 80,75 100,40 100,30 50' },
   'destinator-m-line-red': { b: [90.9, 34.2, 3.2, 14.4], p: '0 0,60 4,100 30,100 80,75 100,40 100,30 50' },
-  'destinator-p-line': { b: [84.5, 18.5, 5.2, 15.8], p: '10 0,40 5,100 70,95 100,60 95,0 30' }
+  'destinator-p-line': { b: [94.9, 33, 2.7, 14.7], p: '0 8,100 0,100 100,25 100,0 70' }
 };
 const carFx = (src, alt, w, h) => {
   const base = src.replace(/.(png|webp)$/, ''), name = base.split('/').pop();
@@ -185,6 +185,7 @@ function page(file, { title, desc, active, hdr = 'dark', body, preload = '', aft
   ${after}
   <script src="js/inner.js?v=${ASSET_V}"></script>
   <script src="js/megacar.js?v=${ASSET_V}"></script>
+  <script src="js/enquire.js?v=${ASSET_V}"></script>
 </body>
 </html>
 `;
@@ -250,13 +251,39 @@ ${ctaBand({ title: 'Test the range', text: 'Speak to our team about the vehicle 
 /* ======================================================================== VEHICLE DETAIL ===== */
 /* Layout follows the Mitsubishi Motors Kuwait model page: hero, Drive hero, Exterior / Interior banners,
    50/50 Safety block, text block, tabbed trim + specification table, legal note, key buying actions. */
+/* hero feature points: a line icon that matches each point */
+const FEAT_ICONS = [
+  [/two-tone|roof(?!line)/i, '<path d="M3 16v-3.5L5.5 9.5h9L19 13h2v3"/><path d="M7 9.5 9 6h6l2 3.5" stroke-width="2.4"/><circle cx="7.5" cy="16.5" r="1.8"/><circle cx="16.5" cy="16.5" r="1.8"/>'],
+  [/alloy|wheel/i, '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.2"/><path d="M12 4v5.8M12 14.2V20M4 12h5.8M14.2 12H20"/>'],
+  [/sculpt|body line/i, '<path d="M3 11c4-1 6-4 9-4s5 2 9 3"/><path d="M3 15c4-1 6-3.5 9-3.5s5 1.5 9 2.5"/><path d="M3 19c4-1 6-3 9-3s5 1 9 2"/>'],
+  [/double cab|cab(?!in)|pickup/i, '<path d="M2 16v-4l3-1V8h6l3 3h5l3 2v3"/><path d="M11 11V8"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/>'],
+  [/led|lamp|light/i, '<path d="M5 8l9 2v6l-9 2z"/><path d="M17 9h4M17 13h4M17 17h3"/>'],
+  [/compact|suv|mid-size/i, '<path d="M3 16v-3l2-4h9l4 4h3v3"/><path d="M8 9v4h10"/><circle cx="7.5" cy="17" r="1.8"/><circle cx="16.5" cy="17" r="1.8"/>'],
+  [/sporty|stance/i, '<path d="M4 12h9M2 8h7M2 16h7"/><path d="M13 7l7 5-7 5"/>'],
+  [/seat/i, '<path d="M8 4v8h6a2 2 0 0 1 2 2v3H8"/><path d="M8 17v3M16 17v3"/>'],
+  [/tall|roofline/i, '<path d="M4 20V8l8-4 8 4v12"/><path d="M12 8v9M9.5 10.5 12 8l2.5 2.5"/>'],
+  [/wide|cabin/i, '<rect x="3" y="7" width="18" height="10" rx="2"/><path d="M7 12h10M9 10l-2 2 2 2M15 10l2 2-2 2"/>'],
+  [/diesel|turbo|engine|petrol/i, '<circle cx="12" cy="12" r="8"/><path d="M12 12l5-4M12 12l-1 6M12 12l-6-3"/><circle cx="12" cy="12" r="1"/>'],
+  [/4wd|select|drive/i, '<rect x="9" y="5" width="6" height="14" rx="2"/><rect x="4" y="5" width="3" height="4"/><rect x="17" y="5" width="3" height="4"/><rect x="4" y="15" width="3" height="4"/><rect x="17" y="15" width="3" height="4"/>']
+];
+const featIcon = l => { const e = FEAT_ICONS.find(([re]) => re.test(l)); return '<svg class="xh__ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + (e ? e[1] : '<path d="M12 4l8 8-8 8-8-8z"/>') + '</svg>'; };
+/* one clean spec list per variant: the variant's own facts + the model's known specs, grouped; "On request" rows are left out */
+const specGroups = (m, v) => Object.keys(m.specs).map(t => {
+  let rows = m.specs[t];
+  if (t === 'Performance') {
+    const own = [['Engine', v.engine], ['Transmission', v.trans], ['Drive', v.drive], ['Fuel', v.fuel]].filter(r => r[1] && r[1] !== TBC), have = own.map(r => r[0].toLowerCase());
+    rows = own.concat(rows.filter(r => have.indexOf(r[0].toLowerCase()) < 0));
+  }
+  const known = rows.filter(r => r[1] !== TBC), more = rows.filter(r => r[1] === TBC), row = (r, c) => '<div' + (c ? ' class="' + c + '"' : '') + '><dt>' + r[0] + '</dt><dd>' + r[1] + '</dd></div>';
+  return '<details class="spec3"' + (t === 'Design' || t === 'Performance' ? ' open' : '') + '><summary><h4>' + t + '</h4></summary><dl>' + known.map(r => row(r)).join('') + more.map(r => row(r, 'is-more')).join('') + '</dl></details>';
+}).join('');
 ORDER.forEach((s, mi) => {
   const m = model(s), next = model(ORDER[(mi + 1) % ORDER.length]);
   const tabs = Object.keys(m.specs);
   const enq = 'contact.html?vehicle=' + encodeURIComponent(m.name);
   const F = [0, 1, 2, 3].map(i => m.features[i % m.features.length]), bg = i => (F[i] && F[i][3]) || m.photo2 || m.hero;
   const banner = (i, label) => `<section class="xb" id="${label}" aria-labelledby="xb-${i}"><div class="xb__bg">${img(bg(i), '', 1600, 900)}</div><div class="xb__shade"></div>
-  <div class="xb__in"><div class="xb__txt"><p class="xk" data-a>${F[i][0]}</p><h2 class="xh2" id="xb-${i}" data-a>${F[i][1]}</h2><p class="xp" data-a>${F[i][2]}</p><div class="xb__btn" data-a><a class="btn" href="#specs" data-spec="${label === 'exterior' ? 0 : 3}">Explore ${label}</a></div></div></div></section>`;
+  <div class="xb__in"><div class="xb__txt"><p class="xk" data-a>${F[i][0]}</p><h2 class="xh2" id="xb-${i}" data-a>${F[i][1]}</h2><p class="xp" data-a>${F[i][2]}</p><div class="xb__btn" data-a><a class="btn" href="#variants">Explore ${label}</a></div></div></div></section>`;
   page(s + '.html', {
     title: m.name, desc: `Mitsubishi ${m.name} in Libya: ${m.tag}`, active: 'cars', bodyClass: 'vd xf pg-' + s,
     preload: `\n  <link rel="preload" href="${m.hero}" as="image">`,
@@ -268,49 +295,43 @@ ORDER.forEach((s, mi) => {
     <p class="xk" data-a>${m.kind} &middot; Mitsubishi Motors Libya</p>
     <h1 class="xh1" id="xh-t" data-a>${m.name}</h1>
     <p class="xp" data-a>${m.tag}</p>
-    <ul class="xh__feat" data-a>${m.labels.slice(0, 3).map(l => `<li>${l}</li>`).join('')}</ul>
+    <ul class="xh__feat" data-a>${m.labels.slice(0, 3).map(l => `<li>${featIcon(l)}<span>${l}</span></li>`).join('')}</ul>
+    <div class="xh__cta" data-a><a class="btn btn--solid" href="${enq}">Enquire now</a><a class="btn" href="${enq}" data-brochure="${s}" data-label="Download brochure">Download brochure</a></div>
   </div>
 </section>
 
 <section class="xh xh--r" id="drive" aria-labelledby="xd-t">
   <div class="xh__bg">${img(bg(0), '', 1600, 900)}</div><div class="xh__shade"></div>
   <div class="xh__in xh__in--r"><div class="xh__box">
-    <p class="xk" data-a>Drive</p><h2 class="xh2" id="xd-t" data-a>${F[0][1]}</h2><p class="xp" data-a>${F[0][2]}</p>
-    <div data-a><a class="btn" href="#specs" data-spec="1">Explore drive</a></div></div></div>
+    <p class="xk" data-a>Drive</p><h2 class="xh2" id="xd-t" data-a>${F[0][1]}</h2><p class="xp" data-a>${F[0][2]}</p><div data-a><a class="btn" href="${enq}">Enquire now</a></div></div></div>
 </section>
 
 ${banner(1, 'exterior')}
 ${m.features.length > 2 ? banner(2, 'interior') : ''}
 
 ${m.features.length > 3 ? `<section class="x50" id="safety" aria-labelledby="xs-t">
-  <div class="x50__txt"><div><p class="xk" data-a>Safety</p><h2 class="xh2 xh2--dk" id="xs-t" data-a>${F[3][1]}</h2><p class="xp xp--dk" data-a>${F[3][2]}</p><div class="xb__btn" data-a><a class="btn btn--dk" href="#specs" data-spec="2">Explore safety</a></div></div></div>
+  <div class="x50__txt"><div><p class="xk" data-a>Safety</p><h2 class="xh2 xh2--dk" id="xs-t" data-a>${F[3][1]}</h2><p class="xp xp--dk" data-a>${F[3][2]}</p><div class="xb__btn" data-a><a class="btn btn--dk" href="#variants">Explore safety</a></div></div></div>
   <div class="x50__img">${img(bg(3), m.name, 1200, 900)}</div>
 </section>` : ''}
 
-<section class="xtx" aria-labelledby="xo-t">
-  <div class="wrap xtx__in"><p class="xk" data-a>Model overview</p><h2 class="xh2 xh2--dk" id="xo-t" data-a>${m.tag}</h2><p class="xp xp--dk" data-a>${m.intro}</p></div>
+${m.interior ? `<section class="xin" id="interior-view" aria-labelledby="xin-t">
+  <div class="xin__grid">${m.interior.map((src, i) => `<figure class="xin__i" data-a>${img(src, m.name + ' interior view ' + (i + 1), 740, 550)}${i === 0 ? `<figcaption class="xin__cap"><p class="xk">Interior</p><h2 class="xh2" id="xin-t">Inside the ${m.name}</h2></figcaption>` : ''}</figure>`).join('')}</div>
 </section>
 
+` : ''}
 <section class="xs" id="variants" aria-labelledby="var-t">
   <div class="wrap">
     <h2 class="xh2 xh2--dk" id="var-t" data-a>${m.variants.length > 1 ? 'Choose your ' + m.name : 'The ' + m.name}</h2>
+    <p class="xs__lede" data-a>${m.variants.length > 1 ? 'Pick a variant to see its specifications.' : 'Key specifications at a glance.'}</p>
     <div class="trim" data-tabs>
       <div class="trim__tabs" role="tablist" aria-label="${m.name} variants">${m.variants.map((v, i) => `<button type="button" role="tab" id="tt-${v.id}" aria-controls="tp-${v.id}" aria-selected="${i === 0}"${i ? ' tabindex="-1"' : ''}>${esc(v.trim)}</button>`).join('')}</div>
       ${m.variants.map((v, i) => `<div class="trim__panel" role="tabpanel" id="tp-${v.id}" aria-labelledby="tt-${v.id}"${i ? ' hidden' : ''}>
         <div class="trim__img${v.photo ? ' is-photo' : ''}">${v.img.indexOf('assets/cars/') === 0 ? carFx(v.photo ? v.img : v.img.replace(/.webp$/, '.png'), m.name + ' ' + v.trim, 900, 600) : img(v.img, m.name + ' ' + v.trim, 900, 600)}</div>
         <div class="trim__info"><h3>${esc(v.trim)}</h3>
-          <dl class="trim__facts"><div><dt>Engine</dt><dd>${v.engine}</dd></div><div><dt>Transmission</dt><dd>${v.trans}</dd></div><div><dt>Drive</dt><dd>${v.drive}</dd></div></dl>
+          <div class="spec3s is-open">${specGroups(m, v)}</div>
           <a class="btn btn--solid" href="compare.html?m=${s}&v=${v.id}">Compare this variant</a></div></div>`).join('')}
     </div>
 
-    <div class="xs__spec" id="specs">
-      <h3 class="xh3" data-a>Specifications</h3>
-      <div data-tabs class="spec__x">
-        <div class="spec__tabs" role="tablist" aria-label="${m.name} specifications">${tabs.map((t, i) => `<button type="button" role="tab" id="st-${s}-${i}" aria-controls="sp-${s}-${i}" aria-selected="${i === 0}"${i ? ' tabindex="-1"' : ''}>${t}</button>`).join('')}</div>
-        <div class="spec__list" id="spl">${tabs.map((t, i) => `<dl class="spec__panel" role="tabpanel" id="sp-${s}-${i}" aria-labelledby="st-${s}-${i}"${i ? ' hidden' : ''}>${m.specs[t].map(r => `<div${r[1] === TBC ? ' class="is-tbc"' : ''}><dt>${r[0]}</dt><dd>${r[1]}</dd></div>`).join('')}</dl>`).join('')}</div>
-      </div>
-      <button class="spec__more" type="button" data-more-btn aria-controls="spl" aria-expanded="false"><span>Show more</span> ${ic('plus')}</button>
-    </div>
   </div>
 </section>
 
@@ -473,7 +494,7 @@ page('about.html', {
       <article class="tl"><i></i><p class="hs__k">1976</p><h3>A founder&rsquo;s first venture</h3><p>Our Founder, a pioneer and a visionary in business, started his business venture with a humble background in construction and general trading.</p></article>
       <article class="tl"><i></i><p class="hs__k">1977</p><h3>Middle East Group is established</h3><p>Established in 1977 with financial headquarters in Dubai, we are one of the leading and respected business houses in Libya.</p></article>
       <article class="tl"><i></i><p class="hs__k">Heritage</p><h3>Associated with Mitsubishi Motors Corporation for more than 25 years</h3><p>Middle East Group became associated with Mitsubishi Motors Corporation and has been creating innovative vehicles for Libya for more than 25 years.</p></article>
-      <article class="tl"><i></i><p class="hs__k">Distribution</p><h3>One of Libya&rsquo;s leading distributors</h3><p>An unbeaten choice of Mitsubishi passenger cars, SUVs and commercial vehicles.</p></article>
+      <article class="tl"><i></i><p class="hs__k">Distribution</p><h3>Libya&rsquo;s leading distributors</h3><p>An unbeaten choice of Mitsubishi passenger cars, SUVs and commercial vehicles.</p></article>
       <article class="tl"><i></i><p class="hs__k">Parts</p><h3>With central parts warehouse</h3><p>Fully automated and air-conditioned, covering some 25,000 sq meters, the highest parts facility in the North Africa Region.</p></article>
       <article class="tl"><i></i><p class="hs__k">Service</p><h3>A growing service network</h3><p>Professional customer service and a growing network of hi-tech service centres.</p></article>
     </div>

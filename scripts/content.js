@@ -26,7 +26,7 @@ const MODELS = [
     features: [
       ['Presence', 'A confident SUV stance', 'Two-tone roof and sculpted body lines give the Destinator a strong, modern profile.', 'assets/img/destinator-stance.webp'],
       ['Choice', 'Three trim lines', 'Choose between the P Line, M Line and H Line to match how you drive.', 'assets/img/destinator-choice.webp'],
-      ['Drive', '1.5L petrol, automatic', 'A four-cylinder 1.5L petrol engine with automatic transmission and two-wheel drive.', 'assets/img/story-destinator.webp']
+      ['Drive', '1.5L petrol, automatic', 'A four-cylinder 1.5L petrol engine with automatic transmission and two-wheel drive.', 'assets/img/interior/destinator-banner.webp']
     ],
     specs: { Design: [['Model', 'Destinator'], ['Trims', 'P Line, M Line, H Line'], ['Roof', 'Two-tone'], ['Wheels', 'Alloy']], Performance: [['Engine', '1.5L petrol'], ['Cylinders', '4'], ['Transmission', 'Automatic'], ['Drive', '2WD'], ['Power', TBC], ['Torque', TBC]], Safety: [['Braking', TBC], ['Stability', TBC], ['Airbags', TBC], ['Driver assist', TBC]], Comfort: [['Climate', TBC], ['Infotainment', TBC], ['Seating', TBC], ['Access', TBC]] },
     variants: [V('destinator-p', 'P Line', { img: 'assets/cars/destinator-p-line.webp', engine: '1.5L Petrol', trans: 'Automatic', cyl: '4', drive: '2WD', fuel: 'Petrol', body: 'SUV' }), V('destinator-m', 'M Line', { img: 'assets/cars/destinator-m-line.webp', engine: '1.5L Petrol', trans: 'Automatic', cyl: '4', drive: '2WD', fuel: 'Petrol', body: 'SUV' }), V('destinator-h', 'H Line', { img: 'assets/cars/destinator-m-line-red.webp', engine: '1.5L Petrol', trans: 'Automatic', cyl: '4', drive: '2WD', fuel: 'Petrol', body: 'SUV' })]
@@ -97,7 +97,7 @@ const MODELS = [
       ['Drive', '2.4L turbo diesel, 8-speed automatic', 'A 2.4L MIVEC turbo diesel with an 8-speed automatic transmission. 4WD models add Super-Select 4WD-II with an off-road mode.', 'assets/img/pajero-turbo.webp']
     ],
     specs: { Design: [['Model', 'Pajero Sport'], ['Body', 'Mid-size SUV'], ['Theme', 'Elevate your Journey'], ['Wheels', 'Alloy']], Performance: [['Engine', '2.4L MIVEC turbo diesel'], ['Transmission', '8-speed automatic'], ['Drive', 'Super-Select 4WD-II (4WD models)'], ['Power', TBC], ['Torque', TBC]], Safety: [['Lane Change Assist', 'Yes'], ['Rear Cross Traffic Alert', 'Yes'], ['Braking', TBC], ['Airbags', TBC]], Comfort: [['Display audio', '8-inch Smartphone-Link'], ['Meter', '8-inch colour LCD'], ['Tailgate', 'Power, hands-free'], ['Climate', TBC]] },
-    variants: [V('pajero-sport', 'Pajero Sport', { img: 'assets/cars/pajero-sport.webp', engine: '2.4L Turbo Diesel', trans: 'Automatic', cyl: TBC, drive: '4WD', fuel: 'Diesel', body: 'Mid-size SUV' })]
+    variants: [V('pajero-sport', 'Pajero Sport', { img: 'assets/cars/pajero-sport.webp', engine: '2.4L Turbo Diesel', trans: 'Automatic', cyl: TBC, drive: 'Super-Select 4WD-II', fuel: 'Diesel', body: 'Mid-size SUV' })]
   }
 ];
 const ORDER = ['destinator', 'l200', 'outlander', 'xpander', 'pajero-sport'];

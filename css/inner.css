@@ -972,3 +972,61 @@ html { scroll-padding-top: 56px; }
 
 /* "Fleet service": no 01-03 numbers, so each stacked card is just title + text */
 @media (min-width: 900px) { .fsv--stack .fsv__grid article { grid-template-rows: auto 1fr; } .fsv--stack .fsv__grid h3 { margin-top: 0; } }
+/* "What drives us": the right-hand text fills the column out to the container edge */
+.why2__list p { max-width: none; }
+
+/* Car page banner: Enquire now + Download brochure side by side */
+.xf .xh__cta { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: clamp(22px, 3vw, 36px); }
+
+/* Car page banner: each feature point has a line icon */
+.xf .xh__feat li::before { display: none; }
+.xf .xh__feat li { gap: 12px; }
+.xh__ic { width: 26px; height: 26px; flex: 0 0 auto; color: var(--red); }
+
+/* Interior view: two images side by side */
+.xf .xin { background: #fff; padding-block: var(--sec); }
+.xin__grid { display: grid; gap: clamp(12px, 1.6vw, 24px); margin-top: clamp(20px, 3vw, 36px); }
+.xin__i { margin: 0; aspect-ratio: 4 / 3; overflow: hidden; background: #111; }
+.xin__i img { width: 100%; height: 100%; object-fit: cover; }
+@media (min-width: 700px) { .xin__grid { grid-template-columns: 1fr 1fr; } }
+
+/* Variant + specifications merged: one minimal panel per variant */
+.xs__lede { color: #5d5d63; margin: 6px 0 clamp(20px, 3vw, 32px); max-width: 52ch; }
+.xf .trim__panel { grid-template-columns: 1fr; align-items: start; }
+@media (min-width: 900px) { .xf .trim__panel { grid-template-columns: 1fr 1.1fr; gap: clamp(28px, 4vw, 64px); } }
+.spec3s { display: block; margin: 6px 0 18px; border-top: 1px solid #cfd2d4; }
+.spec3 { border-bottom: 1px solid #cfd2d4; }
+.spec3 summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; padding: 20px 4px; }
+.spec3 summary::-webkit-details-marker { display: none; }
+.spec3 summary::after { content: ""; width: 10px; height: 10px; border-right: 2px solid #000; border-bottom: 2px solid #000; transform: rotate(45deg); margin: -4px 6px 0 0; transition: transform .25s; }
+.spec3[open] summary::after { transform: rotate(-135deg); margin-top: 4px; }
+.spec3 summary:hover h4 { color: var(--red-deep); }
+.spec3 dl { padding: 0 4px 14px; }
+.spec3 h4 { font: 600 clamp(16px, 1.4vw, 19px)/1.2 var(--body); letter-spacing: 0; text-transform: none; color: #000; margin: 0; transition: color .2s; }
+.spec3 dl div { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 11px 0; border-bottom: 1px solid #e3e5e6; }
+.spec3 dt { color: #686d71; font-size: 15px; }
+.spec3 dd { margin: 0; color: #000; font-weight: 600; font-size: 15px; text-align: right; }
+.trim__note { color: #686d71; font-size: 14px; margin: 0 0 20px; }
+
+/* "Choose your ...": heading, intro line and variant tabs are centred */
+.xf .xs > .wrap > .xh2, .xf .xs .xs__lede { text-align: center; margin-inline: auto; }
+.xf .xs .trim__slider { justify-content: center; }
+.xf .xs .trim__tabs { margin-inline: auto; }
+
+/* Interior view: full-width banner, two images edge to edge */
+.xf .xin { padding-bottom: 0; }
+.xf .xin__grid { gap: 0; margin-top: clamp(24px, 3vw, 40px); width: 100%; }
+
+/* Interior banner: the title sits inside the left image */
+.xf .xin { padding-block: 0; }
+.xf .xin__grid { margin-top: 0; }
+.xin__i { position: relative; }
+.xin__cap { position: absolute; inset: auto 0 0 0; z-index: 2; padding: clamp(60px, 9vw, 140px) max(var(--pad), calc((100% * 2 - var(--max)) / 2 + var(--pad))) clamp(22px, 3.4vw, 48px) max(var(--pad), calc((100vw - var(--max)) / 2 + var(--pad))); background: linear-gradient(0deg, rgba(0,0,0,.72), rgba(0,0,0,0)); color: #fff; }
+.xin__cap .xk { color: #fff; margin-bottom: 8px; }
+.xin__cap .xh2 { color: #fff; margin: 0; max-width: 14ch; }
+@media (max-width: 699px) { .xin__cap { padding-inline: var(--pad); } }
+
+/* "Show more details": extra rows and groups stay hidden until asked for */
+.spec3s:not(.is-open) .is-more { display: none; }
+.spec3 dd.is-more, .spec3 .is-more dd { color: #686d71; font-weight: 500; }
+.trim__info .spec__more { margin: 0 0 24px; }
