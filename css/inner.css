@@ -1228,3 +1228,20 @@ html { scroll-padding-top: 56px; }
 .fsv .svc__grid--in { margin-bottom: clamp(40px, 5vw, 72px); }
 .fsv .svc__copy p:last-child { margin-bottom: 0; }
 @media (min-width: 900px) { .fsv > .wrap > .fsv__grid { margin-top: clamp(40px, 5vw, 72px); } .fsv > .wrap > .svc__grid--in { margin-bottom: 0; } }
+/* fleet service (desktop): text starts level with the title, not the label */
+@media (min-width: 900px) { .fsv > .wrap > .svc__grid--in { grid-row: 2; align-self: start; } .fsv > .wrap > .svc__grid--in .svc__copy p:first-child { margin-top: .5em; } }
+/* article body lists */
+.art__body .prose ul { margin: 0 0 22px; padding: 0; list-style: none; }
+.art__body .prose li { position: relative; padding: 10px 0 10px 22px; border-bottom: 1px solid var(--line-dark); line-height: 1.5; }
+.art__body .prose li::before { content: ""; position: absolute; left: 0; top: 1.15em; width: 8px; height: 2px; background: var(--red); }
+.art__body .prose strong { font-weight: 700; color: #000; }
+.art__body .prose h3 { margin-top: 36px; padding-top: 22px; border-top: 1px solid var(--line-dark); }
+/* article: less white space between the hero image and the text, and between sections */
+.art__body { padding-block: clamp(28px, 3vw, 44px) var(--sec); }
+.art__body .prose > p:first-child { margin-top: 0; }
+.art__body .prose h3 { margin-top: 26px; padding-top: 18px; }
+
+/* article: text panel and image share the same width */
+.art__figure.wrap, .art__body.wrap { max-width: var(--max); }
+.art__body.wrap { width: calc(100% - 2 * var(--pad)); max-width: calc(var(--max) - 2 * var(--pad)); padding-inline: clamp(20px, 3.5vw, 56px); box-sizing: border-box; }
+.art__body .prose { max-width: none; width: 100%; margin-inline: 0; }

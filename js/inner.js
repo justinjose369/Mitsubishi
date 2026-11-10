@@ -393,7 +393,7 @@
     $('#artTitle').textContent = a.title; $('#artMeta').textContent = a.cat + (a.date ? '  ·  ' + a.date : '');
     $('#artBack').href = kind === 'blog' ? 'blog.html' : 'media.html';
     $('#artFig').innerHTML = '<img src="' + a.img + '" alt="">';
-    if (a.body) { $('#artBody').innerHTML = a.body.map(t => t.indexOf('## ') === 0 ? '<h3>' + t.slice(3) + '</h3>' : '<p>' + t + '</p>').join(''); return; }
+    if (a.body) { $('#artBody').innerHTML = a.body.map(s => s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')).reduce((o, t) => t.indexOf('## ') === 0 ? o + '<h3>' + t.slice(3) + '</h3>' : t.indexOf('- ') === 0 ? (o.endsWith('</ul>') ? o.slice(0, -5) : o + '<ul>') + '<li>' + t.slice(2) + '</li></ul>' : o + '<p>' + t + '</p>', ''); return; }
     $('#artBody').innerHTML = '<p>' + a.ex + '</p>' + (a.cta ? '<p>' + a.cta + '</p>' : '') + '<p class="ph-note">The full article text is being prepared and will appear here. For details in the meantime, contact our team on +218 918 804 961.</p>';
   })();
 
