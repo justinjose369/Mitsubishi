@@ -178,14 +178,18 @@
         const CW = 240; // car width in px (the photos are 847x360)
         if (bar && track.classList.contains('hs__track--tl')) {
           const barEl = bar.parentElement;
-          const ERAS = [{ y: '1976', src: 'assets/img/hist-l200-1.webp' }, { y: 'Today', src: 'assets/img/hist-l200-2.webp' }];
+          const ERAS = [{ y: '1976', src: 'assets/img/hist-l200-1.webp', w: [[255, 255], [680, 255]], r: 53 }, { y: 'Today', src: 'assets/img/hist-l200-2.webp', w: [[255, 255], [676, 252]], r: 52 }]; // wheel centres / tyre radius in the 847x360 photos
           driveCar = document.createElement('div'); driveCar.className = 'hs__car'; driveCar.setAttribute('aria-hidden', 'true');
-          driveCar.innerHTML = ERAS.map(e => `<span class="hs__era"><img src="${e.src}" alt="" width="847" height="360" decoding="async"><em>${e.y}</em></span>`).join('');
+          const WK = .84, HR = 360 / 847;
+          driveCar.innerHTML = ERAS.map(e => { const sz = 2 * (e.r / 847) * WK; return `<span class="hs__era"><img src="${e.src}" alt="" width="847" height="360" decoding="async"><em>${e.y}</em>` + e.w.map(([cx, cy]) => { const fx = cx / 847, fy = cy / 360; return `<i class="wheel" aria-hidden="true" style="left:${fx * 100}%;top:${fy * 100}%;width:${sz * 100}%;background-image:url(${e.src});background-size:${100 / sz}% auto;background-position:${(sz / 2 - fx) / (sz - 1) * 100}% ${(sz / 2 - fy * HR) / (sz - HR) * 100}%"></i>`; }).join('') + `</span>`; }).join('');
           barEl.appendChild(driveCar);
         }
         const eras = driveCar ? [...driveCar.children] : [];
+        const wheels = driveCar ? $('.wheel', driveCar) : [];
+        if (wheels.length) gsap.set(wheels, { xPercent: -50, yPercent: -50 });
         const drive = p => {
           driveCar.style.transform = 'translateX(' + p * (bar.parentElement.clientWidth - CW) + 'px)';
+          const spin = p * (bar.parentElement.clientWidth - CW) / (52 / 847 * CW) * 57.2958; gsap.set(wheels, { rotation: spin }); // rolls without slip: angle = distance / tyre radius
           const k = Math.max(0, Math.min(1, (p - .46) / .08)); // hand-over at the centre
           eras[0].style.opacity = 1 - k; eras[1].style.opacity = k;
         };

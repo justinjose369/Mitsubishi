@@ -456,7 +456,7 @@ body.menu-open .dock { opacity: 0 !important; pointer-events: none !important; }
    ========================================================================== */
 @media (max-width: 700px) {
   .thumbs { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
-  .thumb { flex: 0 0 100%; scroll-snap-align: center; scroll-snap-stop: always; }
+  .thumb { flex: 0 0 50%; scroll-snap-align: start; scroll-snap-stop: always; }
   .thumb + .thumb { border-left: 0; }
 }
 
@@ -981,4 +981,86 @@ html.snap .footer__main { border-top: 1px solid var(--line) !important; }
 @media (min-width: 1001px) { html.snap .contact__info { padding-top: calc(clamp(14px, 2.6svh, 28px) + 1px); } }
 
 /* mobile: thumbnail strip shows one car at a time, swipe for the next */
-@media (max-width: 700px) { .thumb img, html.snap .thumb img { width: min(100%, 280px); } }
+@media (max-width: 700px) { .thumb img, html.snap .thumb img { width: min(100%, 180px); } .thumb + .thumb { border-left: 1px solid var(--line-dark); } }
+
+/* mobile showcase: centre the text block, buttons, car and controls so everything shares one axis */
+@media (max-width: 1023px) {
+  .stage__info { text-align: center; display: flex; flex-direction: column; align-items: center; }
+  .stage__name { margin-left: 0; }
+  .stage__intro { margin-inline: auto; }
+  .stage__cta { justify-content: center; }
+  .stage > .ctrl { justify-content: center; }
+  .stage__car { margin-inline: auto; }
+  .details__tabs { margin-inline: auto; }
+}
+
+/* phones: Design / Performance / Safety / Comfort as an expandable accordion */
+@media (max-width: 1023px) {
+  .details.is-acc .details__tabs { flex-direction: column; width: 100%; gap: 0; border-bottom: 0; margin: 0; }
+  .details.is-acc .details__tabs button { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 16px 0; font-size: 13px; letter-spacing: .14em; border-top: 1px solid var(--line-dark); text-align: left; }
+  .details.is-acc .details__tabs button::after { content: "+"; position: static; height: auto; background: none; transform: none; font: 400 22px/1 var(--body); letter-spacing: 0; color: var(--ink); }
+  .details.is-acc .details__tabs button[aria-expanded="true"]::after { content: "\2212"; }
+  .details.is-acc .details__tabs > .details__panel { width: 100%; }
+  .details.is-acc .details__panel { display: grid; grid-template-rows: 1fr; padding-top: 0; transition: grid-template-rows .4s var(--ease), opacity .3s var(--ease), visibility 0s; } .details.is-acc .details__panel > .details__grid { min-height: 0; overflow: hidden; }
+  .details.is-acc .details__panel.is-closed { display: grid; grid-template-rows: 0fr; opacity: 0; visibility: hidden; transition: grid-template-rows .4s var(--ease), opacity .25s var(--ease), visibility 0s .4s; }
+}
+
+/* phones: expanded accordion content as a list (label left, value right) */
+@media (max-width: 700px) {
+  .details.is-acc .details__grid { grid-template-columns: 1fr; }
+  .details.is-acc .details__grid div { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 12px 0; }
+  .details.is-acc .details__grid dt { margin: 0; flex: none; }
+  .details.is-acc .details__grid dd { text-align: right; }
+}
+
+/* phones: each list row stacks label over value (Body / Double cab, Trim / GLX) */
+@media (max-width: 700px) {
+  .details.is-acc .details__grid div { display: block; }
+  .details.is-acc .details__grid dt { margin-bottom: 7px; }
+  .details.is-acc .details__grid dd { text-align: left; }
+}
+
+/* phones: thumbnail strip removed (use the prev/next controls or swipe the car) */
+@media (max-width: 700px) { .thumbs-wrap { display: none; } }
+
+/* phones: arrows directly under the car, details after */
+@media (max-width: 1023px) {
+  .stage > .ctrl { order: 3; margin: 8px 0 12px; }
+  .stage__specs { order: 4; }
+}
+
+/* phones: auto-rotate progress line sits right under the arrows */
+@media (max-width: 1023px) {
+  .stage__progress { position: static; order: 3; width: 100%; height: 2px; margin: 0 0 16px; background: var(--line-dark); }
+}
+
+/* phones: no small divider lines between the rows inside the opened accordion */
+@media (max-width: 700px) {
+  .details.is-acc .details__grid div { border-bottom: 0; }
+}
+
+/* phones and tablets: the detail items run in one column, first above second, third, fourth... */
+@media (max-width: 1023px) {
+  .details__grid, .details.is-acc .details__grid { grid-template-columns: 1fr; }
+}
+
+/* phones: list rows are label over value with a full-width line between them (Trim / M line, Roof / Two tone ...) */
+@media (max-width: 1023px) {
+  .details.is-acc .details__grid div, .details__grid div { display: block; border-top: 1px solid var(--line-dark); border-bottom: 0; padding: 14px 0; }
+  .details.is-acc .details__grid dt { margin-bottom: 7px; }
+  .details.is-acc .details__grid dd { text-align: left; }
+}
+
+
+/* accordion (phones): specs as a vertical list, one full-width row each: label, value under it, thin grey divider between rows */
+.details.is-acc .details__grid { grid-template-columns: 1fr; }
+.details.is-acc .details__grid > div { padding: 16px 0; border: 0; border-bottom: 1px solid var(--line-dark); }
+.details.is-acc .details__grid > div:last-child { border-bottom: 0; }
+.details.is-acc .details__grid > div::before { content: none; }
+
+/* accordion rows: small spaced uppercase label, larger darker value, left aligned, red accent on the open tab */
+.details.is-acc .details__grid dt { font: 600 11px/1.3 var(--body); letter-spacing: .16em; text-transform: uppercase; color: var(--muted-dark); margin-bottom: 6px; }
+.details.is-acc .details__grid dd { font: 600 clamp(19px, 5.4vw, 22px)/1.2 var(--display); color: #000; text-align: left; }
+.details.is-acc .details__grid dd.is-na { font: 500 15px/1.3 var(--body); color: var(--muted-dark); }
+.details.is-acc .details__tabs button[aria-expanded="true"] { color: #000; }
+.details.is-acc .details__tabs button[aria-expanded="true"]::after { color: var(--red); }

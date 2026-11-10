@@ -154,11 +154,26 @@
       dt.panel.setAttribute('aria-labelledby', t.id);
       dtShow(M[state.idx]);
     };
-    dt.tabs.forEach(t => on(t, 'click', () => select(t)));
+    // phones: the four tabs become an accordion; the panel sits right under the open tab, tap again to collapse
+    const accMQ = matchMedia('(max-width: 1023px)'), tabsBox = dt.tabs[0].parentElement;
+    let accOpen = true;
+    const place = () => {
+      const acc = accMQ.matches; dt.box.classList.toggle('is-acc', acc);
+      dt.tabs.forEach(x => x.setAttribute('aria-expanded', String(acc && accOpen && x.getAttribute('aria-selected') === 'true')));
+      if (!acc) { tabsBox.after(dt.panel); dt.panel.classList.remove('is-closed'); return; }
+      const cur = dt.tabs.find(x => x.getAttribute('aria-selected') === 'true') || dt.tabs[0];
+      if (cur.nextElementSibling !== dt.panel) cur.after(dt.panel);
+      dt.panel.classList.toggle('is-closed', !accOpen);
+    };
+    dt.tabs.forEach(t => on(t, 'click', () => {
+      if (accMQ.matches && t.getAttribute('aria-selected') === 'true') { accOpen = !accOpen; place(); return; }
+      accOpen = true; select(t); place();
+    }));
+    on(accMQ, 'change', place); place();
     on(dt.tabs[0].parentElement, 'keydown', e => {
       const i = dt.tabs.indexOf(document.activeElement); if (i < 0) return;
       const k = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : e.key === 'Home' ? -i : e.key === 'End' ? dt.tabs.length - 1 - i : 0; if (!k) return;
-      e.preventDefault(); const t = dt.tabs[(i + k + dt.tabs.length) % dt.tabs.length]; t.focus(); select(t);
+      e.preventDefault(); const t = dt.tabs[(i + k + dt.tabs.length) % dt.tabs.length]; t.focus(); accOpen = true; select(t); place();
     });
   }
 

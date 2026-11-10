@@ -1200,3 +1200,26 @@ html { scroll-padding-top: 56px; }
 
 /* mobile: "Latest news" heading keeps its button on the right of the title */
 @media (max-width: 1023px) { .sec-head--sp { flex-direction: row; align-items: center; justify-content: space-between; gap: 12px; } .sec-head--sp .btn { white-space: nowrap; } }
+
+/* history: keep the driving car, hide the year label above it */
+.hs__era em { display: none; }
+
+/* fleet: service block after the banner */
+.svc__grid { display: grid; gap: 32px; align-items: center; }
+.svc__img { margin: 0; aspect-ratio: 16 / 10; overflow: hidden; background: #e8e6e1; } .svc__img img { width: 100%; height: 100%; object-fit: cover; }
+.svc__copy .h2 { margin-bottom: 24px; max-width: 16ch; } .svc__copy p { margin-bottom: 16px; max-width: 60ch; }
+@media (min-width: 900px) { .svc__grid { grid-template-columns: 1.1fr .9fr; gap: 6vw; } }
+.svc__grid--in { margin-top: clamp(40px, 5vw, 72px); padding-top: clamp(32px, 4vw, 56px); border-top: 1px solid var(--line-dark); }
+.svc__copy h3 { font: 600 clamp(26px, 2.6vw, 38px)/1.05 var(--display); text-transform: uppercase; margin-bottom: 16px; }
+/* fleet service: block sits directly under the title, cards follow */
+.fsv .svc__grid--in { margin-top: clamp(24px, 3vw, 40px); margin-bottom: clamp(32px, 4vw, 56px); padding-top: 0; border-top: 0; }
+.fsv .svc__grid--in { display: block; }
+.fsv .svc__copy p { max-width: 70ch; }
+/* fleet service (desktop): title on the left, service text on the right, cards below */
+@media (min-width: 900px) {
+  .fsv > .wrap { display: grid; grid-template-columns: 1fr 1fr; column-gap: 6vw; align-items: start; }
+  .fsv > .wrap > .eyebrow { grid-column: 1; grid-row: 1; }
+  .fsv > .wrap > .h2 { grid-column: 1; grid-row: 2; }
+  .fsv > .wrap > .svc__grid--in { grid-column: 2; grid-row: 1 / span 2; margin: 0; align-self: end; }
+  .fsv > .wrap > .fsv__grid { grid-column: 1 / -1; grid-row: 3; }
+}
