@@ -1030,3 +1030,121 @@ html { scroll-padding-top: 56px; }
 .spec3s:not(.is-open) .is-more { display: none; }
 .spec3 dd.is-more, .spec3 .is-more dd { color: #686d71; font-weight: 500; }
 .trim__info .spec__more { margin: 0 0 24px; }
+
+/* Destinator "Choose your" block, xforce style: copy left, image right, specs in columns, Show more */
+.xf .trim__panel.xv { display: block; background: #f7f7f7; padding: clamp(20px, 3vw, 44px); }
+.xv__top { display: grid; gap: 20px; align-items: center; }
+.xv__txt h3 { font: 700 clamp(28px, 3.4vw, 48px)/1.05 var(--body); color: #000; margin: 0 0 12px; text-transform: none; letter-spacing: 0; }
+.xv__txt p { color: #5d5d63; margin: 0 0 24px; font-size: 17px; }
+.xv__img { background: transparent; aspect-ratio: auto; }
+@media (min-width: 900px) { .xv__top { grid-template-columns: 1fr 2fr; gap: clamp(24px, 4vw, 64px); } }
+.xv__specs { position: relative; margin-top: clamp(28px, 4vw, 56px); padding-top: clamp(24px, 3vw, 40px); border-top: 1px solid #dcdfe1; }
+.xv__grid { display: grid; gap: 8px 40px; grid-template-columns: 1fr; max-height: 440px; overflow: hidden; position: relative; transition: max-height .5s ease; }
+@media (min-width: 700px) { .xv__grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1100px) { .xv__grid { grid-template-columns: repeat(3, 1fr); } }
+.xv__specs:not(.is-open) .xv__grid::after { content: ""; position: absolute; inset: auto 0 0 0; height: 140px; background: linear-gradient(0deg, #f7f7f7, rgba(247,247,247,0)); pointer-events: none; }
+.xv__specs.is-open .xv__grid { max-height: 6000px; }
+.xv__g { margin-bottom: 28px; }
+.xv__g h5 { font: 700 18px/1.2 var(--body); color: #000; margin: 0 0 14px; letter-spacing: 0; text-transform: none; }
+.xv__g dl div { padding: 8px 0; border-bottom: 1px solid #e3e5e6; }
+.xv__g dt { color: #686d71; font-size: 13px; }
+.xv__g dd { margin: 2px 0 0; color: #000; font-size: 16px; font-weight: 600; }
+.xv__more { display: flex; align-items: center; gap: 10px; margin: 18px auto 0; padding: 10px 6px; font: 600 15px/1 var(--body); color: #000; background: none; border: 0; cursor: pointer; }
+.xv__more::after { content: ""; width: 9px; height: 9px; border-right: 2px solid var(--red); border-bottom: 2px solid var(--red); transform: rotate(45deg); margin-top: -4px; transition: transform .25s; }
+.xv__specs.is-open .xv__more::after { transform: rotate(-135deg); margin-top: 4px; }
+.xv__more:hover { color: var(--red-deep); }
+.xv__grid { max-height: 620px; }
+.xv__g--l ul { margin: 0; padding: 0; list-style: none; }
+.xv__g--l li { padding: 8px 0; border-bottom: 1px solid #e3e5e6; font-size: 15px; line-height: 1.45; color: #1a1a1a; }
+@media (min-width: 700px) { .xv__grid { column-gap: 48px; } }
+
+/* "Show more" link under the compare button opens the details */
+.xv__specs { display: none; }
+.xv.is-open .xv__specs { display: block; }
+.xv__grid, .xv__specs:not(.is-open) .xv__grid { max-height: none; overflow: visible; }
+.xv__specs .xv__grid::after, .xv__specs:not(.is-open) .xv__grid::after { content: none; }
+.xv__txt .xv__more { display: flex; width: fit-content; margin: 20px 0 0; padding: 6px 0; font-weight: 600; text-decoration: underline; text-underline-offset: 4px; }
+.xv.is-open .xv__more::after { transform: rotate(-135deg); margin-top: 4px; }
+
+/* Tail lamp, brake: keep the housing dark, light only the red LED segments */
+.trim__img[data-lights="brake"] .tcar .lamp--shape > i { filter: contrast(1.45) saturate(3.2) brightness(1.15); }
+.trim__img[data-lights="drive"] .tcar .lamp--tail.lamp--shape { opacity: .6; }
+
+/* Next vehicle strip: the next car, flipped to face right, drives in from the left; its name sits on top */
+.nextm { position: relative; overflow: hidden; }
+.nextm__car { order: 2; margin-left: auto; margin-right: -14px; flex: none; width: clamp(150px, 23vw, 360px); margin-block: -18px; position: relative; z-index: 1; opacity: 0; transition: opacity .4s ease; }
+.nextm.is-in .nextm__car, .no-js .nextm__car { opacity: 1; }
+.nextm__car .tcar { display: block; width: 100%; transform: scaleX(-1); filter: drop-shadow(0 14px 10px rgba(0,0,0,.35)); }
+.nextm__car .tcar img { display: block; width: 100%; height: auto; }
+.nextm b { order: 3; margin-left: 0; position: relative; z-index: 2; }
+.nextm .ic { order: 4; }
+@media (prefers-reduced-motion: reduce) { .nextm__car { opacity: 1; transition: none; } }
+@media (max-width: 560px) { .nextm { gap: 14px; } .nextm > span { display: none; } .nextm__car { width: 38vw; } }
+
+/* Next vehicle strip lights: headlights on while it drives, brake lights on once it stops at the name */
+.nextm__car[data-lights="drive"] .tcar .lamp--head { opacity: 1; }
+.nextm__car[data-lights="drive"] .tcar .lamp--tail { opacity: .25; }
+.nextm__car[data-lights="drive"] .tcar .lamp--tail.lamp--shape { opacity: .45; }
+.nextm__car[data-lights="brake"] .tcar .lamp--tail { opacity: 1; transition: none; box-shadow: 0 0 20px 7px rgba(255,30,20,.75); }
+.nextm__car[data-lights="brake"] .tcar .lamp--shape > i { filter: contrast(1.45) saturate(3.2) brightness(1.15); }
+/* Next vehicle strip: headlight blinks while the car drives */
+.nextm__car[data-lights="drive"] .tcar .lamp--head { animation: lampBlink .34s steps(1, end) infinite; }
+@media (prefers-reduced-motion: reduce) { .nextm__car[data-lights="drive"] .tcar .lamp--head { animation: none; opacity: 1; } }
+
+/* Shaped headlights: the lit lamp is the car's own lamp pixels, brightened and clipped to the real lens, so no glow spills outside the car */
+.tcar .lamp--head.lamp--shape { background: none !important; border-radius: 0; box-shadow: none !important; filter: none !important; }
+.tcar .lamp--head.lamp--shape::after { display: none; }
+.tcar .lamp--head.lamp--shape > i { filter: brightness(1.9) contrast(1.05); box-shadow: inset 0 0 0 999px rgba(255,255,255,.55); }
+/* stronger lit lamps on the red strip (still clipped to the lamp shape) */
+.tcar .lamp--head.lamp--shape > i { filter: brightness(2.3) contrast(1.05); box-shadow: inset 0 0 0 999px rgba(255,255,255,.7); }
+.nextm__car[data-lights="brake"] .tcar .lamp--tail.lamp--shape > i { filter: brightness(1.7) saturate(3) contrast(1.2); box-shadow: inset 0 0 0 999px rgba(255,20,10,.55); }
+
+/* Headlight beam: a focused cone of light ahead of the lamp, blinking with it */
+.tcar { container-type: inline-size; }
+.tcar .lamp--head.lamp--shape::before { content: ""; position: absolute; right: 70%; top: 50%; width: 22cqw; height: 9cqw; transform: translateY(-50%); background: linear-gradient(270deg, rgba(255,255,255,.9) 0%, rgba(255,255,255,.45) 40%, rgba(255,255,255,0) 100%); clip-path: polygon(100% 34%, 0 0, 0 100%, 100% 66%); filter: blur(1.2px); mix-blend-mode: screen; pointer-events: none; }
+
+/* Interior / Exterior tabs with image sliders */
+.xg { background: #fff; padding-block: var(--sec); }
+.xg .xh2 { text-align: center; margin-inline: auto; }
+.xg__tabs { display: flex; justify-content: center; gap: 8px; margin: clamp(20px, 3vw, 36px) auto clamp(20px, 3vw, 36px); }
+.xg__tabs button { padding: 14px 34px; border-radius: 999px; font: 600 clamp(15px, 1.3vw, 18px)/1 var(--body); color: #4a4d52; background: #f2f3f4; border: 1px solid #e3e5e6; transition: background .25s, color .25s, border-color .25s; }
+.xg__tabs button:hover { background: #e8eaec; color: #000; }
+.xg__tabs button[aria-selected="true"] { background: #000; color: #fff; border-color: #000; }
+.xg__slider { position: relative; }
+.xg__track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; scroll-behavior: smooth; }
+.xg__track::-webkit-scrollbar { display: none; }
+.xg__i { flex: 0 0 100%; margin: 0; scroll-snap-align: center; aspect-ratio: 16 / 8; background: #e9eaec; }
+.xg__i img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.xg__btn { position: absolute; top: 50%; transform: translateY(-50%); width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; color: #111; background: rgba(255,255,255,.85); border: 1px solid rgba(0,0,0,.08); transition: background .25s, color .25s; z-index: 2; }
+.xg__btn:hover { background: #e60012; color: #fff; }
+.xg__btn .ic { width: 20px; height: 20px; }
+.xg__btn--p { left: 16px; } .xg__btn--n { right: 16px; }
+@media (max-width: 700px) { .xg__i { aspect-ratio: 4 / 3; } .xg__btn { width: 42px; height: 42px; } }
+@media (prefers-reduced-motion: reduce) { .xg__track { scroll-behavior: auto; } }
+
+/* two images per slide */
+.xg__track { gap: 16px; }
+.xg__i { flex: 0 0 calc(50% - 8px); aspect-ratio: 4 / 3; scroll-snap-align: start; }
+@media (max-width: 700px) { .xg__track { gap: 10px; } .xg__i { flex-basis: 100%; } }
+.xg__btn:disabled { opacity: .35; pointer-events: none; }
+.xg__i { overflow: hidden; }
+.xg .xh2 + div > .xg__panel:first-child { margin-top: clamp(20px, 3vw, 36px); }
+
+/* Choose your ... block: same lit headlight, beam and brake lights as the Next vehicle strip */
+.trim__img .tcar .lamp--head.lamp--shape::before { background: linear-gradient(270deg, rgba(255,255,255,1) 0%, rgba(235,243,252,.85) 40%, rgba(205,220,238,.35) 75%, rgba(205,220,238,0) 100%); mix-blend-mode: normal; }
+.trim__img[data-lights="drive"] .tcar .lamp--head { opacity: 1; animation: lampBlink .34s steps(1, end) infinite; }
+.trim__img[data-lights="brake"] .tcar .lamp--tail { opacity: 1; transition: none; }
+.trim__img[data-lights="brake"] .tcar .lamp--tail.lamp--shape > i { filter: brightness(1.7) saturate(3) contrast(1.2); box-shadow: inset 0 0 0 999px rgba(255,20,10,.55); }
+@media (prefers-reduced-motion: reduce) { .trim__img[data-lights="drive"] .tcar .lamp--head { animation: none; } }
+
+/* a photo shown whole (not cropped), centred, over a soft blurred copy of itself */
+.xg__i--fit { position: relative; display: grid; place-items: center; }
+.xg__i--fit img:not(.xg__bgimg) { position: relative; z-index: 1; width: 100%; height: auto; max-height: 100%; object-fit: contain; object-position: 50% 50%; }
+.xg__i .xg__bgimg { position: absolute; inset: -20px; width: calc(100% + 40px); height: calc(100% + 40px); object-fit: cover; filter: blur(24px) saturate(1.1); opacity: .6; }
+
+/* Headlight beam: the far end fades fully to transparent (no visible cut-off edge) */
+.tcar .lamp--head.lamp--shape::before { -webkit-mask-image: linear-gradient(270deg, #000 0%, rgba(0,0,0,.7) 30%, transparent 92%); mask-image: linear-gradient(270deg, #000 0%, rgba(0,0,0,.7) 30%, transparent 92%); clip-path: polygon(100% 34%, 0 12%, 0 88%, 100% 66%); filter: blur(2px); }
+
+.xg__soon { margin: 0; padding: clamp(60px, 9vw, 120px) 20px; text-align: center; font: 500 clamp(16px, 1.4vw, 20px)/1.4 var(--body); color: #5d5d63; background: #f2f3f4; border: 1px dashed #cfd2d4; }
+
+.xg__i img:not(.xg__bgimg) { object-position: var(--pos, 50% 50%); }

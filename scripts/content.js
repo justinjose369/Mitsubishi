@@ -17,7 +17,8 @@ const SOCIAL = {
 const V = (id, trim, o) => Object.assign({ id, trim }, o);
 const MODELS = [
   {
-    slug: 'destinator', name: 'Destinator', kind: 'SUV', accent: '#8fb4d9',
+    slug: 'destinator', name: 'Destinator', kind: 'SUV',
+    views: { Interior: ['assets/img/interior/destinator-1.webp', 'assets/img/interior/destinator-2.webp', 'assets/img/interior/destinator-banner.webp'], Exterior: ['assets/img/destinator-stance.webp', 'assets/img/destinator-choice.webp', 'assets/img/story-destinator.webp'] }, accent: '#8fb4d9',
     tag: 'A bold, modern SUV built for the family.',
     hero: 'assets/img/story-destinator.webp', photo2: 'assets/img/web/Destinator.jpg', cut: 'assets/cars/destinator-m-line.webp', cutAr: .444,
     intro: 'A confident SUV stance with a two-tone roof and sculpted body lines, offered in P Line, M Line and H Line trims.',
@@ -26,13 +27,14 @@ const MODELS = [
     features: [
       ['Presence', 'A confident SUV stance', 'Two-tone roof and sculpted body lines give the Destinator a strong, modern profile.', 'assets/img/destinator-stance.webp'],
       ['Choice', 'Three trim lines', 'Choose between the P Line, M Line and H Line to match how you drive.', 'assets/img/destinator-choice.webp'],
-      ['Drive', '1.5L petrol, automatic', 'A four-cylinder 1.5L petrol engine with automatic transmission and two-wheel drive.', 'assets/img/interior/destinator-banner.webp']
+      ['Drive', '1.5L petrol, automatic', 'A four-cylinder 1.5L petrol engine with automatic transmission and two-wheel drive.', 'assets/img/destinator-rear.webp']
     ],
     specs: { Design: [['Model', 'Destinator'], ['Trims', 'P Line, M Line, H Line'], ['Roof', 'Two-tone'], ['Wheels', 'Alloy']], Performance: [['Engine', '1.5L petrol'], ['Cylinders', '4'], ['Transmission', 'Automatic'], ['Drive', '2WD'], ['Power', TBC], ['Torque', TBC]], Safety: [['Braking', TBC], ['Stability', TBC], ['Airbags', TBC], ['Driver assist', TBC]], Comfort: [['Climate', TBC], ['Infotainment', TBC], ['Seating', TBC], ['Access', TBC]] },
     variants: [V('destinator-p', 'P Line', { img: 'assets/cars/destinator-p-line.webp', engine: '1.5L Petrol', trans: 'Automatic', cyl: '4', drive: '2WD', fuel: 'Petrol', body: 'SUV' }), V('destinator-m', 'M Line', { img: 'assets/cars/destinator-m-line.webp', engine: '1.5L Petrol', trans: 'Automatic', cyl: '4', drive: '2WD', fuel: 'Petrol', body: 'SUV' }), V('destinator-h', 'H Line', { img: 'assets/cars/destinator-m-line-red.webp', engine: '1.5L Petrol', trans: 'Automatic', cyl: '4', drive: '2WD', fuel: 'Petrol', body: 'SUV' })]
   },
   {
-    slug: 'l200', name: 'L200', kind: 'Pickup', accent: '#e8902a',
+    slug: 'l200',
+    views: { Interior: ['assets/img/interior/l200-1.webp', 'assets/img/interior/l200-2.webp'], Exterior: [{ src: 'assets/img/l200-ext.webp', pos: '89% 50%' }, 'assets/img/l200-hill.webp', 'assets/img/l200-intro.webp'] }, name: 'L200', kind: 'Pickup', accent: '#e8902a',
     tag: 'A rugged pickup built for work and adventure.',
     hero: 'assets/img/l200-intro.webp', photo2: 'assets/img/l200-ext.webp', cut: 'assets/cars/l200-glx-diesel.webp', cutAr: .426,
     intro: 'In pursuit of the ultimate toughness, the L200 pickup was put through rigorous tests. Being tough was not enough: it had to endure the harshest conditions.',
@@ -57,7 +59,8 @@ const MODELS = [
     ]
   },
   {
-    slug: 'outlander', name: 'Outlander', kind: 'SUV', accent: '#c7ccd4',
+    slug: 'outlander',
+    views: { Interior: ['assets/img/interior/outlander-1.webp', 'assets/img/interior/outlander-2.webp', 'assets/img/outlander-choice.webp'], Exterior: ['assets/img/story-outlander.webp', 'assets/img/outlander-drive.webp', 'assets/img/drive.webp'] }, name: 'Outlander', kind: 'SUV', accent: '#c7ccd4',
     tag: 'An agile compact SUV for the city and the weekend.',
     hero: 'assets/img/story-outlander.webp', photo2: 'assets/img/drive.webp', cut: 'assets/cars/outlander-sport-h-line-hd.webp', cutAr: .382,
     intro: 'A sleek compact SUV profile with a sporty stance, offered as the Outlander Sport in P Line, H Line and M Line trims.',
@@ -72,7 +75,8 @@ const MODELS = [
     variants: [V('outlander-p', 'Outlander Sport P Line', { img: 'assets/cars/outlander-sport-p-line.webp', engine: '1.5L Petrol', trans: 'Automatic', cyl: '4', drive: '2WD', fuel: 'Petrol', body: 'Compact SUV' }), V('outlander-h', 'Outlander Sport H Line', { img: 'assets/cars/outlander-sport-h-line.webp', engine: '1.5L Petrol', trans: 'Automatic', cyl: '4', drive: '2WD', fuel: 'Petrol', body: 'Compact SUV' }), V('outlander-m', 'Outlander Sport M Line', { img: 'assets/cars/outlander-sport-m-line.webp', engine: '1.5L Petrol', trans: 'Automatic', cyl: '4', drive: '2WD', fuel: 'Petrol', body: 'Compact SUV' })]
   },
   {
-    slug: 'xpander', name: 'Xpander', kind: 'Family MPV', accent: '#ff4545',
+    slug: 'xpander',
+    views: { Interior: ['assets/img/interior/xpander-1.webp', 'assets/img/interior/xpander-2.webp'], Exterior: ['assets/img/xpander-drive.webp', 'assets/img/xpander-family.webp', 'assets/img/story-xpander.webp'] }, name: 'Xpander', kind: 'Family MPV', accent: '#ff4545',
     tag: 'A spacious family MPV with room for everyone.',
     hero: 'assets/img/story-xpander.webp', photo2: 'assets/img/story-xpander.webp', cut: 'assets/cars/xpander.webp', cutAr: .3505,
     intro: 'A practical, space-focused MPV with a tall roofline and a wide cabin for seven.',
@@ -86,7 +90,8 @@ const MODELS = [
     variants: [V('xpander', 'Xpander', { img: 'assets/cars/xpander.webp', engine: TBC, trans: TBC, cyl: TBC, drive: TBC, fuel: TBC, body: 'MPV' })]
   },
   {
-    slug: 'pajero-sport', name: 'Pajero Sport', kind: 'SUV', accent: '#3a7bd5',
+    slug: 'pajero-sport',
+    views: { Interior: ['assets/img/interior/pajero-sport-1.webp', 'assets/img/interior/pajero-sport-2.webp'], Exterior: ['assets/img/pajero-banner.webp', 'assets/img/pajero-drive.webp', 'assets/img/pajero-turbo.webp'] }, name: 'Pajero Sport', kind: 'SUV', accent: '#3a7bd5',
     tag: 'A refined, powerful mid-size SUV built for the journey.',
     hero: 'assets/img/pajero-banner.webp', photo2: 'assets/img/pajero-drive.webp', cut: 'assets/cars/pajero-sport.webp', cutAr: .3925,
     intro: 'A mid-size SUV with a refined, powerful look, a 2.4L MIVEC turbo diesel and Super-Select 4WD-II.',

@@ -40,7 +40,7 @@ const EXTRA_WHEELS = { // wheel data for images that are not in js/data.js: { ar
 // every car image listed in js/data.js (including ones not shown on the home page) carries measured wheel positions
 for (const m of fs.readFileSync(path.join(__dirname, '..', 'js', 'data.js'), 'utf8').matchAll(/img: '(assets[/]cars[/][^']+)[.]webp', ar: ([0-9.]+), wheels: [[]([^\]]*)[\]]/g)) if (!EXTRA_WHEELS[m[1]]) EXTRA_WHEELS[m[1]] = { ar: +m[2], wheels: m[3].split(',').map(Number) };
 const CAR_LAMPS = { // [head, tail]
-  'destinator-p-line': [[2, 47.7, 4, 13.5], [94.9, 33, 2.7, 14.7]],
+  'destinator-p-line': [[0.5, 44.5, 4, 13], [93.4, 29.3, 5.74, 18.6]],
   'destinator-m-line': [[5.4, 45, 3.4, 15], [90.6, 33, 3.8, 15]],
   'l200-glx-diesel': [[4.8, 40, 4.4, 9], [91.2, 37, 3.6, 18]],
   'l200-4wd-gl': [[2.4, 37, 6.4, 7], [93.5, 32.8, 4, 21]],
@@ -57,9 +57,22 @@ const CAR_LAMPS = { // [head, tail]
   'xpander': [[9, 37, 6, 13], [85.5, 16, 5.5, 16]]
 };
 const CAR_TAIL = { // tail lamps drawn in the real lamp shape: [left, top, width, height] in % of the image, polygon points in % of that box
-  'destinator-m-line': { b: [90.9, 34.2, 3.2, 14.4], p: '0 0,60 4,100 30,100 80,75 100,40 100,30 50' },
-  'destinator-m-line-red': { b: [90.9, 34.2, 3.2, 14.4], p: '0 0,60 4,100 30,100 80,75 100,40 100,30 50' },
-  'destinator-p-line': { b: [94.9, 33, 2.7, 14.7], p: '0 8,100 0,100 100,25 100,0 70' }
+  'destinator-m-line': { b: [89.6, 33.6, 5.2, 15.6], p: '0 3.3,57.4 0,82 7.4,96.7 21.8,100 34.2,95.6 52.7,91.3 69.1,84.7 85.6,71 97.1,51.9 100,47.5 52.7,45.4 32.1,32.8 17.7,8.2 7.4' },
+  'destinator-m-line-red': { b: [89.6, 33.6, 5.2, 15.6], p: '0 3.3,57.4 0,82 7.4,96.7 21.8,100 34.2,95.6 52.7,91.3 69.1,84.7 85.6,71 97.1,51.9 100,47.5 52.7,45.4 32.1,32.8 17.7,8.2 7.4' },
+  'l200-glx-diesel': { b: [90.9, 37.4, 3.9, 17.4], p: '23.7 1.8,88.1 0,100 34.1,96.6 73.9,91.5 99.1,13.6 100,0 99.1,13.6 91.6,20.3 58.4' },
+  'outlander-sport-h-line': { b: [88.4, 30.3, 9.1, 6.9], p: '0 8.3,63.7 0,94 16.7,100 54.2,98.4 100,79.8 88.9,39.5 54.2,3.2 30.6' },
+  'xpander': { b: [86, 15.6, 5.1, 16.5], p: '9.4 0,23.5 2.1,54 31.1,96.2 72.6,100 98.3,68.1 100,25.8 90,0 81.7,4.7 60.2,7 18.7' },
+  'pajero-sport': { b: [89.4, 19.6, 8.2, 13.7], p: '0 56.1,21 44.6,56.7 21,71.4 0,76.5 6.4,81.9 35,92.4 73.2,100 100,79.8 89.2,37.8 73.2,12.6 63.7' },
+  'destinator-p-line': { b: [93.4, 29.3, 5.74, 18.6], p: '0.8 1.9,34.7 0,59.5 .6,77.7 6.2,95.9 18.6,99.7 23.6,99.2 33.5,95.9 41,94.2 50.9,90.9 68.3,86 80.7,77.7 90.7,67.8 98.1,52.9 99.4,52.1 68.3,49.6 43.5,47.9 31.1,43 23.6,18.2 9.9,0.8 3.1' }
+};
+const CAR_HEAD = {
+  'destinator-m-line': { b: [4.7, 47, 3.5, 14.1], p: '0 4.5,66.1 3.6,98.4 0,100 70.5,96 100,58.1 95.5,25.8 90.9,9.7 79.5,0 61.4' },
+  'destinator-p-line': { b: [0.2, 44.8, 4.1, 13.9], p: '0 8.9,61.9 6.6,97.2 0,100 47,94 90.1,68.8 80.1,36.7 83.4,13.8 100,2.3 93.4' },
+  'destinator-m-line-red': { b: [4.7, 47, 3.5, 14.1], p: '0 4.5,66.1 3.6,98.4 0,100 70.5,96 100,58.1 95.5,25.8 90.9,9.7 79.5,0 61.4' },
+  'l200-glx-diesel': { b: [5, 46.2, 1.8, 5.4], p: '0 16.4,34.4 0,100 9.8,97.9 96.7,20.8 100,0 83.6' },
+  'outlander-sport-h-line': { b: [3.9, 45.8, 2.3, 13.8], p: '19 4.1,66.7 0,93.7 15.1,100 71.2,85.7 93.8,54 100,22.2 88.4,3.2 57.5,0 19.9' },
+  'xpander': { b: [9.4, 48.3, 4.1, 7.2], p: '1.3 6.1,50.6 0,98.1 8.2,100 100,50.6 91.8,6.3 79.6,0 38.8' },
+  'pajero-sport': { b: [5.1, 36.6, 8, 4.4], p: '0 42.5,33.2 7.5,65.2 0,97.3 7.5,100 42.5,65.2 62.5,38.5 82.5,3.7 100' }
 };
 const carFx = (src, alt, w, h) => {
   const base = src.replace(/.(png|webp)$/, ''), name = base.split('/').pop();
@@ -67,7 +80,7 @@ const carFx = (src, alt, w, h) => {
   let wheels = '';
   if (e) { const [fx, rx, cyF, r, cyR] = e.wheels, sz = 2 * r * WHEEL_K, hr = e.ar, f = n => +n.toFixed(4);
     wheels = [[fx, cyF], [rx, cyR == null ? cyF : cyR]].map(([cx, cy]) => `<i class="wheel" aria-hidden="true" style="left:${f((cx - sz / 2) * 100)}%;top:${f((cy * hr - sz / 2) / hr * 100)}%;width:${f(sz * 100)}%;background-image:url(${src});background-size:${f(100 / sz)}% auto;background-position:${f((sz / 2 - cx) / (sz - 1) * 100)}% ${f((sz / 2 - cy * hr) / (sz - hr) * 100)}%"></i>`).join(''); }
-  const f2 = n => +n.toFixed(4), lp = CAR_LAMPS[name], tl = CAR_TAIL[name], lamps = lp ? [['head', lp[0]], ['tail', lp[1]]].map(([k, b]) => k === 'tail' && tl ? `<i class="lamp lamp--tail lamp--shape" aria-hidden="true" style="left:${tl.b[0]}%;top:${tl.b[1]}%;width:${tl.b[2]}%;height:${tl.b[3]}%"><i style="clip-path:polygon(${tl.p.split(',').map(q => q.trim().split(' ').map(v => v + '%').join(' ')).join(',')});background-image:url(${src});background-size:${f2(10000 / tl.b[2])}% auto;background-position:${f2(tl.b[0] / (100 - tl.b[2]) * 100)}% ${f2(tl.b[1] / (100 - tl.b[3]) * 100)}%"></i></i>` : `<i class="lamp lamp--${k}" aria-hidden="true" style="left:${b[0]}%;top:${b[1]}%;width:${b[2]}%;height:${b[3]}%"></i>`).join('') : '';
+  const f2 = n => +n.toFixed(4), lp = CAR_LAMPS[name], shp = (k, o) => `<i class="lamp lamp--${k} lamp--shape" aria-hidden="true" style="left:${o.b[0]}%;top:${o.b[1]}%;width:${o.b[2]}%;height:${o.b[3]}%"><i style="clip-path:polygon(${o.p.split(',').map(q => q.trim().split(' ').map(v => v + '%').join(' ')).join(',')});background-image:url(${src});background-size:${f2(10000 / o.b[2])}% auto;background-position:${f2(o.b[0] / (100 - o.b[2]) * 100)}% ${f2(o.b[1] / (100 - o.b[3]) * 100)}%"></i></i>`, lamps = lp ? [['head', lp[0], CAR_HEAD[name]], ['tail', lp[1], CAR_TAIL[name]]].map(([k, b, o]) => o ? shp(k, o) : `<i class="lamp lamp--${k}" aria-hidden="true" style="left:${b[0]}%;top:${b[1]}%;width:${b[2]}%;height:${b[3]}%"></i>`).join('') : '';
   return `<span class="tcar" data-tcar>${img(src, alt, w, h)}${wheels}${lamps}</span>`;
 };
 const clip = (src, alt, w, h, cls = '', extra = '') => `<figure class="clip ${cls}" data-clip${extra ? ' ' + extra : ''}>${img(src, alt, w, h)}</figure>`;
@@ -277,13 +290,26 @@ const specGroups = (m, v) => Object.keys(m.specs).map(t => {
   const known = rows.filter(r => r[1] !== TBC), more = rows.filter(r => r[1] === TBC), row = (r, c) => '<div' + (c ? ' class="' + c + '"' : '') + '><dt>' + r[0] + '</dt><dd>' + r[1] + '</dd></div>';
   return '<details class="spec3"' + (t === 'Design' || t === 'Performance' ? ' open' : '') + '><summary><h4>' + t + '</h4></summary><dl>' + known.map(r => row(r)).join('') + more.map(r => row(r, 'is-more')).join('') + '</dl></details>';
 }).join('');
+/* xforce-style variant block (Destinator): copy left, big image right, specs in columns underneath */
+const SHEET = JSON.parse(fs.readFileSync(path.join(__dirname, 'sheet-specs.json'), 'utf8'));
+const specCols = (m, v) => { const sh = SHEET[v.id]; if (sh) return '<section class="xv__g"><h5>Specification</h5><dl>' + sh.facts.map(r => '<div><dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd></div>').join('') + '</dl></section>' + Object.keys(sh.lists).map(t => '<section class="xv__g xv__g--l"><h5>' + t + '</h5><ul>' + sh.lists[t].map(l => '<li>' + esc(l) + '</li>').join('') + '</ul></section>').join(''); return specColsOld(m, v); };
+const specColsOld = (m, v) => Object.keys(m.specs).map(t => {
+  let rows = m.specs[t];
+  if (t === 'Performance') {
+    const own = [['Engine', v.engine], ['Transmission', v.trans], ['Drive', v.drive], ['Fuel', v.fuel]].filter(r => r[1] && r[1] !== TBC), have = own.map(r => r[0].toLowerCase());
+    rows = own.concat(rows.filter(r => have.indexOf(r[0].toLowerCase()) < 0));
+  }
+  rows = rows.filter(r => r[1] !== TBC);
+  return rows.length ? '<section class="xv__g"><h5>' + t + '</h5><dl>' + rows.map(r => '<div><dt>' + r[0] + '</dt><dd>' + r[1] + '</dd></div>').join('') + '</dl></section>' : '';
+}).join('');
 ORDER.forEach((s, mi) => {
   const m = model(s), next = model(ORDER[(mi + 1) % ORDER.length]);
+  const vOn = m.views ? Math.max(0, Object.keys(m.views).findIndex(k => m.views[k].length)) : 0;
   const tabs = Object.keys(m.specs);
   const enq = 'contact.html?vehicle=' + encodeURIComponent(m.name);
   const F = [0, 1, 2, 3].map(i => m.features[i % m.features.length]), bg = i => (F[i] && F[i][3]) || m.photo2 || m.hero;
   const banner = (i, label) => `<section class="xb" id="${label}" aria-labelledby="xb-${i}"><div class="xb__bg">${img(bg(i), '', 1600, 900)}</div><div class="xb__shade"></div>
-  <div class="xb__in"><div class="xb__txt"><p class="xk" data-a>${F[i][0]}</p><h2 class="xh2" id="xb-${i}" data-a>${F[i][1]}</h2><p class="xp" data-a>${F[i][2]}</p><div class="xb__btn" data-a><a class="btn" href="#variants">Explore ${label}</a></div></div></div></section>`;
+  <div class="xb__in"><div class="xb__txt"><p class="xk" data-a>${F[i][0]}</p><h2 class="xh2" id="xb-${i}" data-a>${F[i][1]}</h2><p class="xp" data-a>${F[i][2]}</p><div class="xb__btn" data-a><a class="btn" href="${enq}">Enquire now</a></div></div></div></section>`;
   page(s + '.html', {
     title: m.name, desc: `Mitsubishi ${m.name} in Libya: ${m.tag}`, active: 'cars', bodyClass: 'vd xf pg-' + s,
     preload: `\n  <link rel="preload" href="${m.hero}" as="image">`,
@@ -319,17 +345,26 @@ ${m.interior ? `<section class="xin" id="interior-view" aria-labelledby="xin-t">
 </section>
 
 ` : ''}
-<section class="xs" id="variants" aria-labelledby="var-t">
+${m.views ? `<section class="xg" id="gallery" aria-labelledby="xg-t">
+  <div class="wrap">
+    <h2 class="xh2 xh2--dk" id="xg-t" data-a>Explore the ${m.name}</h2>
+    <div ${Object.keys(m.views).length > 1 ? 'data-tabs' : ''}>
+      ${Object.keys(m.views).length > 1 ? `<div class="xg__tabs" role="tablist" aria-label="${m.name} views">${Object.keys(m.views).map((t, i) => `<button type="button" role="tab" id="xgt-${i}" aria-controls="xgp-${i}" aria-selected="${i === vOn}"${i !== vOn ? ' tabindex="-1"' : ''}>${t}</button>`).join('')}</div>` : ''}
+      ${Object.keys(m.views).map((t, i) => `<div class="xg__panel"${Object.keys(m.views).length > 1 ? ` role="tabpanel" id="xgp-${i}" aria-labelledby="xgt-${i}"` : ''}${i !== vOn ? ' hidden' : ''}>${m.views[t].length ? `<div class="xg__slider" data-xg role="region" aria-roledescription="carousel" aria-label="${m.name} ${t.toLowerCase()}"><div class="xg__track">${m.views[t].map((o, j) => { const src = o.src || o; return `<figure class="xg__i${o.fit ? ' xg__i--fit' : ''}"${o.pos ? ` style="--pos:${o.pos}"` : ''}${o.fit ? `><img class="xg__bgimg" src="${src}" alt="" aria-hidden="true" loading="lazy" decoding="async"` : ''}>${img(src, m.name + ' ' + t.toLowerCase() + ' ' + (j + 1), 1600, 900)}</figure>`; }).join('')}</div><button type="button" class="xg__btn xg__btn--p" data-xg-prev aria-label="Previous image">${ic('arrow-left')}</button><button type="button" class="xg__btn xg__btn--n" data-xg-next aria-label="Next image">${ic('arrow-right')}</button></div>` : `<p class="xg__soon">${t} photos coming soon.</p>`}</div>`).join('')}
+    </div>
+  </div>
+</section>
+
+` : ''}<section class="xs" id="variants" aria-labelledby="var-t">
   <div class="wrap">
     <h2 class="xh2 xh2--dk" id="var-t" data-a>${m.variants.length > 1 ? 'Choose your ' + m.name : 'The ' + m.name}</h2>
     <p class="xs__lede" data-a>${m.variants.length > 1 ? 'Pick a variant to see its specifications.' : 'Key specifications at a glance.'}</p>
     <div class="trim" data-tabs>
       <div class="trim__tabs" role="tablist" aria-label="${m.name} variants">${m.variants.map((v, i) => `<button type="button" role="tab" id="tt-${v.id}" aria-controls="tp-${v.id}" aria-selected="${i === 0}"${i ? ' tabindex="-1"' : ''}>${esc(v.trim)}</button>`).join('')}</div>
-      ${m.variants.map((v, i) => `<div class="trim__panel" role="tabpanel" id="tp-${v.id}" aria-labelledby="tt-${v.id}"${i ? ' hidden' : ''}>
-        <div class="trim__img${v.photo ? ' is-photo' : ''}">${v.img.indexOf('assets/cars/') === 0 ? carFx(v.photo ? v.img : v.img.replace(/.webp$/, '.png'), m.name + ' ' + v.trim, 900, 600) : img(v.img, m.name + ' ' + v.trim, 900, 600)}</div>
-        <div class="trim__info"><h3>${esc(v.trim)}</h3>
-          <div class="spec3s is-open">${specGroups(m, v)}</div>
-          <a class="btn btn--solid" href="compare.html?m=${s}&v=${v.id}">Compare this variant</a></div></div>`).join('')}
+      ${m.variants.map((v, i) => `<div class="trim__panel xv" role="tabpanel" id="tp-${v.id}" aria-labelledby="tt-${v.id}"${i ? ' hidden' : ''}>
+        <div class="xv__top"><div class="xv__txt"><h3>${esc(v.trim)}</h3><p>${[v.engine, v.trans, v.drive].filter(x => x && x !== TBC).map(esc).join(' &middot; ')}</p><a class="btn btn--solid" href="compare.html?m=${s}&v=${v.id}">Compare this variant</a><button type="button" class="xv__more" data-xv-more aria-expanded="false"><span>Show more</span></button></div>
+        <div class="trim__img xv__img${v.photo ? ' is-photo' : ''}">${v.img.indexOf('assets/cars/') === 0 ? carFx(v.photo ? v.img : v.img.replace(/.webp$/, '.png'), m.name + ' ' + v.trim, 900, 600) : img(v.img, m.name + ' ' + v.trim, 900, 600)}</div></div>
+        <div class="xv__specs"><div class="xv__grid">${specCols(m, v)}</div></div></div>`).join('')}
     </div>
 
   </div>
@@ -349,7 +384,7 @@ ${m.interior ? `<section class="xin" id="interior-view" aria-labelledby="xin-t">
   </div>
 </section>
 
-<a class="nextm" href="${next.slug}.html" data-a><span>Next vehicle</span><b>${next.name}</b>${ic('arrow-right')}</a>`
+<a class="nextm" href="${next.slug}.html" data-a><span>Next vehicle</span><b>${next.name}</b><div class="nextm__car">${carFx(next.cut.replace('-hd.', '.'), '', 600, Math.round(600 * next.cutAr))}</div>${ic('arrow-right')}</a>`
   });
 });
 

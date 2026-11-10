@@ -527,3 +527,57 @@ document.addEventListener('click', e => {
   const box = b.closest('.trim__info').querySelector('.spec3s'), open = box.classList.toggle('is-open');
   b.setAttribute('aria-expanded', String(open)); const t = b.querySelector('span'); if (t) t.textContent = open ? 'Show fewer details' : 'Show more details';
 });
+
+/* Destinator variant block: Show more / Show less on the spec columns */
+document.addEventListener('click', e => {
+  const b = e.target.closest && e.target.closest('[data-xv-more]'); if (!b) return;
+  const box = b.closest('.xv'), open = box.classList.toggle('is-open');
+  b.setAttribute('aria-expanded', String(open)); const t = b.querySelector('span'); if (t) t.textContent = open ? 'Show less' : 'Show more';
+});
+
+/* next vehicle strip: the car starts after the label, drives to the start of the name with headlights on, then stops with brake lights on */
+(() => { const n = document.querySelector(".nextm"); if (!n) return; const wrap = n.querySelector(".nextm__car"); if (!wrap) return;
+  const lab = n.querySelector(":scope > span"), still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let started = false; const go = () => { if (started) return; started = true; n.classList.add("is-in"); if (!window.gsap || still) { wrap.dataset.lights = "brake"; return; }
+    const wheels = wrap.querySelectorAll(".wheel"), nr = n.getBoundingClientRect(), lr = lab && lab.offsetWidth ? lab.getBoundingClientRect().right : nr.left + 16,
+      x0 = -(wrap.getBoundingClientRect().left - (lr + 24)); if (x0 >= 0) { wrap.dataset.lights = "brake"; return; }
+    wrap.dataset.lights = "drive";
+    gsap.fromTo(wrap, { x: x0 }, { x: 0, duration: 3.2, ease: "power2.out", onUpdate: () => { const travel = Math.abs(x0) - Math.abs(gsap.getProperty(wrap, "x")); wheels.forEach(w => gsap.set(w, { rotation: -(travel / (w.offsetWidth / 1.68)) * 180 / Math.PI })); }, onComplete: () => { wrap.dataset.lights = "brake"; } }); };
+  const check = () => { const r = n.getBoundingClientRect(); if (r.top < window.innerHeight * .95 && r.bottom > 0) { window.removeEventListener("scroll", check); window.removeEventListener("resize", check); go(); } };
+  window.addEventListener("scroll", check, { passive: true }); window.addEventListener("resize", check); window.addEventListener("load", check); check(); })();
+
+/* Interior / Exterior sliders: two images per slide; arrows scroll one image, ends disable the arrow */
+document.querySelectorAll("[data-xg]").forEach(sl => {
+  const track = sl.querySelector(".xg__track"), prev = sl.querySelector("[data-xg-prev]"), next = sl.querySelector("[data-xg-next]");
+  const step = () => { const a = track.children[0], b = track.children[1]; return b ? b.offsetLeft - a.offsetLeft : track.clientWidth; };
+  const upd = () => { prev.disabled = track.scrollLeft <= 4; next.disabled = track.scrollLeft >= track.scrollWidth - track.clientWidth - 4; };
+  prev.addEventListener("click", () => track.scrollBy({ left: -step() }));
+  next.addEventListener("click", () => track.scrollBy({ left: step() }));
+  track.addEventListener("scroll", upd, { passive: true }); window.addEventListener("resize", upd); upd();
+  document.querySelectorAll("[role=tab]").forEach(t => t.addEventListener("click", () => setTimeout(upd, 80)));
+});
+
+/* Explore section: the images rise in with a soft reveal when it scrolls into view, and again on each tab switch */
+(() => { const sec = document.getElementById("gallery"); if (!sec || !window.gsap || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const play = panel => { if (!panel) return; const figs = panel.querySelectorAll(".xg__i"), imgs = panel.querySelectorAll(".xg__i img"); if (!figs.length) return;
+    gsap.fromTo(figs, { opacity: 0, y: 70, scale: .94, clipPath: "inset(10% 10% 10% 10% round 8px)" }, { opacity: 1, y: 0, scale: 1, clipPath: "inset(0% 0% 0% 0% round 0px)", duration: 1.3, ease: "power3.out", stagger: .2, clearProps: "clipPath,transform", overwrite: true });
+    gsap.fromTo(imgs, { scale: 1.18 }, { scale: 1, duration: 2, ease: "power2.out", stagger: .2, clearProps: "transform", overwrite: true }); };
+  const active = () => sec.querySelector(".xg__panel:not([hidden])");
+  gsap.set(active().querySelectorAll(".xg__i"), { opacity: 0 });
+  let done = false; const check = () => { if (done) return; const r = sec.getBoundingClientRect(); if (r.top < window.innerHeight * .75 && r.bottom > 0) { done = true; window.removeEventListener("scroll", check); window.removeEventListener("resize", check); play(active()); } };
+  window.addEventListener("scroll", check, { passive: true }); window.addEventListener("resize", check); window.addEventListener("load", check); check();
+  sec.querySelectorAll("[role=tab]").forEach(t => t.addEventListener("click", () => { done = true; setTimeout(() => play(active()), 30); }));
+})();
+
+/* Choose your ... block: the first time it scrolls into view the car drives in from the right with headlights blinking, then stops with brake lights on */
+(function () {
+  const trim = document.querySelector(".xf .trim"); if (!trim || !window.gsap || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const sec = trim.closest("section") || trim; let done = false;
+  const run = () => { const panel = trim.querySelector(".trim__panel:not([hidden])"), box = panel && panel.querySelector(".trim__img"), car = box && (box.querySelector(".tcar") || box.querySelector("img")); if (!car) return;
+    const inX = (box.clientWidth + car.offsetWidth) / 2 + 24, spin = x => car.querySelectorAll(".wheel").forEach(w => gsap.set(w, { rotation: (x / (w.offsetWidth / 1.68)) * 180 / Math.PI }));
+    gsap.set(car, { x: inX }); spin(inX); box.dataset.lights = "drive";
+    gsap.to(car, { x: 0, duration: 1.8, ease: "power2.out", onUpdate: () => spin(gsap.getProperty(car, "x")), onComplete: () => { gsap.set(car, { x: 0 }); spin(0); box.dataset.lights = "brake"; setTimeout(() => { box.dataset.lights = ""; }, 2200); } }); };
+  const check = () => { if (done) return; const r = sec.getBoundingClientRect(); if (r.top < window.innerHeight * .6 && r.bottom > window.innerHeight * .25) { done = true; window.removeEventListener("scroll", check); run(); } };
+  window.addEventListener("scroll", check, { passive: true }); window.addEventListener("load", check); check();
+  trim.querySelectorAll("[role=tab]").forEach(t => t.addEventListener("click", () => { done = true; }));
+})();
