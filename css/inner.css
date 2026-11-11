@@ -1249,3 +1249,15 @@ html { scroll-padding-top: 56px; }
 /* article: the closing white strip has the same width as the image and text panel above it */
 .strip--light { width: calc(100% - 2 * var(--pad)); max-width: calc(var(--max) - 2 * var(--pad)); margin-inline: auto; box-sizing: border-box; padding-inline: clamp(20px, 3.5vw, 56px); }
 .strip--light > .wrap { padding-inline: 0; max-width: none; }
+
+/* mobile: car detail pages use one even section rhythm (40px) between banners, text blocks and light sections */
+@media (max-width: 899px) {
+  .xf { --msec: 40px; }
+  .xf .xh--c, .xf .xh--r { padding-bottom: var(--msec); }
+  .xf .xh__in, .xf .xb__in { padding-top: var(--msec); }
+  .xf .xh--c .xh__in { padding-top: 6px; }
+  .xf .xb__in { padding-bottom: var(--msec); }
+  .xf .xg, .xf .xs, .xf .xka { padding-block: var(--msec); }
+  .xf .xl { padding-block: var(--msec); }
+  .nextm { padding-block: var(--msec); }
+}

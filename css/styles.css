@@ -1113,3 +1113,85 @@ html.snap .media__preview { min-height: 220px; max-height: 560px; }
 @media (max-width: 1023px) { .media__preview { aspect-ratio: 1 / 1; } }
 /* media section (desktop): fixed taller image; the row grows to fit it */
 html.snap .media__preview { flex: none; height: clamp(380px, 54svh, 580px); max-height: none; min-height: 0; }
+
+/* ==========================================================================
+   Home page, 2nd section (car showcase): phone-first layout
+   text block, full-width car, thumb-friendly controls bar, card accordion with 48px+ touch targets
+   ========================================================================== */
+@media (max-width: 700px) {
+  .showcase { padding-block: 40px 48px; overflow-x: clip; }
+  .stage { overflow: visible; padding-bottom: 0; border-bottom: 0; }
+
+  /* text block */
+  .stage__info { padding-top: 0; text-align: left; align-items: flex-start; }
+  .stage__no { margin-bottom: 10px; }
+  .stage__name { font-size: clamp(34px, 10.5vw, 44px); line-height: 1; margin: 0; white-space: normal; }
+  .stage__intro { margin-top: 12px; font-size: 16px; line-height: 1.5; max-width: none; }
+  .stage__price { margin-top: 12px; font-size: 13px; }
+  .stage__cta { width: 100%; margin: 20px 0 0; }
+  .stage__cta .btn { width: 100%; min-height: 52px; justify-content: center; }
+
+  /* car, edge to edge */
+  .stage__car { aspect-ratio: 1.75 / 1; margin: 20px calc(-1 * var(--pad)) 0; width: auto; overflow: visible; }
+
+  /* controls bar: counter left, thumb-size buttons right */
+  .stage > .ctrl { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin: 12px 0 0; padding: 12px 0; border-top: 1px solid var(--line-dark); border-bottom: 1px solid var(--line-dark); }
+  .ctrl__count { display: block; margin-right: auto; font-size: 14px; }
+  .ctrl__btn { width: 48px; height: 48px; border-radius: 10px; background: #fff; border: 1px solid #cfd2d6; }
+  .stage__progress { display: block; position: static; order: 3; width: 100%; height: 2px; margin: 0; background: var(--line-dark); }
+
+  /* accordion: card per group, big touch targets */
+  .stage__specs { margin-top: 20px; }
+  .details.is-acc .details__tabs { gap: 10px; border-bottom: 0; }
+  .details.is-acc .details__tabs button { min-height: 56px; border: 1px solid #e3e5e8; border-radius: 12px; background: #f8f9fb; padding: 0 18px; font: 700 16px/1 var(--body); letter-spacing: .02em; text-transform: uppercase; color: var(--ink); }
+  .details.is-acc .details__tabs button::after { content: ""; position: static; width: 9px; height: 9px; margin-right: 4px; border: 0; border-right: 2.5px solid var(--red); border-bottom: 2.5px solid var(--red); background: none; transform: rotate(45deg) translate(-2px, -2px); font-size: 0; transition: transform .3s; }
+  .details.is-acc .details__tabs button[aria-expanded="true"] { border-bottom: 2.5px solid var(--red); border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+  .details.is-acc .details__tabs button[aria-expanded="true"]::after { transform: rotate(-135deg) translate(-2px, -2px); }
+  .details.is-acc .details__tabs > .details__panel { margin-top: -10px; }
+  .details.is-acc .details__panel:not(.is-closed) { border: 1px solid #e3e5e8; border-top: 0; border-radius: 0 0 12px 12px; background: #fff; box-shadow: 0 6px 18px rgba(0, 0, 0, .05); }
+  .details.is-acc .details__grid > div { display: block; margin-inline: 16px; padding: 14px 4px; border-bottom: 1px solid #e3e5e8; }
+  .details.is-acc .details__grid > div:last-child { border-bottom: 0; }
+  .details.is-acc .details__grid dt { margin: 0 0 3px; font: 400 13px/1.3 var(--body); letter-spacing: .06em; text-transform: uppercase; color: #3d3d42; }
+  .details.is-acc .details__grid dd, .details.is-acc .details__grid dd.is-na { margin: 0; text-align: left; font: 700 18px/1.25 var(--body); letter-spacing: 0; text-transform: uppercase; color: var(--ink); }
+}
+
+/* ==========================================================================
+   MOBILE spec tabs redesign (<=700px): dark open header + 2-col spec tiles
+   ========================================================================== */
+@media (max-width: 700px) {
+  .details.is-acc .details__tabs { gap: 8px; }
+  .details.is-acc .details__tabs button { min-height: 58px; padding: 0 18px 0 20px; border: 0; border-radius: 14px; background: #f2f3f5; font: 700 15px/1 var(--body); letter-spacing: .12em; transition: background .3s, color .3s; }
+  .details.is-acc .details__tabs button[aria-expanded="true"] { background: #111; color: #fff; border: 0; border-radius: 14px 14px 0 0; }
+  .details.is-acc .details__tabs button[aria-expanded="true"]::after { border-color: var(--red); }
+  .details.is-acc .details__tabs > .details__panel { margin-top: -8px; }
+  .details.is-acc .details__panel:not(.is-closed) { border: 0; border-radius: 0 0 14px 14px; background: #111; box-shadow: none; padding: 6px 12px 12px; }
+  .details.is-acc .details__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-flow: row; gap: 8px; }
+  .details.is-acc .details__grid > div { position: relative; display: flex; flex-direction: column-reverse; justify-content: flex-end; gap: 6px; margin: 0; padding: 14px 12px 14px 16px; border: 0; border-radius: 10px; background: rgba(255, 255, 255, .06); min-width: 0; }
+  .details.is-acc .details__grid > div::before { content: ""; position: absolute; left: 0; top: 14px; bottom: 14px; width: 3px; border-radius: 2px; background: var(--red); }
+  .details.is-acc .details__grid dt { margin: 0; font: 500 11px/1.3 var(--body); letter-spacing: .12em; color: rgba(255, 255, 255, .6); }
+  .details.is-acc .details__grid dd, .details.is-acc .details__grid dd.is-na { font: 700 17px/1.2 var(--body); color: #fff; overflow-wrap: anywhere; }
+  .details.is-acc .details__grid dd.is-na { font-size: 14px; color: rgba(255, 255, 255, .7); }
+  .details.is-acc .details__grid > div:last-child:nth-child(odd) { grid-column: 1 / -1; }
+}
+
+/* MOBILE: showcase controls (counter + prev/next/auto-slide) aligned left */
+@media (max-width: 700px) {
+  .stage > .ctrl { justify-content: flex-start; gap: 8px; }
+  .ctrl__count { margin-right: 8px; }
+}
+
+/* Laptop/tablet landscape (1024-1199px): keep header on one row, phone shows as icon only */
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .header__inner { gap: 20px; }
+  .header__call span { display: none; }
+  .header__right { gap: 16px; }
+}
+
+/* MOBILE: spec tabs use sharp corners (match the banners) */
+@media (max-width: 700px) {
+  .details.is-acc .details__tabs button,
+  .details.is-acc .details__tabs button[aria-expanded="true"],
+  .details.is-acc .details__panel:not(.is-closed),
+  .details.is-acc .details__grid > div,
+  .details.is-acc .details__grid > div::before { border-radius: 0; }
+}
