@@ -1261,3 +1261,15 @@ html { scroll-padding-top: 56px; }
   .xf .xl { padding-block: var(--msec); }
   .nextm { padding-block: var(--msec); }
 }
+
+/* mobile: L200 "Beyond tough" banner uses its own image, cropped so the truck sits in the centre */
+@media (max-width: 899px) {
+  .pg-l200 #drive .xh__bg { aspect-ratio: 4 / 3; overflow: hidden; background: #111 url(../assets/img/l200-beyond-tough-m.webp) 84% 50% / cover no-repeat; }
+  .pg-l200 #drive .xh__bg img { display: none; }
+}
+
+/* mobile: L200 "Active safety" banner - crop off the blurred right-hand panel baked into the photo */
+@media (max-width: 899px) {
+  .pg-l200 #interior .xb__bg { aspect-ratio: 6 / 5; overflow: hidden; background: #111 url(../assets/img/l200-active-safety.webp) 0 50% / 154% auto no-repeat; }
+  .pg-l200 #interior .xb__bg img { display: none; }
+}

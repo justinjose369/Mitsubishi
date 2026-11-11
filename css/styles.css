@@ -1195,3 +1195,43 @@ html.snap .media__preview { flex: none; height: clamp(380px, 54svh, 580px); max-
   .details.is-acc .details__grid > div,
   .details.is-acc .details__grid > div::before { border-radius: 0; }
 }
+
+/* MOBILE: all spec tabs share one colour; the open tab is marked by the red line + chevron, panel stays light */
+@media (max-width: 700px) {
+  .details.is-acc .details__tabs button,
+  .details.is-acc .details__tabs button[aria-expanded="true"] { background: #f2f3f5; color: var(--ink); }
+  .details.is-acc .details__tabs button[aria-expanded="true"] { border-bottom: 2.5px solid var(--red); }
+  .details.is-acc .details__panel:not(.is-closed) { background: #f2f3f5; }
+  .details.is-acc .details__grid > div { background: #fff; }
+  .details.is-acc .details__grid dt { color: #3d3d42; }
+  .details.is-acc .details__grid dd, .details.is-acc .details__grid dd.is-na { color: var(--ink); }
+}
+
+/* MOBILE: no red line under the open tab; tab and its dropdown read as one block of the same colour */
+@media (max-width: 700px) {
+  .details.is-acc .details__tabs button[aria-expanded="true"] { border-bottom: 0; }
+  .details.is-acc .details__tabs > .details__panel { margin-top: -8px; }
+  .details.is-acc .details__panel:not(.is-closed) { padding: 0 12px 12px; }
+}
+
+/* MOBILE: spec tab indicator is a plain + / - in the text colour (no red chevron) */
+@media (max-width: 700px) {
+  .details.is-acc .details__tabs button::after,
+  .details.is-acc .details__tabs button[aria-expanded="true"]::after { content: "+"; width: auto; height: auto; margin: 0; border: 0; background: none; transform: none; font: 400 26px/1 var(--body); color: var(--ink); }
+  .details.is-acc .details__tabs button[aria-expanded="true"]::after { content: "\2212"; }
+}
+
+/* MOBILE: showcase arrows and play/pause buttons have sharp corners */
+@media (max-width: 700px) {
+  .ctrl__btn, .thumbs__arrow { border-radius: 0; }
+}
+
+/* Hero scroll cue: centred horizontal cue in the bottom gutter so it never overlaps the lead text or the buttons at any desktop size */
+@keyframes cueX { 0% { transform: translateX(-100%); } 55% { transform: translateX(0); } 100% { transform: translateX(100%); } }
+@media (min-width: 1024px) {
+  .scrollcue { display: flex; align-items: center; gap: 14px; left: 50%; right: auto; bottom: clamp(18px, 3vh, 32px); transform: translateX(-50%); }
+  .scrollcue span { writing-mode: horizontal-tb; line-height: 1; }
+  .scrollcue i { width: 44px; height: 1px; margin: 0; }
+  .scrollcue i::after { transform: translateX(-100%); animation-name: cueX; }
+}
+@media (min-width: 1024px) and (prefers-reduced-motion: reduce) { .scrollcue i::after { animation: none; transform: none; } }
