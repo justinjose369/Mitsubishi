@@ -1226,12 +1226,7 @@ html.snap .media__preview { flex: none; height: clamp(380px, 54svh, 580px); max-
   .ctrl__btn, .thumbs__arrow { border-radius: 0; }
 }
 
-/* Hero scroll cue: centred horizontal cue in the bottom gutter so it never overlaps the lead text or the buttons at any desktop size */
-@keyframes cueX { 0% { transform: translateX(-100%); } 55% { transform: translateX(0); } 100% { transform: translateX(100%); } }
+/* Hero scroll cue: vertical cue pinned bottom-right */
 @media (min-width: 1024px) {
-  .scrollcue { display: flex; align-items: center; gap: 14px; left: 50%; right: auto; bottom: clamp(18px, 3vh, 32px); transform: translateX(-50%); }
-  .scrollcue span { writing-mode: horizontal-tb; line-height: 1; }
-  .scrollcue i { width: 44px; height: 1px; margin: 0; }
-  .scrollcue i::after { transform: translateX(-100%); animation-name: cueX; }
+  .scrollcue { display: block; left: auto; right: var(--pad); bottom: clamp(18px, 3vh, 32px); transform: none; }
 }
-@media (min-width: 1024px) and (prefers-reduced-motion: reduce) { .scrollcue i::after { animation: none; transform: none; } }
